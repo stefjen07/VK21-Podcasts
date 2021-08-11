@@ -14,6 +14,9 @@
 		3EA7797526C4543900B0C05E /* VKPodcastsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA7797426C4543900B0C05E /* VKPodcastsTests.swift */; };
 		3EA7797F26C4543900B0C05E /* VKPodcastsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA7797E26C4543900B0C05E /* VKPodcastsUITests.swift */; };
 		3EA7798126C4543900B0C05E /* VKPodcastsUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA7798026C4543900B0C05E /* VKPodcastsUITestsLaunchTests.swift */; };
+		3EA7798E26C454EB00B0C05E /* DataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA7798D26C454EB00B0C05E /* DataModel.swift */; };
+		3EA7799026C4568A00B0C05E /* PlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA7798F26C4568A00B0C05E /* PlayerView.swift */; };
+		3EA7799226C45B9E00B0C05E /* ReactionItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA7799126C45B9E00B0C05E /* ReactionItem.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,6 +47,9 @@
 		3EA7797A26C4543900B0C05E /* VKPodcastsUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = VKPodcastsUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3EA7797E26C4543900B0C05E /* VKPodcastsUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VKPodcastsUITests.swift; sourceTree = "<group>"; };
 		3EA7798026C4543900B0C05E /* VKPodcastsUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VKPodcastsUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		3EA7798D26C454EB00B0C05E /* DataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataModel.swift; sourceTree = "<group>"; };
+		3EA7798F26C4568A00B0C05E /* PlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerView.swift; sourceTree = "<group>"; };
+		3EA7799126C45B9E00B0C05E /* ReactionItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReactionItem.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -94,6 +100,9 @@
 		3EA7796226C4543600B0C05E /* VKPodcasts */ = {
 			isa = PBXGroup;
 			children = (
+				3EA7798D26C454EB00B0C05E /* DataModel.swift */,
+				3EA7798F26C4568A00B0C05E /* PlayerView.swift */,
+				3EA7799126C45B9E00B0C05E /* ReactionItem.swift */,
 				3EA7796326C4543700B0C05E /* VKPodcastsApp.swift */,
 				3EA7796526C4543700B0C05E /* ContentView.swift */,
 				3EA7796726C4543900B0C05E /* Assets.xcassets */,
@@ -259,6 +268,9 @@
 			files = (
 				3EA7796626C4543700B0C05E /* ContentView.swift in Sources */,
 				3EA7796426C4543700B0C05E /* VKPodcastsApp.swift in Sources */,
+				3EA7798E26C454EB00B0C05E /* DataModel.swift in Sources */,
+				3EA7799226C45B9E00B0C05E /* ReactionItem.swift in Sources */,
+				3EA7799026C4568A00B0C05E /* PlayerView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
