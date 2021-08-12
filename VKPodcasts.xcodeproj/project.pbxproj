@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3E2DE7BE26C5369800313C92 /* ReactionsGraph.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E2DE7BD26C5369700313C92 /* ReactionsGraph.swift */; };
 		3EA7796426C4543700B0C05E /* VKPodcastsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA7796326C4543700B0C05E /* VKPodcastsApp.swift */; };
 		3EA7796626C4543700B0C05E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA7796526C4543700B0C05E /* ContentView.swift */; };
 		3EA7796826C4543900B0C05E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3EA7796726C4543900B0C05E /* Assets.xcassets */; };
@@ -37,6 +38,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		3E2DE7BD26C5369700313C92 /* ReactionsGraph.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReactionsGraph.swift; sourceTree = "<group>"; };
 		3EA7796026C4543600B0C05E /* VKPodcasts.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VKPodcasts.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3EA7796326C4543700B0C05E /* VKPodcastsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VKPodcastsApp.swift; sourceTree = "<group>"; };
 		3EA7796526C4543700B0C05E /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -102,6 +104,7 @@
 			children = (
 				3EA7798D26C454EB00B0C05E /* DataModel.swift */,
 				3EA7798F26C4568A00B0C05E /* PlayerView.swift */,
+				3E2DE7BD26C5369700313C92 /* ReactionsGraph.swift */,
 				3EA7799126C45B9E00B0C05E /* ReactionItem.swift */,
 				3EA7796326C4543700B0C05E /* VKPodcastsApp.swift */,
 				3EA7796526C4543700B0C05E /* ContentView.swift */,
@@ -267,6 +270,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3EA7796626C4543700B0C05E /* ContentView.swift in Sources */,
+				3E2DE7BE26C5369800313C92 /* ReactionsGraph.swift in Sources */,
 				3EA7796426C4543700B0C05E /* VKPodcastsApp.swift in Sources */,
 				3EA7798E26C454EB00B0C05E /* DataModel.swift in Sources */,
 				3EA7799226C45B9E00B0C05E /* ReactionItem.swift in Sources */,

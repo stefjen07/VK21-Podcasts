@@ -11,8 +11,15 @@ struct ReactionItem: View {
     var emoji: String
     var body: some View {
         Circle()
+            .foregroundColor(.init("Background").opacity(0.3))
+            .frame(width: 80, height: 80)
             .overlay(
-                Text(emoji)
+                ZStack {
+                    Circle()
+                        .stroke(.gray, lineWidth: 1)
+                    Text(emoji)
+                        .font(.title)
+                }
             )
     }
 }
