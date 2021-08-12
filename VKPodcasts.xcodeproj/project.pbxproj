@@ -3,11 +3,15 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 55;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		002F0DA3F567C5815F7F5475 /* Pods_VKPodcasts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C4ABB5364CB21DA421B412E /* Pods_VKPodcasts.framework */; };
+		204CD1C8D05D9EEAF116AEE7 /* Pods_VKPodcasts_VKPodcastsUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C54067D9C31D86D2E2B400CC /* Pods_VKPodcasts_VKPodcastsUITests.framework */; };
 		3E2DE7BE26C5369800313C92 /* ReactionsGraph.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E2DE7BD26C5369700313C92 /* ReactionsGraph.swift */; };
+		3E8431E726C5A4DB00545232 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E8431E626C5A4DB00545232 /* LoginView.swift */; };
+		3E8431E926C5B71200545232 /* PresentController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E8431E826C5B71200545232 /* PresentController.swift */; };
 		3EA7796426C4543700B0C05E /* VKPodcastsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA7796326C4543700B0C05E /* VKPodcastsApp.swift */; };
 		3EA7796626C4543700B0C05E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA7796526C4543700B0C05E /* ContentView.swift */; };
 		3EA7796826C4543900B0C05E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3EA7796726C4543900B0C05E /* Assets.xcassets */; };
@@ -19,6 +23,7 @@
 		3EA7799026C4568A00B0C05E /* PlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA7798F26C4568A00B0C05E /* PlayerView.swift */; };
 		3EA7799226C45B9E00B0C05E /* ReactionItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA7799126C45B9E00B0C05E /* ReactionItem.swift */; };
 		3EF6844326C57EAB0047CF20 /* RSSParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EF6844226C57EAB0047CF20 /* RSSParser.swift */; };
+		5B2B257E080F45ECF551E61C /* Pods_VKPodcastsTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27F902617BE0166225C22737 /* Pods_VKPodcastsTests.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -39,7 +44,13 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		07313568BC89ABA711DDC5AC /* Pods-VKPodcastsTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VKPodcastsTests.debug.xcconfig"; path = "Target Support Files/Pods-VKPodcastsTests/Pods-VKPodcastsTests.debug.xcconfig"; sourceTree = "<group>"; };
+		0C4ABB5364CB21DA421B412E /* Pods_VKPodcasts.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_VKPodcasts.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		27F902617BE0166225C22737 /* Pods_VKPodcastsTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_VKPodcastsTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3E2DE7BD26C5369700313C92 /* ReactionsGraph.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReactionsGraph.swift; sourceTree = "<group>"; };
+		3E8431E526C5A05B00545232 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		3E8431E626C5A4DB00545232 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
+		3E8431E826C5B71200545232 /* PresentController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresentController.swift; sourceTree = "<group>"; };
 		3EA7796026C4543600B0C05E /* VKPodcasts.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VKPodcasts.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3EA7796326C4543700B0C05E /* VKPodcastsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VKPodcastsApp.swift; sourceTree = "<group>"; };
 		3EA7796526C4543700B0C05E /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -54,6 +65,12 @@
 		3EA7798F26C4568A00B0C05E /* PlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerView.swift; sourceTree = "<group>"; };
 		3EA7799126C45B9E00B0C05E /* ReactionItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReactionItem.swift; sourceTree = "<group>"; };
 		3EF6844226C57EAB0047CF20 /* RSSParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSSParser.swift; sourceTree = "<group>"; };
+		4AC03FC6B9EC9134A0A5BD1F /* Pods-VKPodcasts.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VKPodcasts.debug.xcconfig"; path = "Target Support Files/Pods-VKPodcasts/Pods-VKPodcasts.debug.xcconfig"; sourceTree = "<group>"; };
+		8B1F610D295CBA2AC800C2D8 /* Pods-VKPodcasts-VKPodcastsUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VKPodcasts-VKPodcastsUITests.debug.xcconfig"; path = "Target Support Files/Pods-VKPodcasts-VKPodcastsUITests/Pods-VKPodcasts-VKPodcastsUITests.debug.xcconfig"; sourceTree = "<group>"; };
+		B3833B3F71C1D52A90033304 /* Pods-VKPodcastsTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VKPodcastsTests.release.xcconfig"; path = "Target Support Files/Pods-VKPodcastsTests/Pods-VKPodcastsTests.release.xcconfig"; sourceTree = "<group>"; };
+		C54067D9C31D86D2E2B400CC /* Pods_VKPodcasts_VKPodcastsUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_VKPodcasts_VKPodcastsUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		DC9574EB25442DDDBDEEC606 /* Pods-VKPodcasts.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VKPodcasts.release.xcconfig"; path = "Target Support Files/Pods-VKPodcasts/Pods-VKPodcasts.release.xcconfig"; sourceTree = "<group>"; };
+		E4B2DABE4A5B139D2E872909 /* Pods-VKPodcasts-VKPodcastsUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VKPodcasts-VKPodcastsUITests.release.xcconfig"; path = "Target Support Files/Pods-VKPodcasts-VKPodcastsUITests/Pods-VKPodcasts-VKPodcastsUITests.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -61,6 +78,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				002F0DA3F567C5815F7F5475 /* Pods_VKPodcasts.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -68,6 +86,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5B2B257E080F45ECF551E61C /* Pods_VKPodcastsTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -75,12 +94,23 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				204CD1C8D05D9EEAF116AEE7 /* Pods_VKPodcasts_VKPodcastsUITests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1F37C96E0624FDACDDF3F0D2 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				0C4ABB5364CB21DA421B412E /* Pods_VKPodcasts.framework */,
+				C54067D9C31D86D2E2B400CC /* Pods_VKPodcasts_VKPodcastsUITests.framework */,
+				27F902617BE0166225C22737 /* Pods_VKPodcastsTests.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		3EA7795726C4543600B0C05E = {
 			isa = PBXGroup;
 			children = (
@@ -88,6 +118,8 @@
 				3EA7797326C4543900B0C05E /* VKPodcastsTests */,
 				3EA7797D26C4543900B0C05E /* VKPodcastsUITests */,
 				3EA7796126C4543600B0C05E /* Products */,
+				7828F50C9949EB69EAADE470 /* Pods */,
+				1F37C96E0624FDACDDF3F0D2 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -104,6 +136,7 @@
 		3EA7796226C4543600B0C05E /* VKPodcasts */ = {
 			isa = PBXGroup;
 			children = (
+				3E8431E526C5A05B00545232 /* Info.plist */,
 				3EA7798D26C454EB00B0C05E /* DataModel.swift */,
 				3EA7798F26C4568A00B0C05E /* PlayerView.swift */,
 				3EF6844226C57EAB0047CF20 /* RSSParser.swift */,
@@ -111,6 +144,8 @@
 				3EA7799126C45B9E00B0C05E /* ReactionItem.swift */,
 				3EA7796326C4543700B0C05E /* VKPodcastsApp.swift */,
 				3EA7796526C4543700B0C05E /* ContentView.swift */,
+				3E8431E826C5B71200545232 /* PresentController.swift */,
+				3E8431E626C5A4DB00545232 /* LoginView.swift */,
 				3EA7796726C4543900B0C05E /* Assets.xcassets */,
 				3EA7796926C4543900B0C05E /* Preview Content */,
 			);
@@ -142,6 +177,19 @@
 			path = VKPodcastsUITests;
 			sourceTree = "<group>";
 		};
+		7828F50C9949EB69EAADE470 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				4AC03FC6B9EC9134A0A5BD1F /* Pods-VKPodcasts.debug.xcconfig */,
+				DC9574EB25442DDDBDEEC606 /* Pods-VKPodcasts.release.xcconfig */,
+				8B1F610D295CBA2AC800C2D8 /* Pods-VKPodcasts-VKPodcastsUITests.debug.xcconfig */,
+				E4B2DABE4A5B139D2E872909 /* Pods-VKPodcasts-VKPodcastsUITests.release.xcconfig */,
+				07313568BC89ABA711DDC5AC /* Pods-VKPodcastsTests.debug.xcconfig */,
+				B3833B3F71C1D52A90033304 /* Pods-VKPodcastsTests.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -149,9 +197,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 3EA7798426C4543900B0C05E /* Build configuration list for PBXNativeTarget "VKPodcasts" */;
 			buildPhases = (
+				770DAA1D5EACEF037F11CD33 /* [CP] Check Pods Manifest.lock */,
 				3EA7795C26C4543600B0C05E /* Sources */,
 				3EA7795D26C4543600B0C05E /* Frameworks */,
 				3EA7795E26C4543600B0C05E /* Resources */,
+				9F7382247A74283F910D8F58 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -166,6 +216,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 3EA7798726C4543900B0C05E /* Build configuration list for PBXNativeTarget "VKPodcastsTests" */;
 			buildPhases = (
+				710888670390B03FB604FC11 /* [CP] Check Pods Manifest.lock */,
 				3EA7796C26C4543900B0C05E /* Sources */,
 				3EA7796D26C4543900B0C05E /* Frameworks */,
 				3EA7796E26C4543900B0C05E /* Resources */,
@@ -184,9 +235,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 3EA7798A26C4543900B0C05E /* Build configuration list for PBXNativeTarget "VKPodcastsUITests" */;
 			buildPhases = (
+				7F8D784B824CCFDCA9840C99 /* [CP] Check Pods Manifest.lock */,
 				3EA7797626C4543900B0C05E /* Sources */,
 				3EA7797726C4543900B0C05E /* Frameworks */,
 				3EA7797826C4543900B0C05E /* Resources */,
+				F6A65AEE6385CA0BECD5905D /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -222,7 +275,7 @@
 				};
 			};
 			buildConfigurationList = 3EA7795B26C4543600B0C05E /* Build configuration list for PBXProject "VKPodcasts" */;
-			compatibilityVersion = "Xcode 13.0";
+			compatibilityVersion = "Xcode 12.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -267,17 +320,122 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		710888670390B03FB604FC11 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-VKPodcastsTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		770DAA1D5EACEF037F11CD33 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-VKPodcasts-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		7F8D784B824CCFDCA9840C99 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-VKPodcasts-VKPodcastsUITests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		9F7382247A74283F910D8F58 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-VKPodcasts/Pods-VKPodcasts-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-VKPodcasts/Pods-VKPodcasts-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-VKPodcasts/Pods-VKPodcasts-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		F6A65AEE6385CA0BECD5905D /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-VKPodcasts-VKPodcastsUITests/Pods-VKPodcasts-VKPodcastsUITests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-VKPodcasts-VKPodcastsUITests/Pods-VKPodcasts-VKPodcastsUITests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-VKPodcasts-VKPodcastsUITests/Pods-VKPodcasts-VKPodcastsUITests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		3EA7795C26C4543600B0C05E /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				3EA7796626C4543700B0C05E /* ContentView.swift in Sources */,
+				3E8431E926C5B71200545232 /* PresentController.swift in Sources */,
 				3E2DE7BE26C5369800313C92 /* ReactionsGraph.swift in Sources */,
 				3EA7796426C4543700B0C05E /* VKPodcastsApp.swift in Sources */,
 				3EA7798E26C454EB00B0C05E /* DataModel.swift in Sources */,
 				3EA7799226C45B9E00B0C05E /* ReactionItem.swift in Sources */,
 				3EF6844326C57EAB0047CF20 /* RSSParser.swift in Sources */,
+				3E8431E726C5A4DB00545232 /* LoginView.swift in Sources */,
 				3EA7799026C4568A00B0C05E /* PlayerView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -433,6 +591,7 @@
 		};
 		3EA7798526C4543900B0C05E /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4AC03FC6B9EC9134A0A5BD1F /* Pods-VKPodcasts.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -442,9 +601,11 @@
 				DEVELOPMENT_TEAM = S4TJY8UCM7;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = VKPodcasts/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
@@ -453,7 +614,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.Netech.VKPodcasts;
+				PRODUCT_BUNDLE_IDENTIFIER = com.stefjen07.VKPodcasts;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -463,6 +624,7 @@
 		};
 		3EA7798626C4543900B0C05E /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = DC9574EB25442DDDBDEEC606 /* Pods-VKPodcasts.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -472,9 +634,11 @@
 				DEVELOPMENT_TEAM = S4TJY8UCM7;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = VKPodcasts/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
@@ -483,7 +647,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.Netech.VKPodcasts;
+				PRODUCT_BUNDLE_IDENTIFIER = com.stefjen07.VKPodcasts;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -493,6 +657,7 @@
 		};
 		3EA7798826C4543900B0C05E /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 07313568BC89ABA711DDC5AC /* Pods-VKPodcastsTests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -518,6 +683,7 @@
 		};
 		3EA7798926C4543900B0C05E /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = B3833B3F71C1D52A90033304 /* Pods-VKPodcastsTests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -543,6 +709,7 @@
 		};
 		3EA7798B26C4543900B0C05E /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 8B1F610D295CBA2AC800C2D8 /* Pods-VKPodcasts-VKPodcastsUITests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
@@ -566,6 +733,7 @@
 		};
 		3EA7798C26C4543900B0C05E /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = E4B2DABE4A5B139D2E872909 /* Pods-VKPodcasts-VKPodcastsUITests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;

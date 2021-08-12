@@ -176,127 +176,129 @@ struct PlayerView: View {
                         .frame(width: size.width, height: size.width/1.7)
                     Color("Background")
                 }
-                VStack(spacing: 0) {
-                    if let logo = logo {
-                        logo
-                            .resizable()
-                            .aspectRatio(contentMode: .fill)
-                            .frame(width: iconSize, height: iconSize)
-                            .cornerRadius(iconSize * 0.12)
-                            .shadow(radius: 10)
-                            .padding(.top, 20)
-                            .padding(.bottom, 20)
-                    } else {
-                        Color.gray.opacity(0.3)
-                            .frame(width: iconSize, height: iconSize)
-                            .cornerRadius(iconSize * 0.12)
-                            .shadow(radius: 10)
-                            .padding(.top, 20)
-                            .padding(.bottom, 20)
-                    }
-                    Text(podcast.title)
-                        .font(.title)
-                        .bold()
-                        .lineLimit(1)
-                        .foregroundColor(.init("TitlePrimary"))
-                        .padding(.horizontal, 5)
-                    Text("Команда ВКонтакте")
-                        .foregroundColor(.init("VKColor"))
-                        .font(.title3)
-                        .bold()
-                        .padding(.top, 10)
-                    Spacer()
-                    VStack {
-                        GeometryReader { proxy in
-                            let size = proxy.size
-                            
-                            EmojiGraph(selfSize: size)
+                ScrollView(.vertical, showsIndicators: false) {
+                    VStack(spacing: 0) {
+                        if let logo = logo {
+                            logo
+                                .resizable()
+                                .aspectRatio(contentMode: .fill)
+                                .frame(width: iconSize, height: iconSize)
+                                .cornerRadius(iconSize * 0.12)
+                                .shadow(radius: 10)
+                                .padding(.top, 20)
+                                .padding(.bottom, 20)
+                        } else {
+                            Color.gray.opacity(0.3)
+                                .frame(width: iconSize, height: iconSize)
+                                .cornerRadius(iconSize * 0.12)
+                                .shadow(radius: 10)
+                                .padding(.top, 20)
+                                .padding(.bottom, 20)
                         }
-                        .frame(height: 20)
-                        GeometryReader { proxy in
-                            let size = proxy.size
-                            
-                            ReactionsGraph(selfSize: size)
+                        Text(podcast.title)
+                            .font(.title)
+                            .bold()
+                            .lineLimit(1)
+                            .foregroundColor(.init("TitlePrimary"))
+                            .padding(.horizontal, 5)
+                        Text("Команда ВКонтакте")
+                            .foregroundColor(.init("VKColor"))
+                            .font(.title3)
+                            .bold()
+                            .padding(.top, 10)
+                        Spacer()
+                        VStack {
+                            GeometryReader { proxy in
+                                let size = proxy.size
+                                
+                                EmojiGraph(selfSize: size)
+                            }
+                            .frame(height: 20)
+                            GeometryReader { proxy in
+                                let size = proxy.size
+                                
+                                ReactionsGraph(selfSize: size)
+                            }
+                            SliderRepresentable()
+                            HStack {
+                                Text("0:00")
+                                Spacer()
+                                Text("-12:34")
+                            }.foregroundColor(.init("SecondaryText"))
                         }
-                        SliderRepresentable()
+                        .padding(10)
+                        .padding(.horizontal, 10)
+                        .background(Color("SecondaryBackground"))
+                        .cornerRadius(10)
+                        Spacer()
+                            .frame(minHeight: 25)
                         HStack {
-                            Text("0:00")
+                            Button(action: {
+                                changeSpeed()
+                            }, label: {
+                                Text(speeds[currentSpeedId].removeZerosFromEnd() + "x")
+                                    .foregroundColor(.white)
+                                    .frame(width: 50)
+                                    .overlay(Capsule().stroke(Color("ControlSecondary")))
+                            })
                             Spacer()
-                            Text("-12:34")
-                        }.foregroundColor(.init("SecondaryText"))
+                            Button(action: {
+                                
+                            }, label: {
+                                Image(systemName: "gobackward.15")
+                                    .resizable()
+                                    .foregroundColor(.white)
+                                    .aspectRatio(contentMode: .fit)
+                                    .frame(width: 30)
+                            })
+                            Spacer()
+                            Button(action: {
+                                paused.toggle()
+                            }, label: {
+                                Image(systemName: paused ? "play.fill" : "pause.fill")
+                                    .resizable()
+                                    .foregroundColor(.white)
+                                    .aspectRatio(contentMode: .fit)
+                                    .frame(width: 30, height: 34)
+                            })
+                            Spacer()
+                            Button(action: {
+                                
+                            }, label: {
+                                Image(systemName: "goforward.15")
+                                    .resizable()
+                                    .foregroundColor(.white)
+                                    .aspectRatio(contentMode: .fit)
+                                    .frame(width: 30)
+                            })
+                            Spacer()
+                            Button(action: {
+                                
+                            }, label: {
+                                Image(systemName: "ellipsis")
+                                    .resizable()
+                                    .foregroundColor(.white)
+                                    .aspectRatio(contentMode: .fit)
+                                    .frame(width: 20)
+                            })
+                        }
+                        Spacer()
+                        HStack {
+                            Image(systemName: "speaker.fill")
+                                .foregroundColor(Color("ControlSecondary"))
+                            Slider(value: $volume, in: 0...1)
+                                .accentColor(Color("ControlSecondary"))
+                            Image(systemName: "speaker.wave.3.fill")
+                                .foregroundColor(Color("ControlSecondary"))
+                        }.padding(.horizontal, 10)
+                        Spacer()
+                            .frame(height: size.height*0.45-proxy.safeAreaInsets.bottom)
                     }
-                    .padding(10)
-                    .padding(.horizontal, 10)
-                    .background(Color("SecondaryBackground"))
-                    .cornerRadius(10)
-                    Spacer()
-                        .frame(minHeight: 25)
-                    HStack {
-                        Button(action: {
-                            changeSpeed()
-                        }, label: {
-                            Text(speeds[currentSpeedId].removeZerosFromEnd() + "x")
-                                .foregroundColor(.white)
-                                .frame(width: 50)
-                                .overlay(Capsule().stroke(Color("ControlSecondary")))
-                        })
-                        Spacer()
-                        Button(action: {
-                            
-                        }, label: {
-                            Image(systemName: "gobackward.15")
-                                .resizable()
-                                .foregroundColor(.white)
-                                .aspectRatio(contentMode: .fit)
-                                .frame(width: 30)
-                        })
-                        Spacer()
-                        Button(action: {
-                            paused.toggle()
-                        }, label: {
-                            Image(systemName: paused ? "play.fill" : "pause.fill")
-                                .resizable()
-                                .foregroundColor(.white)
-                                .aspectRatio(contentMode: .fit)
-                                .frame(width: 30, height: 34)
-                        })
-                        Spacer()
-                        Button(action: {
-                            
-                        }, label: {
-                            Image(systemName: "goforward.15")
-                                .resizable()
-                                .foregroundColor(.white)
-                                .aspectRatio(contentMode: .fit)
-                                .frame(width: 30)
-                        })
-                        Spacer()
-                        Button(action: {
-                            
-                        }, label: {
-                            Image(systemName: "ellipsis")
-                                .resizable()
-                                .foregroundColor(.white)
-                                .aspectRatio(contentMode: .fit)
-                                .frame(width: 20)
-                        })
-                    }
-                    Spacer()
-                    HStack {
-                        Image(systemName: "speaker.fill")
-                            .foregroundColor(Color("ControlSecondary"))
-                        Slider(value: $volume, in: 0...1)
-                            .accentColor(Color("ControlSecondary"))
-                        Image(systemName: "speaker.wave.3.fill")
-                            .foregroundColor(Color("ControlSecondary"))
-                    }.padding(.horizontal, 10)
-                    Spacer()
-                        .frame(height: size.height*0.45-proxy.safeAreaInsets.bottom)
-                }
-                .padding(.horizontal, 15)
-                .onReceive(logoLoader.didChange) { data in
-                    if let uiImage = UIImage(data: data) {
-                        self.logo = Image(uiImage: uiImage)
+                    .padding(.horizontal, 15)
+                    .onReceive(logoLoader.didChange) { data in
+                        if let uiImage = UIImage(data: data) {
+                            self.logo = Image(uiImage: uiImage)
+                        }
                     }
                 }
                 VStack {
