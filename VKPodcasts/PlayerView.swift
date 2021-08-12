@@ -143,6 +143,9 @@ struct PlayerView: View {
     @State var volume: Double
     @State var paused: Bool
     @State var isBottomSheetOpened = false
+    @ObservedObject var podcast: Podcast
+    @State var logo: Image?
+    @ObservedObject var logoLoader: ImageLoader
     
     func changeSpeed() {
         if(currentSpeedId == speeds.count-1) {
@@ -174,14 +177,24 @@ struct PlayerView: View {
                     Color("Background")
                 }
                 VStack(spacing: 0) {
-                    Image("LogoSample")
-                        .resizable()
-                        .frame(width: iconSize, height: iconSize)
-                        .cornerRadius(iconSize * 0.12)
-                        .shadow(radius: 10)
-                        .padding(.top, 20)
-                        .padding(.bottom, 20)
-                    Text("Концепция lifelong-learning - через")
+                    if let logo = logo {
+                        logo
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                            .frame(width: iconSize, height: iconSize)
+                            .cornerRadius(iconSize * 0.12)
+                            .shadow(radius: 10)
+                            .padding(.top, 20)
+                            .padding(.bottom, 20)
+                    } else {
+                        Color.gray.opacity(0.3)
+                            .frame(width: iconSize, height: iconSize)
+                            .cornerRadius(iconSize * 0.12)
+                            .shadow(radius: 10)
+                            .padding(.top, 20)
+                            .padding(.bottom, 20)
+                    }
+                    Text(podcast.title)
                         .font(.title)
                         .bold()
                         .lineLimit(1)
@@ -217,7 +230,7 @@ struct PlayerView: View {
                     .background(Color("SecondaryBackground"))
                     .cornerRadius(10)
                     Spacer()
-                        .frame(minHeight: 15)
+                        .frame(minHeight: 25)
                     HStack {
                         Button(action: {
                             changeSpeed()
@@ -279,7 +292,13 @@ struct PlayerView: View {
                     }.padding(.horizontal, 10)
                     Spacer()
                         .frame(height: size.height*0.45-proxy.safeAreaInsets.bottom)
-                }.padding(.horizontal, 15)
+                }
+                .padding(.horizontal, 15)
+                .onReceive(logoLoader.didChange) { data in
+                    if let uiImage = UIImage(data: data) {
+                        self.logo = Image(uiImage: uiImage)
+                    }
+                }
                 VStack {
                     HStack {
                         Button(action: {
@@ -330,11 +349,22 @@ struct PlayerView: View {
             }
         }
     }
+    
+    init() {
+        let parser = RSSParser(url: URL(string: "https://vk.com/podcasts-147415323_-1000000.rss")!)
+        parser.parse()
+        let parsedPodcast = parser.podcasts.first!
+        self.currentSpeedId = 2
+        self.volume = 0.7
+        self.paused = true
+        logoLoader = ImageLoader(urlString: parsedPodcast.logoUrl)
+        self.podcast = parsedPodcast
+    }
 }
 
 struct PlayerView_Previews: PreviewProvider {
     static var previews: some View {
-        PlayerView(currentSpeedId: 2, volume: 0.7, paused: true)
+        PlayerView()
     }
 }
 

@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        PlayerView(currentSpeedId: 2, volume: 0.7, paused: true)
+        PlayerView()
     }
 }
 

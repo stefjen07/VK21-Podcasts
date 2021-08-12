@@ -5,7 +5,7 @@
 //  Created by Евгений on 11.08.2021.
 //
 
-import Foundation
+import SwiftUI
 
 struct Reaction {
     var id: Int
@@ -39,9 +39,24 @@ struct Episode {
     var statistics: [Stat]
 }
 
-struct Podcast {
+class Podcast: ObservableObject {
+    var title: String
+    var description: String
+    var logoUrl: String
     var reactions: [Reaction]
     var episodes: [Episode]
+    
+    init(title: String, description: String, logoUrl: String, reactions: [Reaction], episodes: [Episode]) {
+        self.title = title
+        self.description = description
+        self.logoUrl = logoUrl
+        self.reactions = reactions
+        self.episodes = episodes
+    }
+    
+    convenience init() {
+        self.init(title: "", description: "", logoUrl: "", reactions: [], episodes: [])
+    }
 }
 
 struct Model {
