@@ -22,7 +22,6 @@ struct BottomSheetView<Content: View>: View {
     
     let radius: CGFloat = 30
     let snapRatio: CGFloat = 0.5
-    let minHeightRatio: CGFloat = 0.5
     
     let indicatorWidth: CGFloat = 65
     let indicatorHeight: CGFloat = 5
@@ -75,8 +74,8 @@ struct BottomSheetView<Content: View>: View {
         }
     }
 
-    init(isOpen: Binding<Bool>, maxHeight: CGFloat, @ViewBuilder content: () -> Content) {
-        self.minHeight = maxHeight * minHeightRatio
+    init(isOpen: Binding<Bool>, maxHeight: CGFloat, bottomSize: CGFloat, @ViewBuilder content: () -> Content) {
+        self.minHeight = 160 + bottomSize
         self.maxHeight = maxHeight
         self.content = content()
         self._isOpen = isOpen
@@ -138,6 +137,8 @@ struct Blur: UIViewRepresentable {
     func updateUIView(_ uiView: UIVisualEffectView, context: UIViewRepresentableContext<Self>) { uiView.effect = effect }
 }
 
+let fadeGradient = createGradient(opacities: [0,0.3,0.5,0.675,0.8,0.9,0.95,1])
+
 struct PlayerView: View {
     @State var currentSpeedId: Int
     @State var volume: Double
@@ -172,7 +173,7 @@ struct PlayerView: View {
                     Spacer()
                 }
                 VStack(spacing: 0) {
-                    createGradient(opacities: [0,0.3,0.5,0.675,0.8,0.9,0.95,1])
+                    fadeGradient
                         .frame(width: size.width, height: size.width/1.7)
                     Color("Background")
                 }
@@ -230,8 +231,7 @@ struct PlayerView: View {
                         .padding(.horizontal, 10)
                         .background(Color("SecondaryBackground"))
                         .cornerRadius(10)
-                        Spacer()
-                            .frame(minHeight: 25)
+                        Spacer(minLength: 25)
                         HStack {
                             Button(action: {
                                 changeSpeed()
@@ -292,7 +292,7 @@ struct PlayerView: View {
                                 .foregroundColor(Color("ControlSecondary"))
                         }.padding(.horizontal, 10)
                         Spacer()
-                            .frame(height: size.height*0.45-proxy.safeAreaInsets.bottom)
+                            .frame(height: 160)
                     }
                     .padding(.horizontal, 15)
                 }
@@ -328,7 +328,10 @@ struct PlayerView: View {
                         .blur(radius: 20)
                         .offset(x: 0, y: size.width/12)
                 }
-                BottomSheetView(isOpen: $isBottomSheetOpened, maxHeight: size.height * 0.8) {
+                
+                let bottomSize = proxy.safeAreaInsets.bottom
+                
+                BottomSheetView(isOpen: $isBottomSheetOpened, maxHeight: 160 + bottomSize + 100*2, bottomSize: bottomSize) {
                     ZStack {
                         VStack {
                             Text("Реакции")
@@ -337,7 +340,11 @@ struct PlayerView: View {
                                 .foregroundColor(.white)
                             LazyVGrid(columns: [.init(.adaptive(minimum: 80, maximum: 100))], spacing: 20) {
                                 ForEach(0..<8) { _ in
-                                    ReactionItem(emoji: "👍")
+                                    Button(action: {
+                                        
+                                    }, label: {
+                                        ReactionItem(emoji: "👍")
+                                    })
                                 }
                             }.padding(.horizontal, 15)
                         }

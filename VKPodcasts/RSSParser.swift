@@ -11,10 +11,13 @@ class RSSParser: NSObject, XMLParserDelegate {
     var parser: XMLParser
     var tempEpisode: Episode?
     var tempElement: String?
+    var tempExplicit: String?
+    var tempDate: String?
     var podcast = Podcast()
     var isInItem = false
     var isInImage = false
     var isInImageURL = false
+    var isInItemDescription = false
     
     func parser(_ parser: XMLParser, parseErrorOccurred parseError: Error) {
         print("Parse error: \(parseError.localizedDescription)")
@@ -25,21 +28,37 @@ class RSSParser: NSObject, XMLParserDelegate {
         if elementName == "item" {
             isInItem = true
             tempEpisode = Episode()
+            tempExplicit = ""
+            tempDate = ""
         } else if elementName == "itunes:image" && isInItem {
             tempEpisode?.logoUrl = attributeDict["href"] ?? ""
         } else if elementName == "image" && !isInItem {
             isInImage = true
         } else if elementName == "url" && isInImage {
             isInImageURL = true
+        } else if elementName == "content:encoded" && isInItem {
+            isInItemDescription = true
+        } else if elementName == "enclosure" && isInItem {
+            tempEpisode?.audioUrl = attributeDict["url"] ?? ""
         }
     }
     
     func parser(_ parser: XMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName qName: String?) {
         if elementName == "item" {
             if let episode = tempEpisode {
+                if let explicit = tempExplicit {
+                    episode.isExplicit = explicit != "no"
+                }
+                if let date = tempDate {
+                    let formatter = DateFormatter()
+                    formatter.dateFormat = "E, d MMM yyyy HH:mm:ss Z"
+                    episode.date = formatter.date(from: date) ?? Date()
+                }
                 podcast.episodes.append(episode)
             }
             tempEpisode = nil
+            tempExplicit = nil
+            tempDate = nil
             isInItem = false
         }  else if elementName == "image" && !isInItem {
             isInImage = false
@@ -49,11 +68,17 @@ class RSSParser: NSObject, XMLParserDelegate {
     }
     
     func parser(_ parser: XMLParser, foundCharacters string: String) {
-        if let episode = tempEpisode {
+        if let episode = tempEpisode, let explicit = tempExplicit, let date = tempDate {
             if tempElement == "title" {
                 tempEpisode?.title = episode.title + string
             } else if tempElement == "guid" {
                 tempEpisode?.id = episode.title + string
+            } else if tempElement == "itunes:expilict" {
+                tempExplicit? = explicit + string
+            } else if tempElement == "pubDate" {
+                tempDate? = date + string
+            } else if tempElement == "itunes:duration" {
+                tempEpisode?.duration = episode.duration + string
             }
         } else {
             if tempElement == "title" && !isInImage {
@@ -69,6 +94,8 @@ class RSSParser: NSObject, XMLParserDelegate {
     func parser(_ parser: XMLParser, foundCDATA CDATABlock: Data) {
         if !isInItem && tempElement == "description" {
             podcast.description = String(data: CDATABlock, encoding: .utf8) ?? ""
+        } else if isInItemDescription {
+            tempEpisode?.description = String(data: CDATABlock, encoding: .utf8) ?? ""
         }
     }
     

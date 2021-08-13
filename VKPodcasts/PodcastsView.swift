@@ -90,8 +90,59 @@ class ImageLoader: ObservableObject {
     }
 }
 
+struct NewPodcastView: View {
+    @State var url: String = ""
+    @Binding var podcasts: [Podcast]
+    @Environment(\.presentationMode) var presentation: Binding<PresentationMode>
+    
+    var body: some View {
+        ZStack {
+            Color("Background")
+                .edgesIgnoringSafeArea(.all)
+            VStack(spacing: 15) {
+                HStack {
+                    Button(action: {
+                        presentation.wrappedValue.dismiss()
+                    }, label: {
+                        Text("Отменить")
+                    })
+                    Spacer()
+                    Button(action: {
+                        if let url = URL(string: url) {
+                            let parser = RSSParser(url: url)
+                            parser.parse()
+                            podcasts.append(parser.podcast)
+                            presentation.wrappedValue.dismiss()
+                        }
+                    }, label: {
+                        Text("Готово")
+                    })
+                }
+                Text("Новый подкаст")
+                    .font(.largeTitle)
+                    .bold()
+                TextField("URL адрес", text: $url)
+                    .preferredColorScheme(.dark)
+                Spacer()
+            }
+            .foregroundColor(.white)
+            .padding(.top, 15)
+            .padding(.horizontal, 25)
+        }
+    }
+}
+
 struct PodcastsView: View {
     @State var podcasts: [Podcast]
+    @State var isAdding = false
+    
+    func lazyLogo() {
+        for podcast in $podcasts {
+            if podcast.logoCache.wrappedValue == nil {
+                ImageLoader(urlString: podcast.wrappedValue.logoUrl, destination: podcast.logoCache)
+            }
+        }
+    }
     
     var body: some View {
         NavigationView {
@@ -113,14 +164,22 @@ struct PodcastsView: View {
             .navigationTitle(
                 Text("Подкасты")
             )
+            .navigationBarItems(trailing:
+                Button(action: {
+                    isAdding = true
+                }, label: {
+                    Image(systemName: "plus")
+                })
+            )
+            .sheet(isPresented: $isAdding, onDismiss: {
+                lazyLogo()
+            }) {
+                NewPodcastView(podcasts: $podcasts)
+            }
         }
         .smartTint(.white)
         .onAppear() {
-            for podcast in $podcasts {
-                if podcast.logoCache.wrappedValue == nil {
-                    ImageLoader(urlString: podcast.wrappedValue.logoUrl, destination: podcast.logoCache)
-                }
-            }
+            lazyLogo()
         }
     }
     

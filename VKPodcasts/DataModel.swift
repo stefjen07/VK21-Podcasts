@@ -37,10 +37,14 @@ class Episode: ObservableObject, Identifiable {
     var title: String = ""
     var description: String = ""
     var logoUrl: String = ""
+    var audioUrl: String = ""
     var logoCache: Image?
     var defaultReactions: [Int] = []
     var timedReactions: [TimedReactionsContainer] = []
     var statistics: [Stat] = []
+    var isExplicit: Bool = false
+    var date: Date = .init()
+    var duration: String = ""
 }
 
 class Podcast: ObservableObject, Identifiable {
