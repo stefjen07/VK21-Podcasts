@@ -144,8 +144,7 @@ struct PlayerView: View {
     @State var paused: Bool
     @State var isBottomSheetOpened = false
     @ObservedObject var podcast: Podcast
-    @State var logo: Image?
-    @ObservedObject var logoLoader: ImageLoader
+    @Environment(\.presentationMode) var presentation: Binding<PresentationMode>
     
     func changeSpeed() {
         if(currentSpeedId == speeds.count-1) {
@@ -178,7 +177,7 @@ struct PlayerView: View {
                 }
                 ScrollView(.vertical, showsIndicators: false) {
                     VStack(spacing: 0) {
-                        if let logo = logo {
+                        if let logo = podcast.logoCache {
                             logo
                                 .resizable()
                                 .aspectRatio(contentMode: .fill)
@@ -295,16 +294,11 @@ struct PlayerView: View {
                             .frame(height: size.height*0.45-proxy.safeAreaInsets.bottom)
                     }
                     .padding(.horizontal, 15)
-                    .onReceive(logoLoader.didChange) { data in
-                        if let uiImage = UIImage(data: data) {
-                            self.logo = Image(uiImage: uiImage)
-                        }
-                    }
                 }
                 VStack {
                     HStack {
                         Button(action: {
-                            
+                            presentation.wrappedValue.dismiss()
                         }, label: {
                             Image(systemName: "chevron.backward")
                                 .resizable()
@@ -346,27 +340,44 @@ struct PlayerView: View {
                                 }
                             }.padding(.horizontal, 15)
                         }
-                    }
+                    }.gesture(
+                        DragGesture(coordinateSpace: .local)
+                            .onEnded { value in
+                                if value.translation.width > .zero
+                                    && value.translation.height > -30
+                                    && value.translation.height < 30 {
+                                    presentation.wrappedValue.dismiss()
+                                }
+                            }
+                    )
                 }.edgesIgnoringSafeArea(.all)
             }
         }
+        .navigationBarHidden(true)
+        .contentShape(Rectangle())
+        .gesture(
+            DragGesture(coordinateSpace: .local)
+                .onEnded { value in
+                    if value.translation.width > .zero
+                        && value.translation.height > -30
+                        && value.translation.height < 30 {
+                        presentation.wrappedValue.dismiss()
+                    }
+                }
+        )
     }
     
-    init() {
-        let parser = RSSParser(url: URL(string: "https://vk.com/podcasts-147415323_-1000000.rss")!)
-        parser.parse()
-        let parsedPodcast = parser.podcasts.first!
-        self.currentSpeedId = 2
-        self.volume = 0.7
-        self.paused = true
-        logoLoader = ImageLoader(urlString: parsedPodcast.logoUrl)
-        self.podcast = parsedPodcast
+    init(podcast: Podcast) {
+        _currentSpeedId = .init(initialValue: 2)
+        _volume = .init(initialValue: 0.7)
+        _paused = .init(initialValue: true)
+        self.podcast = podcast
     }
 }
 
 struct PlayerView_Previews: PreviewProvider {
     static var previews: some View {
-        PlayerView()
+        PlayerView(podcast: Podcast())
     }
 }
 

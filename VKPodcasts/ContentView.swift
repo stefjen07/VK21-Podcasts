@@ -72,6 +72,7 @@ class VKWrapper: NSObject, VKSdkDelegate, VKSdkUIDelegate {
     init(presentedController: Binding<UIViewController?>, isPresented: Binding<Bool>) {
         self._presentedController = presentedController
         self._isPresented = isPresented
+        authorized = true //DEBUG
         sdk  = VKSdk.initialize(withAppId: "7925312")
     }
 }
@@ -102,7 +103,7 @@ struct ContentView: View {
             } else if !wrapper!.authorized {
                 LoginView(wrapper: $wrapper)
             } else {
-                PlayerView()
+                PodcastsView()
             }
         }.onAppear {
             wrapper = VKWrapper(presentedController: $controller, isPresented: $isPresented)
