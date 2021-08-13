@@ -32,14 +32,19 @@ struct Stat {
     var cityId: Int
 }
 
-struct Episode {
-    var id: String
-    var defaultReactions: [Int]
-    var timedReactions: [TimedReactionsContainer]
-    var statistics: [Stat]
+class Episode: ObservableObject, Identifiable {
+    var id: String = ""
+    var title: String = ""
+    var description: String = ""
+    var logoUrl: String = ""
+    var logoCache: Image?
+    var defaultReactions: [Int] = []
+    var timedReactions: [TimedReactionsContainer] = []
+    var statistics: [Stat] = []
 }
 
 class Podcast: ObservableObject, Identifiable {
+    var id = UUID()
     var title: String
     var description: String
     var author: String

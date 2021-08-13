@@ -143,7 +143,8 @@ struct PlayerView: View {
     @State var volume: Double
     @State var paused: Bool
     @State var isBottomSheetOpened = false
-    @ObservedObject var podcast: Podcast
+    @ObservedObject var episode: Episode
+    @Binding var author: String
     @Environment(\.presentationMode) var presentation: Binding<PresentationMode>
     
     func changeSpeed() {
@@ -177,7 +178,7 @@ struct PlayerView: View {
                 }
                 ScrollView(.vertical, showsIndicators: false) {
                     VStack(spacing: 0) {
-                        if let logo = podcast.logoCache {
+                        if let logo = episode.logoCache {
                             logo
                                 .resizable()
                                 .aspectRatio(contentMode: .fill)
@@ -194,13 +195,13 @@ struct PlayerView: View {
                                 .padding(.top, 20)
                                 .padding(.bottom, 20)
                         }
-                        Text(podcast.title)
+                        Text(episode.title)
                             .font(.title)
                             .bold()
                             .lineLimit(1)
                             .foregroundColor(.init("TitlePrimary"))
                             .padding(.horizontal, 5)
-                        Text("Команда ВКонтакте")
+                        Text(author)
                             .foregroundColor(.init("VKColor"))
                             .font(.title3)
                             .bold()
@@ -367,17 +368,18 @@ struct PlayerView: View {
         )
     }
     
-    init(podcast: Podcast) {
+    init(episode: Episode, author: Binding<String>) {
         _currentSpeedId = .init(initialValue: 2)
         _volume = .init(initialValue: 0.7)
         _paused = .init(initialValue: true)
-        self.podcast = podcast
+        self.episode = episode
+        self._author = author
     }
 }
 
 struct PlayerView_Previews: PreviewProvider {
     static var previews: some View {
-        PlayerView(podcast: Podcast())
+        PlayerView(episode: .init(), author: .constant("stefjen07"))
     }
 }
 

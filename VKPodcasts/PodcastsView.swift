@@ -12,11 +12,34 @@ struct PodcastItem: View {
     @Binding var podcast: Podcast
     
     var body: some View {
-        NavigationLink(destination: PlayerView(podcast: podcast)) {
+        NavigationLink(destination: PodcastView(podcast: $podcast)) {
             HStack {
-                Text(podcast.title)
-                    .bold()
-                    .lineLimit(1)
+                if let logo = podcast.logoCache {
+                    logo
+                        .resizable()
+                        .aspectRatio(1, contentMode: .fill)
+                        .cornerRadius(5)
+                        .frame(width: 50)
+                } else {
+                    Color.gray.opacity(0.3)
+                        .aspectRatio(1, contentMode: .fill)
+                        .cornerRadius(5)
+                        .frame(width: 50)
+                }
+                VStack {
+                    HStack {
+                        Text(podcast.title)
+                            .bold()
+                            .lineLimit(1)
+                        Spacer()
+                    }
+                    HStack {
+                        Text(podcast.description)
+                            .foregroundColor(.init(white: 0.9))
+                            .lineLimit(2)
+                        Spacer()
+                    }
+                }.padding(.leading, 10)
                 Spacer()
             }
         }
@@ -94,7 +117,9 @@ struct PodcastsView: View {
         .smartTint(.white)
         .onAppear() {
             for podcast in $podcasts {
-                ImageLoader(urlString: podcast.wrappedValue.logoUrl, destination: podcast.logoCache)
+                if podcast.logoCache.wrappedValue == nil {
+                    ImageLoader(urlString: podcast.wrappedValue.logoUrl, destination: podcast.logoCache)
+                }
             }
         }
     }
@@ -102,7 +127,7 @@ struct PodcastsView: View {
     init() {
         let parser = RSSParser(url: URL(string: "https://vk.com/podcasts-147415323_-1000000.rss")!)
         parser.parse()
-        self.podcasts = parser.podcasts
+        self.podcasts = [parser.podcast]
         UINavigationBar.appearance().largeTitleTextAttributes = [.foregroundColor: UIColor.white]
     }
 }
