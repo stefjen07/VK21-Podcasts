@@ -33,14 +33,11 @@ struct ReactionsGraph: View {
     }
     
     var body: some View {
-        HStack(spacing: colWidth/2) {
+        HStack(alignment: .bottom, spacing: colWidth/2) {
             ForEach(0..<colsCount) { i in
-                VStack {
-                    Spacer()
-                    Capsule()
-                        .foregroundColor(isColActive(idx: i) ? Color("VKColor") : Color("VKColor").opacity(0.2))
-                        .frame(width: colWidth, height: colPercentage(idx: i)*selfSize.height)
-                }
+                Capsule()
+                    .foregroundColor(isColActive(idx: i) ? Color("VKColor") : Color("VKColor").opacity(0.2))
+                    .frame(width: colWidth, height: colPercentage(idx: i)*selfSize.height)
             }
         }
     }

@@ -57,7 +57,7 @@ struct PodcastView: View {
                         Spacer()
                     }
                     ForEach(podcast.episodes) { episode in
-                        NavigationLink(destination: PlayerView(episode: episode, author: $podcast.author)) {
+                        NavigationLink(destination: PlayerView(episode: episode, podcast: $podcast)) {
                             VStack {
                                 HStack {
                                     if let logo = episode.logoCache {

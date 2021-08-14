@@ -19,6 +19,22 @@ func createGradient(opacities: [Double]) -> LinearGradient {
     return LinearGradient(colors: colors, startPoint: .top, endPoint: .bottom)
 }
 
+extension View {
+    func cornerRadius(_ radius: CGFloat, corners: UIRectCorner) -> some View {
+        clipShape( RoundedCorner(radius: radius, corners: corners) )
+    }
+}
+
+struct RoundedCorner: Shape {
+    var radius: CGFloat = .infinity
+    var corners: UIRectCorner = .allCorners
+
+    func path(in rect: CGRect) -> Path {
+        let path = UIBezierPath(roundedRect: rect, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))
+        return Path(path.cgPath)
+    }
+}
+
 struct BottomSheetView<Content: View>: View {
     @Binding var isOpen: Bool
     
@@ -56,7 +72,7 @@ struct BottomSheetView<Content: View>: View {
             }
             .frame(width: geometry.size.width, height: self.maxHeight, alignment: .top)
             .background(Blur(effect: UIBlurEffect(style: .dark)))
-            .cornerRadius(radius)
+            .cornerRadius(radius, corners: [.topLeft, .topRight])
             .frame(height: geometry.size.height, alignment: .bottom)
             .shadow(color: .white, radius: 2)
             .offset(y: max(self.offset + self.translation, 0))
@@ -164,7 +180,7 @@ struct PlayerView: View {
     @State var paused: Bool
     @State var isBottomSheetOpened = false
     @ObservedObject var episode: Episode
-    @Binding var author: String
+    @Binding var podcast: Podcast
     @Environment(\.presentationMode) var presentation: Binding<PresentationMode>
     
     func changeSpeed() {
@@ -202,6 +218,7 @@ struct PlayerView: View {
         GeometryReader { proxy in
             let size = proxy.size
             let iconSize = size.height * 0.15
+            let reactionItemSize = size.width / 6
             
             ZStack {
                 Color("Background")
@@ -245,7 +262,7 @@ struct PlayerView: View {
                                 .lineLimit(1)
                                 .foregroundColor(.init("TitlePrimary"))
                                 .padding(.horizontal, 5)
-                            Text(author)
+                            Text(podcast.author)
                                 .foregroundColor(.init("VKColor"))
                                 .font(.title3)
                                 .bold()
@@ -358,7 +375,7 @@ struct PlayerView: View {
                             .frame(height: 25)
                             .padding(.horizontal, 10)
                             Spacer()
-                                .frame(height: 185)
+                                .frame(height: 15 * 6 + reactionItemSize + 20)
                         }
                         .padding(.horizontal, 15)
                         .frame(height: scrollProxy.size.height)
@@ -399,23 +416,33 @@ struct PlayerView: View {
                 
                 let bottomSize = proxy.safeAreaInsets.bottom
                 
-                BottomSheetView(isOpen: $isBottomSheetOpened, maxHeight: 160 + bottomSize + 100*2, bottomSize: bottomSize) {
-                    ZStack {
-                        VStack {
-                            Text("Реакции")
-                                .font(.title)
-                                .bold()
-                                .foregroundColor(.white)
-                            LazyVGrid(columns: [.init(.adaptive(minimum: 80, maximum: 100))], spacing: 20) {
-                                ForEach(0..<8) { _ in
+                BottomSheetView(isOpen: $isBottomSheetOpened, maxHeight: bottomSize + 15 * 4 + reactionItemSize * 5 + 50, bottomSize: bottomSize) {
+                    VStack(alignment: .center) {
+                        Text("Реакции")
+                            .font(.title)
+                            .bold()
+                            .foregroundColor(.white)
+                        HStack {
+                            Spacer()
+                            LazyVGrid(columns: [.init(.adaptive(minimum: isBottomSheetOpened ? reactionItemSize * 1.45 : reactionItemSize * 0.95))], spacing: 20) {
+                                ForEach(podcast.reactions) { reaction in
                                     Button(action: {
                                         
                                     }, label: {
-                                        ReactionItem(emoji: "👍")
+                                        VStack {
+                                            ReactionItem(width: reactionItemSize, emoji: reaction.emoji)
+                                            if isBottomSheetOpened {
+                                                Text(reaction.description)
+                                                    .font(.callout)
+                                                    .foregroundColor(.white)
+                                                    .lineLimit(1)
+                                            }
+                                        }
                                     })
                                 }
-                            }.padding(.horizontal, 15)
-                        }
+                            }
+                            Spacer()
+                        }.padding(.horizontal, 15)
                     }.gesture(
                         DragGesture(coordinateSpace: .local)
                             .onEnded { value in
@@ -484,18 +511,18 @@ struct PlayerView: View {
         checkTime()
     }
     
-    init(episode: Episode, author: Binding<String>) {
+    init(episode: Episode, podcast: Binding<Podcast>) {
         _currentSpeedId = .init(initialValue: 2)
         _paused = .init(initialValue: false)
         self.episode = episode
-        self._author = author
+        self._podcast = podcast
         self._timeLeft = .init(initialValue: episode.duration)
     }
 }
 
 struct PlayerView_Previews: PreviewProvider {
     static var previews: some View {
-        PlayerView(episode: .init(), author: .constant("stefjen07"))
+        PlayerView(episode: .init(), podcast: .constant(.init()))
     }
 }
 

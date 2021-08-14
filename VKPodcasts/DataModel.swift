@@ -7,29 +7,139 @@
 
 import SwiftUI
 
-struct Reaction {
+struct Reaction: Codable, Identifiable {
     var id: Int
     var emoji: String
     var description: String
+    
+    enum CodingKeys: String, CodingKey {
+        case reaction_id
+        case emoji
+        case description
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .reaction_id)
+        try container.encode(emoji, forKey: .emoji)
+        try container.encode(description, forKey: .description)
+    }
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        if let reactionId = try? container.decode(Int.self, forKey: .reaction_id) {
+            self.id = reactionId
+        } else {
+            self.id = -1
+        }
+        if let emoji = try? container.decode(String.self, forKey: .emoji) {
+            self.emoji = emoji
+        } else {
+            self.emoji = ""
+        }
+        if let description = try? container.decode(String.self, forKey: .description) {
+            self.description = description
+        } else {
+            self.description = ""
+        }
+    }
 }
 
-struct TimedReactionsContainer {
+struct TimedReactionsContainer: Codable {
     var from: Int
     var to: Int
     var availableReactions: [Int]
+    
+    enum CodingKeys: String, CodingKey {
+        case from
+        case to
+        case available_reactions
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(from, forKey: .from)
+        try container.encode(to, forKey: .to)
+        try container.encode(availableReactions, forKey: .available_reactions)
+    }
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        if let from = try? container.decode(Int.self, forKey: .from) {
+            self.from = from
+        } else {
+            self.from = -1
+        }
+        if let to = try? container.decode(Int.self, forKey: .to) {
+            self.to = to
+        } else {
+            self.to = -1
+        }
+        if let availableReactions = try? container.decode([Int].self, forKey: .available_reactions) {
+            self.availableReactions = availableReactions
+        } else {
+            self.availableReactions = []
+        }
+    }
 }
 
-enum Sex {
+enum Sex: String, Codable {
     case male
     case female
 }
 
-struct Stat {
+struct Stat: Codable {
     var time: Int
     var reactionId: Int
     var sex: Sex
     var age: Int
     var cityId: Int
+    
+    enum CodingKeys: String, CodingKey {
+        case time
+        case reaction_id
+        case sex
+        case age
+        case city_id
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(time, forKey: .time)
+        try container.encode(reactionId, forKey: .reaction_id)
+        try container.encode(sex, forKey: .sex)
+        try container.encode(age, forKey: .age)
+        try container.encode(cityId, forKey: .city_id)
+    }
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        if let time = try? container.decode(Int.self, forKey: .time) {
+            self.time = time
+        } else {
+            self.time = -1
+        }
+        if let reactionId = try? container.decode(Int.self, forKey: .reaction_id) {
+            self.reactionId = reactionId
+        } else {
+            self.reactionId = -1
+        }
+        if let sex = try? container.decode(Sex.self, forKey: .sex) {
+            self.sex = sex
+        } else {
+            self.sex = .female
+        }
+        if let age = try? container.decode(Int.self, forKey: .age) {
+            self.age = age
+        } else {
+            self.age = -1
+        }
+        if let cityId = try? container.decode(Int.self, forKey: .city_id) {
+            self.cityId = cityId
+        } else {
+            self.cityId = -1
+        }
+    }
 }
 
 class Episode: ObservableObject, Identifiable {
@@ -47,6 +157,82 @@ class Episode: ObservableObject, Identifiable {
     var duration: String = ""
 }
 
+struct JSONEpisode: Codable {
+    var guid: String
+    var defaultReactions: [Int]
+    var timedReactions: [TimedReactionsContainer]
+    var statistics: [Stat]
+    
+    enum CodingKeys: String, CodingKey {
+        case guid
+        case default_reactions
+        case timed_reactions
+        case statistics
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(guid, forKey: .guid)
+        try container.encode(defaultReactions, forKey: .default_reactions)
+        try container.encode(timedReactions, forKey: .timed_reactions)
+        try container.encode(statistics, forKey: .statistics)
+    }
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        if let guid = try? container.decode(String.self, forKey: .guid) {
+            self.guid = guid
+        } else {
+            self.guid = ""
+        }
+        if let defaultReactions = try? container.decode([Int].self, forKey: .default_reactions) {
+            self.defaultReactions = defaultReactions
+        } else {
+            self.defaultReactions = []
+        }
+        if let timedReactions = try? container.decode([TimedReactionsContainer].self, forKey: .timed_reactions) {
+            self.timedReactions = timedReactions
+        } else {
+            self.timedReactions = []
+        }
+        if let statistics = try? container.decode([Stat].self, forKey: .statistics) {
+            self.statistics = statistics
+        } else {
+            self.statistics = []
+        }
+    }
+}
+
+struct JSONPodcast: Codable {
+    var reactions: [Reaction]
+    var episodes: [JSONEpisode]
+    
+    enum CodingKeys: String, CodingKey {
+        case reactions
+        case episodes
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(reactions, forKey: .reactions)
+        try container.encode(episodes, forKey: .episodes)
+    }
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        if let reactions = try? container.decode([Reaction].self, forKey: .reactions) {
+            self.reactions = reactions
+        } else {
+            self.reactions = []
+        }
+        if let episodes = try? container.decode([JSONEpisode].self, forKey: .episodes) {
+            self.episodes = episodes
+        } else {
+            self.episodes = []
+        }
+    }
+}
+
 class Podcast: ObservableObject, Identifiable {
     var id = UUID()
     var title: String
@@ -55,7 +241,34 @@ class Podcast: ObservableObject, Identifiable {
     var logoUrl: String
     var logoCache: Image?
     var reactions: [Reaction]
+    
     var episodes: [Episode]
+    
+    func parseJSON(name: String) {
+        if let bundlePath = Bundle.main.path(forResource: name,
+                                                     ofType: "json"),
+            let jsonData = try? String(contentsOfFile: bundlePath).data(using: .utf8) {
+            parseJSON(data: jsonData)
+        }
+    }
+    
+    func parseJSON(data: Data) {
+        do {
+            let json = try JSONDecoder().decode(JSONPodcast.self, from: data)
+            self.reactions = json.reactions
+            for episode in episodes {
+                for i in json.episodes {
+                    if i.guid == episode.id {
+                        episode.statistics = i.statistics
+                        episode.timedReactions = i.timedReactions
+                        episode.defaultReactions = i.defaultReactions
+                    }
+                }
+            }
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
     
     init(title: String, description: String, author: String, logoUrl: String, reactions: [Reaction], episodes: [Episode]) {
         self.title = title

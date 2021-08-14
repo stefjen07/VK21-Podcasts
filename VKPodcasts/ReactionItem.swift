@@ -8,11 +8,12 @@
 import SwiftUI
 
 struct ReactionItem: View {
+    var width: CGFloat
     var emoji: String
     var body: some View {
         Circle()
             .foregroundColor(.init("Background").opacity(0.3))
-            .frame(width: 80, height: 80)
+            .frame(width: width, height: width)
             .overlay(
                 ZStack {
                     Circle()
@@ -26,7 +27,6 @@ struct ReactionItem: View {
 
 struct ReactionItem_Previews: PreviewProvider {
     static var previews: some View {
-        ReactionItem(emoji: "👍")
-            .previewLayout(.fixed(width: 60, height: 60))
+        ReactionItem(width: 80, emoji: "👍")
     }
 }

@@ -121,8 +121,21 @@ struct NewPodcastView: View {
                 Text("Новый подкаст")
                     .font(.largeTitle)
                     .bold()
-                TextField("URL адрес", text: $url)
-                    .preferredColorScheme(.dark)
+                List {
+                    Section(content: {
+                        TextField("Введите URL адрес RSS файла", text: $url)
+                            .preferredColorScheme(.dark)
+                    }, header: {
+                        Text("RSS")
+                    })
+                    Section(content: {
+                        TextField("Введите URL адрес файла с реакциями", text: $url)
+                            .preferredColorScheme(.dark)
+                    }, header: {
+                        Text("Файл с реакциями")
+                    })
+                    
+                }.cornerRadius(20)
                 Spacer()
             }
             .foregroundColor(.white)
@@ -184,6 +197,7 @@ struct PodcastsView: View {
     init() {
         let parser = RSSParser(url: URL(string: "https://vk.com/podcasts-147415323_-1000000.rss")!)
         parser.parse()
+        parser.podcast.parseJSON(name: "podcast")
         self.podcasts = [parser.podcast]
         UINavigationBar.appearance().largeTitleTextAttributes = [.foregroundColor: UIColor.white]
     }
