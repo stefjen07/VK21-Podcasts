@@ -161,9 +161,7 @@ struct PodcastsView: View {
                 .padding(.top, 10)
                 .padding(.horizontal, 25)
             }
-            .navigationTitle(
-                Text("Подкасты")
-            )
+            .navigationTitle("Подкасты")
             .navigationBarItems(trailing:
                 Button(action: {
                     isAdding = true

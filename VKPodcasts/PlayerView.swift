@@ -6,6 +6,8 @@
 //
 
 import SwiftUI
+import AVFoundation
+import MediaPlayer
 
 var speeds: [Double] = [0.5, 0.75, 1.0, 1.25, 1.5]
 
@@ -117,13 +119,20 @@ class CustomSlider: UISlider {
 }
 
 struct SliderRepresentable: UIViewRepresentable {
-    func updateUIView(_ uiView: UIViewType, context: Context) {
+    @Binding var value: Float
+    
+    func updateUIView(_ uiView: CustomSlider, context: Context) {
         
     }
     
-    func makeUIView(context: Context) -> some UIView {
+    func makeUIView(context: Context) -> CustomSlider {
         let slider = CustomSlider()
+        slider.observe(\.value, changeHandler: { slider, _ in
+            self.value = slider.value
+        })
         slider.thumbRadius = 15
+        slider.minimumValue = 0
+        slider.maximumValue = 1
         slider.awakeFromNib()
         slider.minimumTrackTintColor = .init(named: "VKColor")
         slider.maximumTrackTintColor = .init(Color("VKColor").opacity(0.2))
@@ -139,9 +148,19 @@ struct Blur: UIViewRepresentable {
 
 let fadeGradient = createGradient(opacities: [0,0.3,0.5,0.675,0.8,0.9,0.95,1])
 
+struct VolumeView: UIViewRepresentable {
+    func makeUIView(context: Context) -> some UIView {
+        let view = MPVolumeView(frame: .zero)
+        view.showsRouteButton = false
+        view.tintColor = UIColor(Color("ControlSecondary"))
+        return view
+    }
+    
+    func updateUIView(_ uiView: UIViewType, context: Context) {}
+}
+
 struct PlayerView: View {
     @State var currentSpeedId: Int
-    @State var volume: Double
     @State var paused: Bool
     @State var isBottomSheetOpened = false
     @ObservedObject var episode: Episode
@@ -154,6 +173,29 @@ struct PlayerView: View {
         } else {
             currentSpeedId += 1
         }
+        player.rate = Float(speeds[currentSpeedId])
+        if paused {
+            player.pause()
+        }
+    }
+    
+    func secondsToString(seconds: Int) -> String {
+        let hours = seconds / 3600
+        let minutes = (seconds % 3600) / 60
+        let seconds = seconds % 60
+        var result = ""
+        if hours > 0 {
+            result += "\(hours):"
+            if minutes < 10 {
+                result += "0"
+            }
+        }
+        result += "\(minutes):"
+        if seconds < 10 {
+            result += "0"
+        }
+        result += "\(seconds)"
+        return result
     }
     
     var body: some View {
@@ -177,124 +219,150 @@ struct PlayerView: View {
                         .frame(width: size.width, height: size.width/1.7)
                     Color("Background")
                 }
-                ScrollView(.vertical, showsIndicators: false) {
-                    VStack(spacing: 0) {
-                        if let logo = episode.logoCache {
-                            logo
-                                .resizable()
-                                .aspectRatio(contentMode: .fill)
-                                .frame(width: iconSize, height: iconSize)
-                                .cornerRadius(iconSize * 0.12)
-                                .shadow(radius: 10)
-                                .padding(.top, 20)
-                                .padding(.bottom, 20)
-                        } else {
-                            Color.gray.opacity(0.3)
-                                .frame(width: iconSize, height: iconSize)
-                                .cornerRadius(iconSize * 0.12)
-                                .shadow(radius: 10)
-                                .padding(.top, 20)
-                                .padding(.bottom, 20)
-                        }
-                        Text(episode.title)
-                            .font(.title)
-                            .bold()
-                            .lineLimit(1)
-                            .foregroundColor(.init("TitlePrimary"))
-                            .padding(.horizontal, 5)
-                        Text(author)
-                            .foregroundColor(.init("VKColor"))
-                            .font(.title3)
-                            .bold()
-                            .padding(.top, 10)
-                        Spacer()
-                        VStack {
-                            GeometryReader { proxy in
-                                let size = proxy.size
-                                
-                                EmojiGraph(selfSize: size)
+                GeometryReader { scrollProxy in
+                    ScrollView(.vertical, showsIndicators: false) {
+                        VStack(spacing: 0) {
+                            if let logo = episode.logoCache {
+                                logo
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fill)
+                                    .frame(width: iconSize, height: iconSize)
+                                    .cornerRadius(iconSize * 0.12)
+                                    .shadow(radius: 10)
+                                    .padding(.top, 20)
+                                    .padding(.bottom, 20)
+                            } else {
+                                Color.gray.opacity(0.3)
+                                    .frame(width: iconSize, height: iconSize)
+                                    .cornerRadius(iconSize * 0.12)
+                                    .shadow(radius: 10)
+                                    .padding(.top, 20)
+                                    .padding(.bottom, 20)
                             }
-                            .frame(height: 20)
-                            GeometryReader { proxy in
-                                let size = proxy.size
-                                
-                                ReactionsGraph(selfSize: size)
+                            Text(episode.title)
+                                .font(.title)
+                                .bold()
+                                .lineLimit(1)
+                                .foregroundColor(.init("TitlePrimary"))
+                                .padding(.horizontal, 5)
+                            Text(author)
+                                .foregroundColor(.init("VKColor"))
+                                .font(.title3)
+                                .bold()
+                                .padding(.vertical, 10)
+                            Spacer()
+                            VStack {
+                                GeometryReader { proxy in
+                                    let size = proxy.size
+                                    
+                                    EmojiGraph(selfSize: size)
+                                }
+                                .frame(height: 20)
+                                GeometryReader { proxy in
+                                    let size = proxy.size
+                                    
+                                    ReactionsGraph(selfSize: size)
+                                }
+                                SliderRepresentable(value: $trackPercentage)
+                                HStack {
+                                    Text(currentTime)
+                                    Spacer()
+                                    Text(timeLeft)
+                                }.foregroundColor(.init("SecondaryText"))
                             }
-                            SliderRepresentable()
+                            .padding(10)
+                            .padding(.horizontal, 10)
+                            .background(Color("SecondaryBackground"))
+                            .cornerRadius(10)
+                            Spacer(minLength: 25)
                             HStack {
-                                Text("0:00")
+                                Button(action: {
+                                    changeSpeed()
+                                }, label: {
+                                    Text(speeds[currentSpeedId].removeZerosFromEnd() + "x")
+                                        .font(.callout)
+                                        .bold()
+                                        .foregroundColor(.white)
+                                        .frame(width: 60, height: 25)
+                                        .overlay(
+                                            Capsule()
+                                                .stroke(Color("ControlSecondary"), lineWidth: 3)
+                                        )
+                                })
                                 Spacer()
-                                Text("-12:34")
-                            }.foregroundColor(.init("SecondaryText"))
+                                Button(action: {
+                                    let currentTime = player.currentTime()
+                                    let seconds = max(0, currentTime.seconds - 15)
+                                    let cm = CMTime(seconds: seconds, preferredTimescale: currentTime.timescale)
+                                    player.seek(to: cm)
+                                }, label: {
+                                    Image(systemName: "gobackward.15")
+                                        .resizable()
+                                        .foregroundColor(.white)
+                                        .aspectRatio(contentMode: .fit)
+                                        .frame(width: 30)
+                                })
+                                Spacer()
+                                Button(action: {
+                                    paused.toggle()
+                                    if paused {
+                                        pause()
+                                    } else {
+                                        play()
+                                    }
+                                }, label: {
+                                    Image(systemName: paused ? "play.fill" : "pause.fill")
+                                        .resizable()
+                                        .foregroundColor(.white)
+                                        .aspectRatio(contentMode: .fit)
+                                        .frame(width: 30, height: 34)
+                                })
+                                Spacer()
+                                Button(action: {
+                                    let currentTime = player.currentTime()
+                                    let seconds = currentTime.seconds + 15
+                                    let cm = CMTime(seconds: seconds, preferredTimescale: currentTime.timescale)
+                                    player.seek(to: cm)
+                                }, label: {
+                                    Image(systemName: "goforward.15")
+                                        .resizable()
+                                        .foregroundColor(.white)
+                                        .aspectRatio(contentMode: .fit)
+                                        .frame(width: 30)
+                                })
+                                Spacer()
+                                Button(action: {
+                                    
+                                }, label: {
+                                    Image(systemName: "ellipsis")
+                                        .resizable()
+                                        .foregroundColor(.white)
+                                        .aspectRatio(contentMode: .fit)
+                                        .frame(width: 20)
+                                })
+                            }
+                            Spacer(minLength: 20)
+                            HStack {
+                                VStack {
+                                    Image(systemName: "speaker.fill")
+                                        .foregroundColor(Color("ControlSecondary"))
+                                    Spacer()
+                                }
+                                VolumeView()
+                                VStack {
+                                    Image(systemName: "speaker.wave.3.fill")
+                                        .foregroundColor(Color("ControlSecondary"))
+                                    Spacer()
+                                }
+                            }
+                            .frame(height: 25)
+                            .padding(.horizontal, 10)
+                            Spacer()
+                                .frame(height: 185)
                         }
-                        .padding(10)
-                        .padding(.horizontal, 10)
-                        .background(Color("SecondaryBackground"))
-                        .cornerRadius(10)
-                        Spacer(minLength: 25)
-                        HStack {
-                            Button(action: {
-                                changeSpeed()
-                            }, label: {
-                                Text(speeds[currentSpeedId].removeZerosFromEnd() + "x")
-                                    .foregroundColor(.white)
-                                    .frame(width: 50)
-                                    .overlay(Capsule().stroke(Color("ControlSecondary")))
-                            })
-                            Spacer()
-                            Button(action: {
-                                
-                            }, label: {
-                                Image(systemName: "gobackward.15")
-                                    .resizable()
-                                    .foregroundColor(.white)
-                                    .aspectRatio(contentMode: .fit)
-                                    .frame(width: 30)
-                            })
-                            Spacer()
-                            Button(action: {
-                                paused.toggle()
-                            }, label: {
-                                Image(systemName: paused ? "play.fill" : "pause.fill")
-                                    .resizable()
-                                    .foregroundColor(.white)
-                                    .aspectRatio(contentMode: .fit)
-                                    .frame(width: 30, height: 34)
-                            })
-                            Spacer()
-                            Button(action: {
-                                
-                            }, label: {
-                                Image(systemName: "goforward.15")
-                                    .resizable()
-                                    .foregroundColor(.white)
-                                    .aspectRatio(contentMode: .fit)
-                                    .frame(width: 30)
-                            })
-                            Spacer()
-                            Button(action: {
-                                
-                            }, label: {
-                                Image(systemName: "ellipsis")
-                                    .resizable()
-                                    .foregroundColor(.white)
-                                    .aspectRatio(contentMode: .fit)
-                                    .frame(width: 20)
-                            })
-                        }
-                        Spacer()
-                        HStack {
-                            Image(systemName: "speaker.fill")
-                                .foregroundColor(Color("ControlSecondary"))
-                            Slider(value: $volume, in: 0...1)
-                                .accentColor(Color("ControlSecondary"))
-                            Image(systemName: "speaker.wave.3.fill")
-                                .foregroundColor(Color("ControlSecondary"))
-                        }.padding(.horizontal, 10)
-                        Spacer()
-                            .frame(height: 160)
+                        .padding(.horizontal, 15)
+                        .frame(height: scrollProxy.size.height)
                     }
-                    .padding(.horizontal, 15)
                 }
                 VStack {
                     HStack {
@@ -361,6 +429,18 @@ struct PlayerView: View {
                 }.edgesIgnoringSafeArea(.all)
             }
         }
+        .onAppear() {
+            playerTimer = Timer.scheduledTimer(withTimeInterval: 0.2, repeats: true, block: { timer in
+                self.checkTime()
+            })
+            if let url = URL(string: episode.audioUrl) {
+                player = AVPlayer(url: url)
+                play()
+            }
+        }
+        .onDisappear() {
+            playerTimer?.invalidate()
+        }
         .navigationBarHidden(true)
         .contentShape(Rectangle())
         .gesture(
@@ -375,12 +455,41 @@ struct PlayerView: View {
         )
     }
     
+    @State var player = AVPlayer()
+    @State var playerTimer: Timer?
+    @State var currentTime = "0:00"
+    @State var timeLeft: String
+    @State var trackPercentage: Float = 0
+    
+    func checkTime() {
+        let seconds = player.currentTime().seconds
+        currentTime = secondsToString(seconds: Int(seconds))
+        if let duration = player.currentItem?.duration.seconds, !duration.isNaN {
+            let secondsLeft = duration - seconds
+            if paused {
+                timeLeft = episode.duration
+            } else {
+                timeLeft = "-" + secondsToString(seconds: Int(secondsLeft))
+            }
+            trackPercentage = Float(seconds / duration)
+        }
+    }
+    
+    func play() {
+        player.play()
+    }
+    
+    func pause() {
+        player.pause()
+        checkTime()
+    }
+    
     init(episode: Episode, author: Binding<String>) {
         _currentSpeedId = .init(initialValue: 2)
-        _volume = .init(initialValue: 0.7)
-        _paused = .init(initialValue: true)
+        _paused = .init(initialValue: false)
         self.episode = episode
         self._author = author
+        self._timeLeft = .init(initialValue: episode.duration)
     }
 }
 
