@@ -10,8 +10,12 @@ import SwiftUI
 struct EmojiGraph: View {
     var selfSize: CGSize
     var body: some View {
-        HStack {
+        GeometryReader { proxy in
+            let size = proxy.size
             
+            HStack {
+                
+            }
         }
     }
 }

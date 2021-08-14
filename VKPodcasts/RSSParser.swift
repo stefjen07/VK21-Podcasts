@@ -72,7 +72,7 @@ class RSSParser: NSObject, XMLParserDelegate {
             if tempElement == "title" {
                 tempEpisode?.title = episode.title + string
             } else if tempElement == "guid" {
-                tempEpisode?.id = episode.title + string
+                tempEpisode?.id = episode.id + string
             } else if tempElement == "itunes:expilict" {
                 tempExplicit? = explicit + string
             } else if tempElement == "pubDate" {

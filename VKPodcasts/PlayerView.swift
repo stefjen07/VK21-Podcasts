@@ -35,127 +35,6 @@ struct RoundedCorner: Shape {
     }
 }
 
-struct BottomSheetView<Content: View>: View {
-    @Binding var isOpen: Bool
-    
-    let radius: CGFloat = 30
-    let snapRatio: CGFloat = 0.5
-    
-    let indicatorWidth: CGFloat = 65
-    let indicatorHeight: CGFloat = 5
-
-    let maxHeight: CGFloat
-    let minHeight: CGFloat
-    let content: Content
-    
-    private var offset: CGFloat {
-        isOpen ? 0 : maxHeight - minHeight
-    }
-
-    private var indicator: some View {
-        RoundedRectangle(cornerRadius: radius)
-            .fill(Color.secondary)
-            .frame(
-                width: indicatorWidth,
-                height: indicatorHeight)
-    }
-
-    @GestureState private var translation: CGFloat = 0
-
-    var body: some View {
-        GeometryReader { geometry in
-            VStack(spacing: 0) {
-                self.indicator
-                    .padding(15)
-                    .preferredColorScheme(.dark)
-                self.content
-            }
-            .frame(width: geometry.size.width, height: self.maxHeight, alignment: .top)
-            .background(Blur(effect: UIBlurEffect(style: .dark)))
-            .cornerRadius(radius, corners: [.topLeft, .topRight])
-            .frame(height: geometry.size.height, alignment: .bottom)
-            .shadow(color: .white, radius: 2)
-            .offset(y: max(self.offset + self.translation, 0))
-            .animation(.interactiveSpring(), value: isOpen)
-            .animation(.interactiveSpring(), value: translation)
-            .gesture(
-                DragGesture().updating(self.$translation) { value, state, _ in
-                    state = value.translation.height
-                }.onEnded { value in
-                    let snapDistance = self.maxHeight * snapRatio
-                    guard abs(value.translation.height) > snapDistance else {
-                        return
-                    }
-                    self.isOpen = value.translation.height < 0
-                }
-            )
-        }
-    }
-
-    init(isOpen: Binding<Bool>, maxHeight: CGFloat, bottomSize: CGFloat, @ViewBuilder content: () -> Content) {
-        self.minHeight = 160 + bottomSize
-        self.maxHeight = maxHeight
-        self.content = content()
-        self._isOpen = isOpen
-    }
-}
-
-class CustomSlider: UISlider {
-    @IBInspectable var trackHeight: CGFloat = 3
-    @IBInspectable var thumbRadius: CGFloat = 20
-
-    private lazy var thumbView: UIView = {
-        let thumb = UIView()
-        thumb.backgroundColor = UIColor(named: "VKColor")
-        return thumb
-    }()
-
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        let thumb = thumbImage(radius: thumbRadius)
-        setThumbImage(thumb, for: .normal)
-    }
-
-    private func thumbImage(radius: CGFloat) -> UIImage {
-        thumbView.frame = CGRect(x: 0, y: radius / 2, width: radius, height: radius)
-        thumbView.layer.cornerRadius = radius / 2
-
-        let renderer = UIGraphicsImageRenderer(bounds: thumbView.bounds)
-        return renderer.image { rendererContext in
-            thumbView.layer.render(in: rendererContext.cgContext)
-        }
-    }
-
-    override func trackRect(forBounds bounds: CGRect) -> CGRect {
-        var newRect = super.trackRect(forBounds: bounds)
-        newRect.size.height = trackHeight
-        return newRect
-    }
-
-}
-
-struct SliderRepresentable: UIViewRepresentable {
-    @Binding var value: Float
-    
-    func updateUIView(_ uiView: CustomSlider, context: Context) {
-        
-    }
-    
-    func makeUIView(context: Context) -> CustomSlider {
-        let slider = CustomSlider()
-        slider.observe(\.value, changeHandler: { slider, _ in
-            self.value = slider.value
-        })
-        slider.thumbRadius = 15
-        slider.minimumValue = 0
-        slider.maximumValue = 1
-        slider.awakeFromNib()
-        slider.minimumTrackTintColor = .init(named: "VKColor")
-        slider.maximumTrackTintColor = .init(Color("VKColor").opacity(0.2))
-        return slider
-    }
-}
-
 struct Blur: UIViewRepresentable {
     var effect: UIVisualEffect?
     func makeUIView(context: UIViewRepresentableContext<Self>) -> UIVisualEffectView { UIVisualEffectView() }
@@ -224,11 +103,13 @@ struct PlayerView: View {
                 Color("Background")
                     .edgesIgnoringSafeArea(.all)
                 VStack(spacing: 0) {
-                    Ellipse()
-                        .fill(Color("PodcastSample"))
-                        .frame(width: size.width/1.2, height: 150)
-                        .blur(radius: 40)
-                        .offset(x: 0, y: -50)
+                    if let logo = episode.logoCache {
+                        logo
+                            .resizable()
+                            .frame(width: size.width/1.2, height: 150)
+                            .blur(radius: 50)
+                            .offset(x: 0, y: -50)
+                    }
                     Spacer()
                 }
                 VStack(spacing: 0) {
@@ -269,16 +150,21 @@ struct PlayerView: View {
                                 .padding(.vertical, 10)
                             Spacer()
                             VStack {
-                                GeometryReader { proxy in
-                                    let size = proxy.size
-                                    
-                                    EmojiGraph(selfSize: size)
-                                }
-                                .frame(height: 20)
-                                GeometryReader { proxy in
-                                    let size = proxy.size
-                                    
-                                    ReactionsGraph(selfSize: size)
+                                ZStack {
+                                    GeometryReader { proxy in
+                                        let size = proxy.size
+                                        
+                                        EmojiGraph(selfSize: size)
+                                    }
+                                    VStack {
+                                        Spacer()
+                                            .frame(height: 20)
+                                        GeometryReader { proxy in
+                                            let size = proxy.size
+                                            
+                                            ReactionsGraph(selfSize: size)
+                                        }
+                                    }
                                 }
                                 SliderRepresentable(value: $trackPercentage)
                                 HStack {
@@ -407,11 +293,13 @@ struct PlayerView: View {
                     .padding(.horizontal, 15)
                     .padding(.top, 5)
                     Spacer()
-                    Ellipse()
-                        .fill(Color("PodcastSample"))
-                        .frame(width: size.width/1.2, height: size.width/2.4)
-                        .blur(radius: 20)
-                        .offset(x: 0, y: size.width/12)
+                    if let logo = episode.logoCache {
+                        logo
+                            .resizable()
+                            .frame(width: size.width*0.8, height: reactionItemSize + 30)
+                            .cornerRadius(20)
+                            .blur(radius: 40)
+                    }
                 }
                 
                 let bottomSize = proxy.safeAreaInsets.bottom
@@ -426,19 +314,21 @@ struct PlayerView: View {
                             Spacer()
                             LazyVGrid(columns: [.init(.adaptive(minimum: isBottomSheetOpened ? reactionItemSize * 1.45 : reactionItemSize * 0.95))], spacing: 20) {
                                 ForEach(podcast.reactions) { reaction in
-                                    Button(action: {
-                                        
-                                    }, label: {
-                                        VStack {
-                                            ReactionItem(width: reactionItemSize, emoji: reaction.emoji)
-                                            if isBottomSheetOpened {
-                                                Text(reaction.description)
-                                                    .font(.callout)
-                                                    .foregroundColor(.white)
-                                                    .lineLimit(1)
+                                    if reaction.isAvailable {
+                                        Button(action: {
+                                            
+                                        }, label: {
+                                            VStack {
+                                                ReactionItem(width: reactionItemSize, emoji: reaction.emoji)
+                                                if isBottomSheetOpened {
+                                                    Text(reaction.description)
+                                                        .font(.callout)
+                                                        .foregroundColor(.white)
+                                                        .lineLimit(1)
+                                                }
                                             }
-                                        }
-                                    })
+                                        })
+                                    }
                                 }
                             }
                             Spacer()
@@ -460,6 +350,9 @@ struct PlayerView: View {
             playerTimer = Timer.scheduledTimer(withTimeInterval: 0.2, repeats: true, block: { timer in
                 self.checkTime()
             })
+            for i in 0..<podcast.reactions.count {
+                podcast.reactions[i].isAvailable = episode.defaultReactions.contains(podcast.reactions[i].id)
+            }
             if let url = URL(string: episode.audioUrl) {
                 player = AVPlayer(url: url)
                 play()
@@ -488,8 +381,21 @@ struct PlayerView: View {
     @State var timeLeft: String
     @State var trackPercentage: Float = 0
     
+    func turnReactions(container: TimedReactionsContainer, isAvailable: Bool) {
+        for reaction in container.availableReactions {
+            for i in 0..<podcast.reactions.count {
+                if reaction == podcast.reactions[i].id {
+                    podcast.reactions[i].isAvailable = isAvailable
+                }
+            }
+        }
+    }
+    
     func checkTime() {
         let seconds = player.currentTime().seconds
+        for timedContainer in episode.timedReactions {
+            turnReactions(container: timedContainer, isAvailable: (timedContainer.from...timedContainer.to).contains(Int(seconds)))
+        }
         currentTime = secondsToString(seconds: Int(seconds))
         if let duration = player.currentItem?.duration.seconds, !duration.isNaN {
             let secondsLeft = duration - seconds

@@ -11,6 +11,7 @@ struct Reaction: Codable, Identifiable {
     var id: Int
     var emoji: String
     var description: String
+    var isAvailable: Bool = false
     
     enum CodingKeys: String, CodingKey {
         case reaction_id
@@ -58,20 +59,20 @@ struct TimedReactionsContainer: Codable {
     
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(from, forKey: .from)
-        try container.encode(to, forKey: .to)
+        try container.encode(String(from), forKey: .from)
+        try container.encode(String(to), forKey: .to)
         try container.encode(availableReactions, forKey: .available_reactions)
     }
     
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        if let from = try? container.decode(Int.self, forKey: .from) {
-            self.from = from
+        if let from = try? container.decode(String.self, forKey: .from) {
+            self.from = Int(from) ?? -1
         } else {
             self.from = -1
         }
-        if let to = try? container.decode(Int.self, forKey: .to) {
-            self.to = to
+        if let to = try? container.decode(String.self, forKey: .to) {
+            self.to = Int(to) ?? -1
         } else {
             self.to = -1
         }
