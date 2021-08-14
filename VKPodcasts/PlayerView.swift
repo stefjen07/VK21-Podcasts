@@ -279,15 +279,13 @@ struct PlayerView: View {
                                 .frame(height: 30)
                         })
                         Spacer()
-                        Button(action: {
-                            
-                        }, label: {
+                        NavigationLink(destination: StatView()) {
                             Image(systemName: "chart.line.uptrend.xyaxis")
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
                                 .padding(5)
                                 .frame(height: 30)
-                        })
+                        }
                     }
                     .foregroundColor(.white)
                     .padding(.horizontal, 15)
@@ -360,6 +358,8 @@ struct PlayerView: View {
         }
         .onDisappear() {
             playerTimer?.invalidate()
+            player.pause()
+            player = AVPlayer()
         }
         .navigationBarHidden(true)
         .contentShape(Rectangle())

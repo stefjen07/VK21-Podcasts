@@ -14,8 +14,10 @@
 		3E434B8926C67C12009D99DD /* PodcastView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E434B8826C67C12009D99DD /* PodcastView.swift */; };
 		3E65895D26C817D30066F144 /* CustomSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E65895C26C817D30066F144 /* CustomSlider.swift */; };
 		3E65895F26C818040066F144 /* BottomSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E65895E26C818040066F144 /* BottomSheet.swift */; };
+		3E65896126C8223F0066F144 /* StatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E65896026C8223F0066F144 /* StatView.swift */; };
 		3E7700F926C7E4770044D7CA /* podcast.json in Resources */ = {isa = PBXBuildFile; fileRef = 3E7700F826C7E4770044D7CA /* podcast.json */; };
 		3E8431E726C5A4DB00545232 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E8431E626C5A4DB00545232 /* LoginView.swift */; };
+		3EA3D97526C83A2800D163E6 /* PieChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA3D97426C83A2800D163E6 /* PieChart.swift */; };
 		3EA7796426C4543700B0C05E /* VKPodcastsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA7796326C4543700B0C05E /* VKPodcastsApp.swift */; };
 		3EA7796626C4543700B0C05E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA7796526C4543700B0C05E /* ContentView.swift */; };
 		3EA7796826C4543900B0C05E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3EA7796726C4543900B0C05E /* Assets.xcassets */; };
@@ -56,9 +58,11 @@
 		3E434B8826C67C12009D99DD /* PodcastView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodcastView.swift; sourceTree = "<group>"; };
 		3E65895C26C817D30066F144 /* CustomSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSlider.swift; sourceTree = "<group>"; };
 		3E65895E26C818040066F144 /* BottomSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheet.swift; sourceTree = "<group>"; };
+		3E65896026C8223F0066F144 /* StatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatView.swift; sourceTree = "<group>"; };
 		3E7700F826C7E4770044D7CA /* podcast.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = podcast.json; path = "../../../../Dropbox/Мой Mac (MacBook Air — Евгений)/Downloads/podcast.json"; sourceTree = "<group>"; };
 		3E8431E526C5A05B00545232 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		3E8431E626C5A4DB00545232 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
+		3EA3D97426C83A2800D163E6 /* PieChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PieChart.swift; sourceTree = "<group>"; };
 		3EA7796026C4543600B0C05E /* VKPodcasts.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VKPodcasts.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3EA7796326C4543700B0C05E /* VKPodcastsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VKPodcastsApp.swift; sourceTree = "<group>"; };
 		3EA7796526C4543700B0C05E /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -149,6 +153,8 @@
 				3E8431E526C5A05B00545232 /* Info.plist */,
 				3EA7798D26C454EB00B0C05E /* DataModel.swift */,
 				3EA7798F26C4568A00B0C05E /* PlayerView.swift */,
+				3E65896026C8223F0066F144 /* StatView.swift */,
+				3EA3D97426C83A2800D163E6 /* PieChart.swift */,
 				3E65895E26C818040066F144 /* BottomSheet.swift */,
 				3E65895C26C817D30066F144 /* CustomSlider.swift */,
 				3EF6844226C57EAB0047CF20 /* RSSParser.swift */,
@@ -444,8 +450,10 @@
 				3EA7796626C4543700B0C05E /* ContentView.swift in Sources */,
 				3E2DE7BE26C5369800313C92 /* ReactionsGraph.swift in Sources */,
 				3E65895D26C817D30066F144 /* CustomSlider.swift in Sources */,
+				3EA3D97526C83A2800D163E6 /* PieChart.swift in Sources */,
 				3E434B8726C67881009D99DD /* PodcastsView.swift in Sources */,
 				3EA7796426C4543700B0C05E /* VKPodcastsApp.swift in Sources */,
+				3E65896126C8223F0066F144 /* StatView.swift in Sources */,
 				3EA7798E26C454EB00B0C05E /* DataModel.swift in Sources */,
 				3E434B8926C67C12009D99DD /* PodcastView.swift in Sources */,
 				3EA7799226C45B9E00B0C05E /* ReactionItem.swift in Sources */,
