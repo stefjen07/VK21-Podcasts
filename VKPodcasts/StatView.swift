@@ -65,6 +65,70 @@ struct StatReactionRow: View {
     }
 }
 
+struct GraphLine: View {
+    var color: Color
+    var relativePercentage: Double
+    
+    var body: some View {
+        GeometryReader { proxy in
+            let size = proxy.size
+            
+            HStack(spacing: 0) {
+                Capsule()
+                    .fill(color)
+                    .frame(width: size.width * relativePercentage, height: 4)
+                Spacer(minLength: 0)
+            }
+        }
+    }
+}
+
+struct StatCityRow: View {
+    var name: String
+    var views: String
+    var percentage: Double
+    var maxPercentage: Double
+    var color: Color
+    
+    var body: some View {
+        GeometryReader { proxy in
+            let size = proxy.size
+            
+            HStack(alignment: .center) {
+                Text(name)
+                    .font(.subheadline)
+                    .frame(width: size.width * 0.35)
+                Text(views)
+                    .foregroundColor(.init(white: 0.65))
+                    .font(.footnote)
+                GraphLine(color: color, relativePercentage: percentage / maxPercentage)
+                Text("\((Double(Int(percentage*10))/10).removeZerosFromEnd()) %")
+                    .foregroundColor(.init(white: 0.65))
+                    .font(.footnote)
+            }
+        }
+    }
+}
+
+struct StatAgeRow: View {
+    var emojies: [String] = ["👍", "👎", "💩"]
+    var description: String = "до 18"
+    
+    var body: some View {
+        HStack(spacing: 20) {
+            Text(description)
+            HStack(alignment: .center) {
+                Text(emojies[0])
+                    .font(.title2)
+                Text(emojies[1])
+                    .font(.subheadline)
+                Text(emojies[2])
+                    .font(.caption)
+            }
+        }
+    }
+}
+
 struct StatView: View {
     @Environment(\.presentationMode) var presentation: Binding<PresentationMode>
     let malePercentage: Double = 0.154
@@ -111,9 +175,24 @@ struct StatView: View {
                         Divider()
                         VStack(alignment: .leading) {
                             StatTitle("Виды реакций")
+                            ReactionTypeGraph(values: [
+                                [1000, 2000, 4000, 6000],
+                                [1500, 2500, 5000, 3000]
+                            ])
                             ForEach(0..<4) { i in
                                 StatReactionRow(emoji: "💩", description: "Какой-то бред", views: "\(i+1)K", graphColor: .green)
                             }
+                            Button(action: {
+                                
+                            }, label: {
+                                HStack {
+                                    Image(systemName: "chevron.down")
+                                    Text("Остальные реакции")
+                                }.font(.body)
+                            })
+                                .foregroundColor(Color("VKColor"))
+                                .padding(.top, 5)
+                                .padding(.horizontal, 8)
                             DataComparingText()
                         }
                         Divider()
@@ -122,10 +201,14 @@ struct StatView: View {
                             HStack {
                                 Spacer()
                                 Circle()
-                                    .fill(Color(malePercentage > 0.5 ? "Male" : "Female"))
+                                    .fill(Color("Female"))
                                     .frame(width: circleWidth, height: circleWidth)
                                     .overlay(
-                                        PieSliceView(pieSliceData: .init(startAngle: .init(degrees: 0), endAngle: .init(degrees: 360 * (malePercentage > 0.5 ? (1-malePercentage) : malePercentage)), color: Color(malePercentage > 0.5 ? "Female" : "Male")), borderColor: Color("Background"), selfSize: circleWidth)
+                                        ZStack {
+                                            PieSliceView(pieSliceData: .init(startAngle: .init(degrees: 0), endAngle: .init(degrees: 360 * malePercentage), color: Color("Male")), borderColor: Color("Background"), selfSize: circleWidth)
+                                            Circle()
+                                                .stroke(Color("Background"), lineWidth: 3)
+                                        }
                                     )
                                 Spacer()
                             }
@@ -176,6 +259,9 @@ struct StatView: View {
                                 Spacer()
                             }
                             Divider()
+                            ForEach(0..<4) { i in
+                                StatAgeRow()
+                            }
                             DataComparingText()
                         }
                         Divider()
@@ -190,11 +276,38 @@ struct StatView: View {
                                         .padding(.top, 10)
                                 }
                             })
+                            HStack {
+                                Spacer()
+                                ZStack {
+                                    ForEach(0..<6) { i in
+                                        PieSliceView(pieSliceData: .init(startAngle: .init(degrees: 0), endAngle: .init(degrees: 360 * malePercentage), color: Color("city0")), borderColor: Color("Background"), selfSize: circleWidth)
+                                    }
+                                }.frame(width: circleWidth, height: circleWidth)
+                                Spacer()
+                            }
+                            ForEach(0..<6) { i in
+                                if i != 0 {
+                                    Spacer()
+                                        .frame(height: 20)
+                                }
+                                StatCityRow(name: "Санкт-Петербург", views: "1.4K", percentage: 74.1, maxPercentage: 74.1, color: Color("city\(i)"))
+                            }
                             DataComparingText()
+                                .padding(.top, 6)
+                                .padding(.horizontal, 4)
                         }
                     }
                         .foregroundColor(Color("TitlePrimary"))
                         .padding(.horizontal, 25)
+                        .padding(.bottom, 25)
+                    Divider()
+                    Button(action: {
+                        
+                    }, label: {
+                        Text("Данные за 30 дней")
+                        Image(systemName: "chevron.down")
+                    }).foregroundColor(Color("VKColor"))
+                    Divider()
                 }
                 .preferredColorScheme(.dark)
             }

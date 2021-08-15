@@ -28,6 +28,7 @@
 		3EA7798E26C454EB00B0C05E /* DataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA7798D26C454EB00B0C05E /* DataModel.swift */; };
 		3EA7799026C4568A00B0C05E /* PlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA7798F26C4568A00B0C05E /* PlayerView.swift */; };
 		3EA7799226C45B9E00B0C05E /* ReactionItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA7799126C45B9E00B0C05E /* ReactionItem.swift */; };
+		3EA8355026C8626D00EA4662 /* ReactionTypeGraph.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA8354F26C8626D00EA4662 /* ReactionTypeGraph.swift */; };
 		3EF6844326C57EAB0047CF20 /* RSSParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EF6844226C57EAB0047CF20 /* RSSParser.swift */; };
 		5B2B257E080F45ECF551E61C /* Pods_VKPodcastsTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27F902617BE0166225C22737 /* Pods_VKPodcastsTests.framework */; };
 /* End PBXBuildFile section */
@@ -76,6 +77,7 @@
 		3EA7798D26C454EB00B0C05E /* DataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataModel.swift; sourceTree = "<group>"; };
 		3EA7798F26C4568A00B0C05E /* PlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerView.swift; sourceTree = "<group>"; };
 		3EA7799126C45B9E00B0C05E /* ReactionItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReactionItem.swift; sourceTree = "<group>"; };
+		3EA8354F26C8626D00EA4662 /* ReactionTypeGraph.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReactionTypeGraph.swift; sourceTree = "<group>"; };
 		3EF6844226C57EAB0047CF20 /* RSSParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSSParser.swift; sourceTree = "<group>"; };
 		4AC03FC6B9EC9134A0A5BD1F /* Pods-VKPodcasts.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VKPodcasts.debug.xcconfig"; path = "Target Support Files/Pods-VKPodcasts/Pods-VKPodcasts.debug.xcconfig"; sourceTree = "<group>"; };
 		8B1F610D295CBA2AC800C2D8 /* Pods-VKPodcasts-VKPodcastsUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VKPodcasts-VKPodcastsUITests.debug.xcconfig"; path = "Target Support Files/Pods-VKPodcasts-VKPodcastsUITests/Pods-VKPodcasts-VKPodcastsUITests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -154,6 +156,7 @@
 				3EA7798D26C454EB00B0C05E /* DataModel.swift */,
 				3EA7798F26C4568A00B0C05E /* PlayerView.swift */,
 				3E65896026C8223F0066F144 /* StatView.swift */,
+				3EA8354F26C8626D00EA4662 /* ReactionTypeGraph.swift */,
 				3EA3D97426C83A2800D163E6 /* PieChart.swift */,
 				3E65895E26C818040066F144 /* BottomSheet.swift */,
 				3E65895C26C817D30066F144 /* CustomSlider.swift */,
@@ -455,6 +458,7 @@
 				3EA7796426C4543700B0C05E /* VKPodcastsApp.swift in Sources */,
 				3E65896126C8223F0066F144 /* StatView.swift in Sources */,
 				3EA7798E26C454EB00B0C05E /* DataModel.swift in Sources */,
+				3EA8355026C8626D00EA4662 /* ReactionTypeGraph.swift in Sources */,
 				3E434B8926C67C12009D99DD /* PodcastView.swift in Sources */,
 				3EA7799226C45B9E00B0C05E /* ReactionItem.swift in Sources */,
 				3EF6844326C57EAB0047CF20 /* RSSParser.swift in Sources */,
