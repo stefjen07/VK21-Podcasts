@@ -190,6 +190,10 @@ struct ReactionTypeGraph: View {
         return CGPoint(x: point.x * size.width, y: point.y * size.height)
     }
     
+    func circleRect(center: CGPoint, radius: CGFloat) -> CGRect {
+        return CGRect(x: center.x - radius, y: center.y - radius, width: 2 * radius, height: 2 * radius)
+    }
+    
     func getPath(size: CGSize, reactionIdx: Int) -> Path {
         var path = Path()
         for i in 0..<3 {
@@ -204,7 +208,21 @@ struct ReactionTypeGraph: View {
                 
                 path.move(to: point1)
                 path.addCurve(to: point2, control1: control1, control2: control2)
+                path.addEllipse(in: circleRect(center: point1, radius: 6))
             }
+        }
+        var lastPoint = types[reactionIdx].dataPoints[3]
+        lastPoint = adapt(point: lastPoint, size: size)
+        path.addEllipse(in: circleRect(center: lastPoint, radius: 6))
+        return path
+    }
+    
+    func getMaskPath(size: CGSize, reactionIdx: Int) -> Path {
+        var path = Path()
+        for i in 0..<4 {
+            var point = types[reactionIdx].dataPoints[i]
+            point = adapt(point: point, size: size)
+            path.addEllipse(in: circleRect(center: point, radius: 5))
         }
         return path
     }
@@ -236,27 +254,15 @@ struct ReactionTypeGraph: View {
                                 Spacer()
                                 getPath(size: size, reactionIdx: reactionIdx)
                                     .stroke(reactionColors[reactionIdx], lineWidth: 3)
-                            }.offset(x: 0, y: -15*0.5)
-                        }
-                        HStack {
-                            ForEach(0..<4) { i in
-                                if i != 0 {
-                                    Spacer()
-                                }
-                                VStack {
-                                    Spacer()
-                                    ZStack {
-                                        ForEach(0..<types.count) { reactionIdx in
-                                            GraphPoint(color: reactionColors[reactionIdx])
-                                                .frame(width: 15, height: 15)
-                                                .offset(x: 0, y: getOffset(height: size.height, reactionIdx: reactionIdx, idx: i, pointSize: 15))
-                                        }
-                                    }
-                                }
+                            }
+                            VStack(spacing: 0) {
+                                Spacer()
+                                getMaskPath(size: size, reactionIdx: reactionIdx)
+                                    .fill(Color("Background"))
                             }
                         }
-                    }
-                }.offset(x: -15 * 0.5, y: 0)
+                    }.offset(x: 0, y: -15*0.5)
+                }
                 Rectangle()
                     .fill(Color(white: 0.3))
                     .frame(height: 1)
