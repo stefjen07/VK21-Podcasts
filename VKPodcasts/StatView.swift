@@ -33,29 +33,56 @@ struct StatTitle: View {
     }
 }
 
+let reactionColors = [
+    Color("reaction0"),
+    Color("reaction1"),
+    Color("reaction2"),
+    Color("reaction3"),
+    Color("reaction4"),
+    Color("reaction5"),
+    Color("reaction6")
+]
+
 struct StatReactionRow: View {
-    @State var selected: Bool = true
-    var emoji: String
-    var description: String
+    @Binding var reactions: [Reaction]
+    @Binding var reaction: Reaction
     var views: String
-    var graphColor: Color
+    
     var body: some View {
         HStack(spacing: 5) {
             Button(action: {
-                selected.toggle()
+                withAnimation {
+                    if reaction.statSelectionIdx == nil {
+                        for i in 0..<7 {
+                            var busy = false
+                            for reaction in reactions {
+                                if reaction.statSelectionIdx == i {
+                                    busy = true
+                                    break
+                                }
+                            }
+                            if !busy {
+                                reaction.statSelectionIdx = i
+                                break
+                            }
+                        }
+                    } else {
+                        reaction.statSelectionIdx = nil
+                    }
+                }
             }, label: {
-                Image(systemName: selected ? "checkmark.circle.fill" : "checkmark.circle")
+                Image(systemName: reaction.statSelectionIdx != nil ? "checkmark.circle.fill" : "checkmark.circle")
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .foregroundColor(Color("VKColor"))
                     .frame(width: 30, height: 30)
             }).padding(.trailing, 10)
-            Text(emoji)
+            Text(reaction.emoji)
                 .font(.title)
-            Text(description)
+            Text(reaction.description)
                 .font(.body)
             Circle()
-                .fill(graphColor)
+                .fill(reaction.statSelectionIdx == nil ? .clear : reactionColors[reaction.statSelectionIdx!])
                 .frame(width: 6, height: 6)
                 .padding(.leading, 5)
             Spacer()
@@ -73,7 +100,7 @@ struct GraphLine: View {
         GeometryReader { proxy in
             let size = proxy.size
             
-            HStack(spacing: 0) {
+            HStack(alignment: .center, spacing: 0) {
                 Capsule()
                     .fill(color)
                     .frame(width: size.width * relativePercentage, height: 4)
@@ -83,10 +110,28 @@ struct GraphLine: View {
     }
 }
 
-struct StatCityRow: View {
-    var name: String
-    var views: String
+func preparePercentage(_ value: Double, percentage: Bool) -> String {
+    return "\((Double(Int(value*10))/10).removeZerosFromEnd())" + (percentage ? " %" : "")
+}
+
+func shortNumber(_ value: Int) -> String {
+    if value < 1000 {
+        return "\(value)"
+    } else if value < 1000000 {
+        return preparePercentage(Double(value)/1000, percentage: false)+"K"
+    }
+    return preparePercentage(Double(value)/1000000, percentage: false)+"M"
+}
+
+struct StatCityData {
+    var id: Int
+    var title: String
+    var count: Int
     var percentage: Double
+}
+
+struct StatCityRow: View {
+    var data: StatCityData
     var maxPercentage: Double
     var color: Color
     
@@ -95,14 +140,14 @@ struct StatCityRow: View {
             let size = proxy.size
             
             HStack(alignment: .center) {
-                Text(name)
+                Text(data.title)
                     .font(.subheadline)
                     .frame(width: size.width * 0.35)
-                Text(views)
+                Text(shortNumber(data.count))
                     .foregroundColor(.init(white: 0.65))
                     .font(.footnote)
-                GraphLine(color: color, relativePercentage: percentage / maxPercentage)
-                Text("\((Double(Int(percentage*10))/10).removeZerosFromEnd()) %")
+                GraphLine(color: color, relativePercentage: data.percentage / maxPercentage)
+                Text(preparePercentage(data.percentage * 100, percentage: true))
                     .foregroundColor(.init(white: 0.65))
                     .font(.footnote)
             }
@@ -129,9 +174,39 @@ struct StatAgeRow: View {
     }
 }
 
+struct CitiesCache {
+    var cities: [City]
+    
+    func cityTitle(id: Int) -> String {
+        if let city = cities.first(where: { city in
+            return city.id == id
+        }) {
+            return city.title
+        }
+        return ""
+    }
+}
+
+struct AgeGroup {
+    
+}
+
 struct StatView: View {
     @Environment(\.presentationMode) var presentation: Binding<PresentationMode>
-    let malePercentage: Double = 0.154
+    let malePercentage: Double
+    var maleCount: Int
+    var peopleCount: Int
+    var citiesTop: [StatCityData]
+    @State var reactions: [Reaction]
+    var maxCityPercentage: Double
+    
+    func percentageOfFirst(_ k: Int) -> Double {
+        var result = Double.zero
+        for i in 0..<min(k, citiesTop.count) {
+            result += citiesTop[i].percentage
+        }
+        return result
+    }
     
     var body: some View {
         ZStack {
@@ -177,10 +252,12 @@ struct StatView: View {
                             StatTitle("Виды реакций")
                             ReactionTypeGraph(values: [
                                 [1000, 2000, 4000, 6000],
-                                [1500, 2500, 5000, 3000]
-                            ])
-                            ForEach(0..<4) { i in
-                                StatReactionRow(emoji: "💩", description: "Какой-то бред", views: "\(i+1)K", graphColor: .green)
+                                [1500, 2500, 5000, 3000],
+                                [2300, 1200, 3600, 3200],
+                                [2500, 2600, 2700, 1900]
+                            ], reactions: reactions)
+                            ForEach($reactions) { reaction in
+                                StatReactionRow(reactions: $reactions, reaction: reaction, views: "4K")
                             }
                             Button(action: {
                                 
@@ -221,13 +298,13 @@ struct StatView: View {
                                             .fill(Color("Male"))
                                             .aspectRatio(1, contentMode: .fit)
                                             .frame(width: 10)
-                                        Text("8,4K")
+                                        Text(shortNumber(maleCount))
                                             .font(.title2)
                                         Circle()
                                             .fill(Color(white: 0.65))
                                             .aspectRatio(1, contentMode: .fit)
                                             .frame(width: 3)
-                                        Text("15.4 %")
+                                        Text(preparePercentage(malePercentage * 100, percentage: true))
                                             .foregroundColor(.init(white: 0.65))
                                             .font(.title2)
                                     }
@@ -242,13 +319,13 @@ struct StatView: View {
                                             .fill(Color("Female"))
                                             .aspectRatio(1, contentMode: .fit)
                                             .frame(width: 10)
-                                        Text("18,4K")
+                                        Text(shortNumber(peopleCount - maleCount))
                                             .font(.title2)
                                         Circle()
                                             .fill(Color(white: 0.65))
                                             .aspectRatio(1, contentMode: .fit)
                                             .frame(width: 3)
-                                        Text("84.6 %")
+                                        Text(preparePercentage((1-malePercentage) * 100, percentage: true))
                                             .foregroundColor(.init(white: 0.65))
                                             .font(.title2)
                                     }
@@ -279,18 +356,18 @@ struct StatView: View {
                             HStack {
                                 Spacer()
                                 ZStack {
-                                    ForEach(0..<6) { i in
-                                        PieSliceView(pieSliceData: .init(startAngle: .init(degrees: 0), endAngle: .init(degrees: 360 * malePercentage), color: Color("city0")), borderColor: Color("Background"), selfSize: circleWidth)
+                                    ForEach(0..<citiesTop.count) { i in
+                                        PieSliceView(pieSliceData: .init(startAngle: .init(degrees: 360 * percentageOfFirst(i)), endAngle: .init(degrees: 360 * percentageOfFirst(i+1)), color: Color("city\(i)")), borderColor: Color("Background"), selfSize: circleWidth)
                                     }
                                 }.frame(width: circleWidth, height: circleWidth)
                                 Spacer()
                             }
-                            ForEach(0..<6) { i in
+                            ForEach(0..<citiesTop.count) { i in
                                 if i != 0 {
                                     Spacer()
                                         .frame(height: 20)
                                 }
-                                StatCityRow(name: "Санкт-Петербург", views: "1.4K", percentage: 74.1, maxPercentage: 74.1, color: Color("city\(i)"))
+                                StatCityRow(data: citiesTop[i], maxPercentage: maxCityPercentage, color: Color("city\(i)"))
                             }
                             DataComparingText()
                                 .padding(.top, 6)
@@ -342,10 +419,68 @@ struct StatView: View {
                 }
         )
     }
+    
+    init(reactions: [Reaction], episode: Episode, citiesCache: CitiesCache) {
+        self._reactions = .init(initialValue: reactions)
+        maleCount = 0
+        peopleCount = 0
+        if episode.statistics.count == 0 {
+            self.malePercentage = 0
+        } else {
+            for stat in episode.statistics {
+                if stat.sex == .male {
+                    maleCount += 1
+                }
+            }
+            peopleCount = episode.statistics.count
+            self.malePercentage = Double(maleCount) / Double(peopleCount)
+        }
+        var citiesTop = [StatCityData]()
+        var maxPercentage: Double = 0
+        if episode.statistics.count != 0 {
+            for stat in episode.statistics {
+                var found = false
+                for i in 0..<citiesTop.count {
+                    if stat.cityId == citiesTop[i].id {
+                        found = true
+                        citiesTop[i].count += 1
+                        break
+                    }
+                }
+                if !found {
+                    citiesTop.append(.init(id: stat.cityId, title: citiesCache.cityTitle(id: stat.cityId), count: 1, percentage: 0))
+                }
+            }
+            citiesTop.sort(by: { first, second in
+                return first.count >= second.count
+            })
+            if citiesTop.count > 5 {
+                citiesTop.removeSubrange(5..<citiesTop.count)
+            }
+            var othersCount = episode.statistics.count
+            
+            for i in 0..<citiesTop.count {
+                citiesTop[i].percentage = Double(citiesTop[i].count) / Double(episode.statistics.count)
+                othersCount -= citiesTop[i].count
+            }
+            
+            if citiesTop.count == 5 {
+                citiesTop.append(.init(id: -1, title: "Другие", count: othersCount, percentage: Double(othersCount)/Double(episode.statistics.count)))
+            }
+            
+            for i in 0..<citiesTop.count {
+                maxPercentage = max(maxPercentage, citiesTop[i].percentage)
+            }
+        }
+        self.maxCityPercentage = maxPercentage
+        self.citiesTop = citiesTop
+    }
 }
 
 struct StatView_Previews: PreviewProvider {
     static var previews: some View {
-        StatView()
+        StatView(reactions: [
+            
+        ], episode: .init(), citiesCache: .init(cities: []))
     }
 }

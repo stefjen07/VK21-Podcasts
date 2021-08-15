@@ -6,8 +6,10 @@
 //
 
 import SwiftUI
+import VK_ios_sdk
 
 struct Reaction: Codable, Identifiable {
+    var statSelectionIdx: Int?
     var id: Int
     var emoji: String
     var description: String
@@ -87,6 +89,34 @@ struct TimedReactionsContainer: Codable {
 enum Sex: String, Codable {
     case male
     case female
+}
+
+struct City: Codable {
+    var id: Int
+    var title: String
+}
+
+struct CitiesResponse: Codable {
+    var response: [City]
+}
+
+func getCities(tIds: [Int]) -> [City] {
+    var ids: [Int] = tIds
+    var result: [City] = []
+    while ids.count != 0 {
+        let request = VKRequest(method: "getCitiesById", parameters: [
+            "city_ids": ids.dropFirst(min(ids.count,1000))
+        ])
+        request?.execute(resultBlock: { response in
+            if let cities = try? JSONDecoder().decode(CitiesResponse.self, from: response!.responseString.data(using: .utf8) ?? Data()) {
+                result.append(contentsOf: cities.response)
+            }
+        }, errorBlock: { error in
+            print(error?.localizedDescription)
+        })
+        ids.removeFirst(min(ids.count,1000))
+    }
+    return result
 }
 
 struct Stat: Codable {

@@ -168,16 +168,7 @@ struct StatReactionType {
 
 struct ReactionTypeGraph: View {
     var types: [StatReactionType]
-    
-    let reactionColors = [
-        Color("reaction0"),
-        Color("reaction1"),
-        Color("reaction2"),
-        Color("reaction3"),
-        Color("reaction4"),
-        Color("reaction5"),
-        Color("reaction6")
-    ]
+    var reactions: [Reaction]
     
     var minValue: Int
     var maxValue: Int
@@ -249,16 +240,19 @@ struct ReactionTypeGraph: View {
                     let size = proxy.size
                     
                     ZStack {
-                        ForEach(0..<types.count) { reactionIdx in
-                            VStack(spacing: 0) {
-                                Spacer()
-                                getPath(size: size, reactionIdx: reactionIdx)
-                                    .stroke(reactionColors[reactionIdx], lineWidth: 3)
-                            }
-                            VStack(spacing: 0) {
-                                Spacer()
-                                getMaskPath(size: size, reactionIdx: reactionIdx)
-                                    .fill(Color("Background"))
+                        ForEach(0..<reactions.count) { reactionIdx in
+                            
+                            if let selectionIdx = reactions[reactionIdx].statSelectionIdx {
+                                VStack(spacing: 0) {
+                                    Spacer()
+                                    getPath(size: size, reactionIdx: reactionIdx)
+                                        .stroke(reactionColors[selectionIdx], lineWidth: 3)
+                                }
+                                VStack(spacing: 0) {
+                                    Spacer()
+                                    getMaskPath(size: size, reactionIdx: reactionIdx)
+                                        .fill(Color("Background"))
+                                }
                             }
                         }
                     }.offset(x: 0, y: -15*0.5)
@@ -283,7 +277,9 @@ struct ReactionTypeGraph: View {
         .foregroundColor(secondaryColor)
     }
     
-    init(values: [[Int]]) {
+    init(values: [[Int]], reactions: [Reaction]) {
+        self.reactions = reactions
+        
         var minValueU, maxValueU: Int?
         for value in values {
             for val in value {
@@ -321,7 +317,11 @@ struct ReactionTypeGraph_Previews: PreviewProvider {
                 .edgesIgnoringSafeArea(.all)
             ReactionTypeGraph(values: [
                 [1000, 2000, 4000, 6000],
-                [1500, 2500, 5000, 3000]
+                [1500, 2500, 5000, 3000],
+                [2300, 1200, 3600, 3200],
+                [2500, 2600, 2700, 1900]
+            ], reactions: [
+            
             ])
                 .frame(width: 320, height: 165)
         }

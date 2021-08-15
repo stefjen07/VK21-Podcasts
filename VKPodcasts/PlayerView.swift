@@ -61,6 +61,7 @@ struct PlayerView: View {
     @ObservedObject var episode: Episode
     @Binding var podcast: Podcast
     @Environment(\.presentationMode) var presentation: Binding<PresentationMode>
+    @State var citiesCache: CitiesCache = .init(cities: [])
     
     func changeSpeed() {
         if(currentSpeedId == speeds.count-1) {
@@ -279,7 +280,7 @@ struct PlayerView: View {
                                 .frame(height: 30)
                         })
                         Spacer()
-                        NavigationLink(destination: StatView()) {
+                        NavigationLink(destination: StatView(reactions: podcast.reactions, episode: episode, citiesCache: citiesCache)) {
                             Image(systemName: "chart.line.uptrend.xyaxis")
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
@@ -345,6 +346,9 @@ struct PlayerView: View {
             }
         }
         .onAppear() {
+            citiesCache.cities = getCities(tIds: episode.statistics.map { stat in
+                return stat.cityId
+            })
             playerTimer = Timer.scheduledTimer(withTimeInterval: 0.2, repeats: true, block: { timer in
                 self.checkTime()
             })
