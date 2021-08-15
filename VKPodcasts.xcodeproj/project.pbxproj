@@ -12,10 +12,10 @@
 		3E2DE7BE26C5369800313C92 /* ReactionsGraph.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E2DE7BD26C5369700313C92 /* ReactionsGraph.swift */; };
 		3E434B8726C67881009D99DD /* PodcastsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E434B8626C67881009D99DD /* PodcastsView.swift */; };
 		3E434B8926C67C12009D99DD /* PodcastView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E434B8826C67C12009D99DD /* PodcastView.swift */; };
+		3E5E0B9926C9972600FE9A44 /* podcast.json in Resources */ = {isa = PBXBuildFile; fileRef = 3E5E0B9826C9972600FE9A44 /* podcast.json */; };
 		3E65895D26C817D30066F144 /* CustomSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E65895C26C817D30066F144 /* CustomSlider.swift */; };
 		3E65895F26C818040066F144 /* BottomSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E65895E26C818040066F144 /* BottomSheet.swift */; };
 		3E65896126C8223F0066F144 /* StatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E65896026C8223F0066F144 /* StatView.swift */; };
-		3E7700F926C7E4770044D7CA /* podcast.json in Resources */ = {isa = PBXBuildFile; fileRef = 3E7700F826C7E4770044D7CA /* podcast.json */; };
 		3E8431E726C5A4DB00545232 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E8431E626C5A4DB00545232 /* LoginView.swift */; };
 		3EA3D97526C83A2800D163E6 /* PieChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA3D97426C83A2800D163E6 /* PieChart.swift */; };
 		3EA7796426C4543700B0C05E /* VKPodcastsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA7796326C4543700B0C05E /* VKPodcastsApp.swift */; };
@@ -57,10 +57,10 @@
 		3E2DE7BD26C5369700313C92 /* ReactionsGraph.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReactionsGraph.swift; sourceTree = "<group>"; };
 		3E434B8626C67881009D99DD /* PodcastsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PodcastsView.swift; sourceTree = "<group>"; };
 		3E434B8826C67C12009D99DD /* PodcastView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodcastView.swift; sourceTree = "<group>"; };
+		3E5E0B9826C9972600FE9A44 /* podcast.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = podcast.json; sourceTree = "<group>"; };
 		3E65895C26C817D30066F144 /* CustomSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSlider.swift; sourceTree = "<group>"; };
 		3E65895E26C818040066F144 /* BottomSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheet.swift; sourceTree = "<group>"; };
 		3E65896026C8223F0066F144 /* StatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatView.swift; sourceTree = "<group>"; };
-		3E7700F826C7E4770044D7CA /* podcast.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = podcast.json; path = "../../../../Dropbox/Мой Mac (MacBook Air — Евгений)/Downloads/podcast.json"; sourceTree = "<group>"; };
 		3E8431E526C5A05B00545232 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		3E8431E626C5A4DB00545232 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		3EA3D97426C83A2800D163E6 /* PieChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PieChart.swift; sourceTree = "<group>"; };
@@ -164,9 +164,9 @@
 				3E2DE7BD26C5369700313C92 /* ReactionsGraph.swift */,
 				3EA7799126C45B9E00B0C05E /* ReactionItem.swift */,
 				3EA7796326C4543700B0C05E /* VKPodcastsApp.swift */,
+				3E5E0B9826C9972600FE9A44 /* podcast.json */,
 				3EA7796526C4543700B0C05E /* ContentView.swift */,
 				3E8431E626C5A4DB00545232 /* LoginView.swift */,
-				3E7700F826C7E4770044D7CA /* podcast.json */,
 				3EA7796726C4543900B0C05E /* Assets.xcassets */,
 				3EA7796926C4543900B0C05E /* Preview Content */,
 			);
@@ -320,7 +320,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3E7700F926C7E4770044D7CA /* podcast.json in Resources */,
+				3E5E0B9926C9972600FE9A44 /* podcast.json in Resources */,
 				3EA7796B26C4543900B0C05E /* Preview Assets.xcassets in Resources */,
 				3EA7796826C4543900B0C05E /* Assets.xcassets in Resources */,
 			);

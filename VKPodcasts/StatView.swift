@@ -44,6 +44,7 @@ let reactionColors = [
 ]
 
 struct StatReactionRow: View {
+    @Binding var selectionCount: Int
     @Binding var reactions: [Reaction]
     @Binding var reaction: Reaction
     var views: String
@@ -63,11 +64,13 @@ struct StatReactionRow: View {
                             }
                             if !busy {
                                 reaction.statSelectionIdx = i
+                                selectionCount += 1
                                 break
                             }
                         }
                     } else {
                         reaction.statSelectionIdx = nil
+                        selectionCount -= 1
                     }
                 }
             }, label: {
@@ -76,7 +79,9 @@ struct StatReactionRow: View {
                     .aspectRatio(contentMode: .fit)
                     .foregroundColor(Color("VKColor"))
                     .frame(width: 30, height: 30)
-            }).padding(.trailing, 10)
+            })
+                .disabled(selectionCount == 7 && reaction.statSelectionIdx != nil)
+                .padding(.trailing, 10)
             Text(reaction.emoji)
                 .font(.title)
             Text(reaction.description)
@@ -310,6 +315,32 @@ let ageGroups: [AgeGroup] = [
     .init(left: 48)
 ]
 
+extension Int: Identifiable {
+    public var id: Int {
+        return self
+    }
+}
+
+struct DataTimeInterval {
+    var description: String
+}
+
+var dataTimeIntervals: [DataTimeInterval] = [
+    .init(description: "7 дней"),
+    .init(description: "30 дней"),
+    .init(description: "полгода")
+]
+
+func scale(maximumValue: Int) -> Int {
+    var currentScale = 1
+    while true {
+        currentScale *= 10
+        if maximumValue < currentScale {
+            return currentScale/10
+        }
+    }
+}
+
 struct StatView: View {
     @Environment(\.presentationMode) var presentation: Binding<PresentationMode>
     let malePercentage: Double
@@ -317,9 +348,12 @@ struct StatView: View {
     var peopleCount: Int
     var citiesTop: [StatCityData]
     @State var reactions: [Reaction]
+    @State var showingReactions: [Int]
     var statAgeGroups: [StatAgeGroup]
     var maxCityPercentage: Double
     var maxAgePercentage: Double
+    @State var reactionSelectionCount = 0
+    @State var selectedTimeInterval: Int = 1
     
     func percentageOfFirst(_ k: Int) -> Double {
         var result = Double.zero
@@ -375,22 +409,35 @@ struct StatView: View {
                                 [1000, 2000, 4000, 6000],
                                 [1500, 2500, 5000, 3000],
                                 [2300, 1200, 3600, 3200],
-                                [2500, 2600, 2700, 1900]
+                                [2500, 2600, 2700, 1900],
+                                [2600, 1000, 3500, 2500]
                             ], reactions: reactions)
-                            ForEach($reactions) { reaction in
-                                StatReactionRow(reactions: $reactions, reaction: reaction, views: "4K")
+                            ForEach($showingReactions) { idx in
+                                StatReactionRow(selectionCount: $reactionSelectionCount, reactions: $reactions, reaction: $reactions[idx.wrappedValue], views: "4K")
                             }
-                            Button(action: {
-                                
-                            }, label: {
-                                HStack {
-                                    Image(systemName: "chevron.down")
-                                    Text("Остальные реакции")
-                                }.font(.body)
-                            })
-                                .foregroundColor(Color("VKColor"))
-                                .padding(.top, 5)
-                                .padding(.horizontal, 8)
+                            if reactions.count > 4 {
+                                Button(action: {
+                                    withAnimation {
+                                        if showingReactions.count > 4 {
+                                            self.showingReactions = [0,1,2,3]
+                                        } else {
+                                            var showingReactions = [Int]()
+                                            for i in reactions.indices {
+                                                showingReactions.append(i)
+                                            }
+                                            self.showingReactions = showingReactions
+                                        }
+                                    }
+                                }, label: {
+                                    HStack {
+                                        Image(systemName: showingReactions.count > 4 ? "chevron.up" : "chevron.down")
+                                        Text(showingReactions.count > 4 ? "Меньше реакций" : "Остальные реакции")
+                                    }.font(.body)
+                                })
+                                    .foregroundColor(Color("VKColor"))
+                                    .padding(.top, 5)
+                                    .padding(.horizontal, 8)
+                            }
                             DataComparingText()
                         }
                         Divider()
@@ -500,12 +547,19 @@ struct StatView: View {
                         .padding(.horizontal, 25)
                         .padding(.bottom, 25)
                     Divider()
-                    Button(action: {
-                        
+                    Picker(selection: $selectedTimeInterval, content: {
+                        ForEach(0..<dataTimeIntervals.count) { i in
+                            Text("Данные за \(dataTimeIntervals[i].description)")
+                                .foregroundColor(Color("VKColor"))
+                                .tag(i)
+                        }
                     }, label: {
-                        Text("Данные за 30 дней")
+                        Text("Данные за \(dataTimeIntervals[selectedTimeInterval].description)")
                         Image(systemName: "chevron.down")
-                    }).foregroundColor(Color("VKColor"))
+                    })
+                        .accentColor(Color("VKColor"))
+                        .pickerStyle(MenuPickerStyle())
+                        
                     Divider()
                 }
                 .preferredColorScheme(.dark)
@@ -624,6 +678,15 @@ struct StatView: View {
         self.citiesTop = citiesTop
         self.statAgeGroups = statAgeGroups
         self.maxAgePercentage = maxAgePercentage
+        if reactions.count >= 4 {
+            self._showingReactions = .init(initialValue: [0,1,2,3])
+        } else {
+            var showingReactions = [Int]()
+            for i in reactions.indices {
+                showingReactions.append(i)
+            }
+            self._showingReactions = .init(initialValue: showingReactions)
+        }
     }
 }
 

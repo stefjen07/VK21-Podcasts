@@ -31,8 +31,8 @@ struct StatReactionType {
     var values: [Int] = []
     var dataPoints: [CGPoint] = []
     
-    let maxValue: Int
-    let minValue: Int
+    let maxDegree: Int
+    let minDegree: Int
     
     var firstControlPoints: [CGPoint?] = []
     var secondControlPoints: [CGPoint?] = []
@@ -43,7 +43,7 @@ struct StatReactionType {
     var c = [CGFloat]()
     
     func getPercentage(idx: Int) -> CGFloat {
-        return 1 - CGFloat(values[idx] - minValue) / CGFloat(maxValue - minValue)
+        return CGFloat(values[idx] - minDegree) / CGFloat(maxDegree - minDegree)
     }
     
     mutating func calculatePoints() {
@@ -166,12 +166,46 @@ struct StatReactionType {
     }
 }
 
+func maxDegree(maximumValue: Int) -> Int {
+    let scale = scale(maximumValue: maximumValue)
+    return (maximumValue + scale) / scale * scale
+}
+
+func minDegree(minimumValue: Int, maximumValue: Int) -> Int {
+    let scale = scale(maximumValue: maximumValue)
+    return (minimumValue - scale) / scale * scale
+}
+
+struct Degree: Identifiable {
+    var id: Int
+    var description: String
+}
+
+func degreeDescriptions(minimumValue: Int, maximumValue: Int) -> [Degree] {
+    let maxDegree = maxDegree(maximumValue: maximumValue)
+    let minDegree = minDegree(minimumValue: minimumValue, maximumValue: maximumValue)
+    let scale = scale(maximumValue: maximumValue)
+    var currentDegree = minDegree
+    var result = [Degree]()
+    let count = (maxDegree - minDegree) / scale + 1
+    while currentDegree <= maxDegree {
+        if currentDegree >= 0 {
+            result.append(.init(id: count - 1 - result.count, description: shortNumber(currentDegree)))
+        }
+        currentDegree += scale
+    }
+    return result
+}
+
 struct ReactionTypeGraph: View {
     var types: [StatReactionType]
     var reactions: [Reaction]
     
     var minValue: Int
     var maxValue: Int
+    
+    let minDegree: Int
+    let maxDegree: Int
     
     func getOffset(height: CGFloat, reactionIdx: Int, idx: Int, pointSize: CGFloat) -> CGFloat {
         return pointSize * 0.5 - height * types[reactionIdx].getPercentage(idx: idx)
@@ -222,11 +256,11 @@ struct ReactionTypeGraph: View {
         HStack(spacing: 0) {
             HStack {
                 VStack {
-                    ForEach(0..<6) { i in
-                        if i != 0 {
+                    ForEach(degreeDescriptions(minimumValue: minValue, maximumValue: maxValue).reversed()) { degree in
+                        if degree.id != 0 {
                             Spacer()
                         }
-                        Text("\(7-i)K")
+                        Text(degree.description)
                     }
                 }
                 Rectangle()
@@ -281,29 +315,34 @@ struct ReactionTypeGraph: View {
         self.reactions = reactions
         
         var minValueU, maxValueU: Int?
-        for value in values {
-            for val in value {
-                if let minValue = minValueU {
-                    if minValue > val {
+        for i in 0..<values.count {
+            if reactions[i].statSelectionIdx != nil {
+                let value = values[i]
+                for val in value {
+                    if let minValue = minValueU {
+                        if minValue > val {
+                            minValueU = val
+                        }
+                    } else {
                         minValueU = val
                     }
-                } else {
-                    minValueU = val
-                }
-                if let maxValue = maxValueU {
-                    if maxValue < val {
+                    if let maxValue = maxValueU {
+                        if maxValue < val {
+                            maxValueU = val
+                        }
+                    } else {
                         maxValueU = val
                     }
-                } else {
-                    maxValueU = val
                 }
             }
         }
         self.maxValue = maxValueU ?? 0
         self.minValue = minValueU ?? 0
         self.types = []
+        self.minDegree = VKPodcasts.minDegree(minimumValue: minValue, maximumValue: maxValue)
+        self.maxDegree = VKPodcasts.maxDegree(maximumValue: maxValue)
         for value in values {
-            var type = StatReactionType(values: value, maxValue: minValue, minValue: maxValue)
+            var type = StatReactionType(values: value, maxDegree: maxDegree, minDegree: minDegree)
             type.calculate()
             types.append(type)
         }
