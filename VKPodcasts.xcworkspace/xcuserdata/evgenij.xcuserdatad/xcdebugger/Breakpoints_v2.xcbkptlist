@@ -142,8 +142,8 @@
             filePath = "VKPodcasts/StatView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "428"
-            endingLineNumber = "428"
+            startingLineNumber = "552"
+            endingLineNumber = "552"
             landmarkName = "init(reactions:episode:citiesCache:)"
             landmarkType = "7">
          </BreakpointContent>

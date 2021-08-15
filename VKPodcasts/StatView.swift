@@ -95,17 +95,26 @@ struct StatReactionRow: View {
 struct GraphLine: View {
     var color: Color
     var relativePercentage: Double
+    var text: String?
     
     var body: some View {
         GeometryReader { proxy in
             let size = proxy.size
+            let width = size.width - (text == nil ? 0 : 45)
             
             HStack(alignment: .center, spacing: 0) {
                 Capsule()
                     .fill(color)
-                    .frame(width: size.width * relativePercentage, height: 4)
+                    .frame(width: max(4, width * relativePercentage), height: 4)
+                if let text = text {
+                    Text(text)
+                        .font(.caption)
+                        .foregroundColor(.init(white: 0.65))
+                        .frame(width: 39)
+                        .padding(.leading, 6)
+                }
                 Spacer(minLength: 0)
-            }
+            }.frame(height: size.height)
         }
     }
 }
@@ -140,9 +149,12 @@ struct StatCityRow: View {
             let size = proxy.size
             
             HStack(alignment: .center) {
-                Text(data.title)
-                    .font(.subheadline)
-                    .frame(width: size.width * 0.35)
+                HStack {
+                    Text(data.title)
+                        .font(.subheadline)
+                        .lineLimit(1)
+                    Spacer()
+                }.frame(width: size.width * 0.35)
                 Text(shortNumber(data.count))
                     .foregroundColor(.init(white: 0.65))
                     .font(.footnote)
@@ -151,26 +163,53 @@ struct StatCityRow: View {
                     .foregroundColor(.init(white: 0.65))
                     .font(.footnote)
             }
+            .frame(height: size.height)
         }
     }
 }
 
+struct StatEmoji {
+    var emoji: String
+    var count: Int
+}
+
 struct StatAgeRow: View {
-    var emojies: [String] = ["👍", "👎", "💩"]
-    var description: String = "до 18"
+    var group: AgeGroup
+    var statGroup: StatAgeGroup
+    var maxPercentage: Double
     
     var body: some View {
-        HStack(spacing: 20) {
-            Text(description)
-            HStack(alignment: .center) {
-                Text(emojies[0])
-                    .font(.title2)
-                Text(emojies[1])
-                    .font(.subheadline)
-                Text(emojies[2])
-                    .font(.caption)
-            }
-        }
+        GeometryReader { proxy in
+            let size = proxy.size
+            
+            HStack(spacing: 0) {
+                HStack {
+                    Text(group.description)
+                    Spacer()
+                }
+                    .frame(width: 65)
+                Spacer()
+                HStack(alignment: .center) {
+                    if statGroup.emojies.count > 0 {
+                        Text(statGroup.emojies[0].emoji)
+                            .font(.title2)
+                    }
+                    if statGroup.emojies.count > 1 {
+                        Text(statGroup.emojies[1].emoji)
+                            .font(.subheadline)
+                    }
+                    if statGroup.emojies.count > 2 {
+                        Text(statGroup.emojies[2].emoji)
+                            .font(.caption)
+                    }
+                }
+                Spacer()
+                VStack(spacing: 16) {
+                    GraphLine(color: Color("Male"), relativePercentage: statGroup.malePercentage / maxPercentage, text: preparePercentage(statGroup.malePercentage * 100, percentage: true))
+                    GraphLine(color: Color("Female"), relativePercentage: statGroup.femalePercentage / maxPercentage, text: preparePercentage(statGroup.femalePercentage * 100, percentage: true))
+                }.frame(width: size.width * 0.5)
+            }.frame(height: size.height)
+        }.padding(.vertical, 8)
     }
 }
 
@@ -187,9 +226,89 @@ struct CitiesCache {
     }
 }
 
-struct AgeGroup {
-    
+enum AgeGroupType {
+    case lower
+    case range
+    case greaterEqual
 }
+
+struct StatAgeGroup {
+    var emojies: [StatEmoji] = []
+    var malePercentage: Double
+    var femalePercentage: Double
+    var maleCount: Int
+    var femaleCount: Int
+    
+    mutating func addEmoji(emoji: String) {
+        for i in 0..<emojies.count {
+            if emojies[i].emoji == emoji {
+                emojies[i].count += 1
+                return
+            }
+        }
+        emojies.append(.init(emoji: emoji, count: 1))
+    }
+    
+    mutating func sort() {
+        emojies.sort(by: { first, second in
+            return first.count >= second.count
+        })
+    }
+}
+
+struct AgeGroup {
+    var type: AgeGroupType
+    var value: Int
+    var bound: Int?
+    
+    init(left: Int, right: Int) {
+        self.type = .range
+        self.value = left
+        self.bound = right
+    }
+    
+    init(left: Int) {
+        self.type = .greaterEqual
+        self.value = left
+    }
+    
+    init(right: Int) {
+        self.type = .lower
+        self.value = right
+    }
+    
+    var description: String {
+        switch type {
+        case .lower:
+            return "до \(value)"
+        case .range:
+            return "\(value)-\(bound!)"
+        case .greaterEqual:
+            return "от \(value)"
+        }
+    }
+    
+    func contains(_ age: Int) -> Bool {
+        switch type {
+        case .lower:
+            return (0..<value).contains(age)
+        case .range:
+            return (value...bound!).contains(age)
+        case .greaterEqual:
+            return age >= value
+        }
+    }
+}
+
+let ageGroups: [AgeGroup] = [
+    .init(right: 18),
+    .init(left: 18, right: 23),
+    .init(left: 24, right: 29),
+    .init(left: 30, right: 35),
+    .init(left: 36, right: 41),
+    .init(left: 42, right: 47),
+    .init(left: 48)
+]
 
 struct StatView: View {
     @Environment(\.presentationMode) var presentation: Binding<PresentationMode>
@@ -198,7 +317,9 @@ struct StatView: View {
     var peopleCount: Int
     var citiesTop: [StatCityData]
     @State var reactions: [Reaction]
+    var statAgeGroups: [StatAgeGroup]
     var maxCityPercentage: Double
+    var maxAgePercentage: Double
     
     func percentageOfFirst(_ k: Int) -> Double {
         var result = Double.zero
@@ -336,8 +457,8 @@ struct StatView: View {
                                 Spacer()
                             }
                             Divider()
-                            ForEach(0..<4) { i in
-                                StatAgeRow()
+                            ForEach(0..<ageGroups.count) { i in
+                                StatAgeRow(group: ageGroups[i], statGroup: statAgeGroups[i], maxPercentage: maxAgePercentage)
                             }
                             DataComparingText()
                         }
@@ -368,6 +489,7 @@ struct StatView: View {
                                         .frame(height: 20)
                                 }
                                 StatCityRow(data: citiesTop[i], maxPercentage: maxCityPercentage, color: Color("city\(i)"))
+                                    .padding(.horizontal, 10)
                             }
                             DataComparingText()
                                 .padding(.top, 6)
@@ -437,6 +559,8 @@ struct StatView: View {
         }
         var citiesTop = [StatCityData]()
         var maxPercentage: Double = 0
+        var maxAgePercentage: Double = 0
+        var statAgeGroups = Array(repeating: StatAgeGroup(malePercentage: 0, femalePercentage: 0, maleCount: 0, femaleCount: 0), count: ageGroups.count)
         if episode.statistics.count != 0 {
             for stat in episode.statistics {
                 var found = false
@@ -444,6 +568,21 @@ struct StatView: View {
                     if stat.cityId == citiesTop[i].id {
                         found = true
                         citiesTop[i].count += 1
+                        break
+                    }
+                }
+                for i in 0..<ageGroups.count {
+                    if ageGroups[i].contains(stat.age) {
+                        if stat.sex == .male {
+                            statAgeGroups[i].maleCount += 1
+                        } else {
+                            statAgeGroups[i].femaleCount += 1
+                        }
+                        if let emoji = reactions.first(where: { reaction in
+                            return reaction.id == stat.reactionId
+                        })?.emoji {
+                            statAgeGroups[i].addEmoji(emoji: emoji)
+                        }
                         break
                     }
                 }
@@ -471,9 +610,20 @@ struct StatView: View {
             for i in 0..<citiesTop.count {
                 maxPercentage = max(maxPercentage, citiesTop[i].percentage)
             }
+            
+            for i in 0..<statAgeGroups.count {
+                statAgeGroups[i].malePercentage = Double(statAgeGroups[i].maleCount) / Double(episode.statistics.count)
+                statAgeGroups[i].femalePercentage = Double(statAgeGroups[i].femaleCount) / Double(episode.statistics.count)
+                maxAgePercentage = max(maxAgePercentage, statAgeGroups[i].malePercentage, statAgeGroups[i].femalePercentage)
+            }
+        }
+        for i in 0..<statAgeGroups.count {
+            statAgeGroups[i].sort()
         }
         self.maxCityPercentage = maxPercentage
         self.citiesTop = citiesTop
+        self.statAgeGroups = statAgeGroups
+        self.maxAgePercentage = maxAgePercentage
     }
 }
 
