@@ -649,7 +649,7 @@ struct StatView: View {
                 }
                 if !found {
                     let title = citiesCache.cityTitle(id: stat.cityId)
-                    if title == "" {
+                    if title != "" {
                         citiesTop.append(.init(id: stat.cityId, title: title, count: 1, percentage: 0))
                     }
                 }
