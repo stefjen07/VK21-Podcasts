@@ -47,7 +47,7 @@ class RSSParser: NSObject, XMLParserDelegate {
         if elementName == "item" {
             if let episode = tempEpisode {
                 if let explicit = tempExplicit {
-                    episode.isExplicit = explicit != "no"
+                    episode.isExplicit = explicit == "yes"
                 }
                 if let date = tempDate {
                     let formatter = DateFormatter()
@@ -60,7 +60,7 @@ class RSSParser: NSObject, XMLParserDelegate {
             tempExplicit = nil
             tempDate = nil
             isInItem = false
-        }  else if elementName == "image" && !isInItem {
+        } else if elementName == "image" && !isInItem {
             isInImage = false
         } else if elementName == "url" && isInImage {
             isInImageURL = false
@@ -73,7 +73,7 @@ class RSSParser: NSObject, XMLParserDelegate {
                 tempEpisode?.title = episode.title + string
             } else if tempElement == "guid" {
                 tempEpisode?.id = episode.id + string
-            } else if tempElement == "itunes:expilict" {
+            } else if tempElement == "itunes:explicit" {
                 tempExplicit? = explicit + string
             } else if tempElement == "pubDate" {
                 tempDate? = date + string

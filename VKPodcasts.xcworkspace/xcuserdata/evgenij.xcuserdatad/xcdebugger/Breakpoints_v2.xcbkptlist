@@ -14,8 +14,8 @@
             filePath = "VKPodcasts/ContentView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "29"
-            endingLineNumber = "29"
+            startingLineNumber = "38"
+            endingLineNumber = "38"
             landmarkName = "authorize()"
             landmarkType = "7">
          </BreakpointContent>
@@ -46,9 +46,9 @@
             filePath = "VKPodcasts/PodcastsView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "201"
-            endingLineNumber = "201"
-            landmarkName = "init()"
+            startingLineNumber = "204"
+            endingLineNumber = "204"
+            landmarkName = "init(ageMajority:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -62,9 +62,9 @@
             filePath = "VKPodcasts/PodcastsView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "200"
-            endingLineNumber = "200"
-            landmarkName = "init()"
+            startingLineNumber = "203"
+            endingLineNumber = "203"
+            landmarkName = "init(ageMajority:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

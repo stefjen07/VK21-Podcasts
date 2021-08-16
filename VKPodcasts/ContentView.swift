@@ -8,9 +8,18 @@
 import SwiftUI
 import VK_ios_sdk
 
+struct UserResponse {
+    var first_name, last_name: String
+}
+
+struct UsersResponse {
+    var response: [UserResponse]
+}
+
 class VKWrapper: NSObject, VKSdkDelegate, VKSdkUIDelegate {
     @Binding var presentedController: UIViewController?
     @Binding var isPresented: Bool
+    @Binding var ageMajority: Bool
     
     func showVC(_ controller: UIViewController) {
         presentedController = controller
@@ -35,6 +44,36 @@ class VKWrapper: NSObject, VKSdkDelegate, VKSdkUIDelegate {
         }, errorBlock: { error in
             print(error?.localizedDescription)
         })
+        /*let userRequest = VKRequest(method: "users.get", parameters: [
+            "access_token": VKSdk.accessToken().accessToken ?? "",
+            "user_ids": [VKSdk.accessToken().localUser]
+            "fields": ["bdate"],
+            "name_case": "nom"
+        ])
+        userRequest?.execute(resultBlock: { response in
+            response.responseString
+        }, errorBlock: { error in
+            print(error?.localizedDescription)
+        })*/
+        var bdate = VKSdk.accessToken().localUser.bdate ?? "01.01.2021"
+        
+        if bdate.count > 1 {
+            if bdate[bdate.index(bdate.startIndex, offsetBy: 1)] == "." {
+                bdate = "0" + bdate
+            }
+        }
+        
+        if bdate.count > 6 {
+            if bdate[bdate.index(bdate.startIndex, offsetBy: 4)] == "." {
+                bdate = bdate.dropFirst(3) + "0" + bdate.dropLast(4)
+            }
+        }
+        
+        let formatter = DateFormatter()
+        formatter.dateFormat = "dd.MM.yyyy"
+        
+        ageMajority = Date().timeIntervalSince((formatter.date(from: bdate) ?? Date())) > 18*365.25*24*60*60
+        print("Majority: \(ageMajority)")
     }
     
     func vkSdkTokenHasExpired(_ expiredToken: VKAccessToken!) {
@@ -65,10 +104,11 @@ class VKWrapper: NSObject, VKSdkDelegate, VKSdkUIDelegate {
     }
 
     
-    init(presentedController: Binding<UIViewController?>, isPresented: Binding<Bool>, authorized: Binding<Bool>) {
+    init(presentedController: Binding<UIViewController?>, isPresented: Binding<Bool>, authorized: Binding<Bool>, ageMajority: Binding<Bool>) {
         self._presentedController = presentedController
         self._isPresented = isPresented
         self._authorized = authorized
+        self._ageMajority = ageMajority
     }
 }
 
@@ -88,6 +128,7 @@ struct ContentView: View {
     @State var controller: UIViewController? = nil
     @State var isPresented = false
     @State var authorized = false
+    @State var ageMajority = false
     @State var wrapper: VKWrapper?
     
     var body: some View {
@@ -96,13 +137,13 @@ struct ContentView: View {
                 ViewControllerRepresentable(viewController: controller!)
             } else {
                 if authorized {
-                    PodcastsView()
+                    PodcastsView(ageMajority: $ageMajority)
                 } else {
                     LoginView(wrapper: $wrapper)
                 }
             }
         }.onAppear {
-            wrapper = VKWrapper(presentedController: $controller, isPresented: $isPresented, authorized: $authorized)
+            wrapper = VKWrapper(presentedController: $controller, isPresented: $isPresented, authorized: $authorized, ageMajority: $ageMajority)
             VKSdk.initialize(withAppId: "7925312").register(wrapper)
             VKSdk.instance().uiDelegate = wrapper
             VKSdk.wakeUpSession(nil, complete: { state, error in

@@ -10,9 +10,10 @@ import Combine
 
 struct PodcastItem: View {
     @Binding var podcast: Podcast
+    @Binding var ageMajority: Bool
     
     var body: some View {
-        NavigationLink(destination: PodcastView(podcast: $podcast)) {
+        NavigationLink(destination: PodcastView(podcast: $podcast, ageMajority: $ageMajority)) {
             HStack {
                 if let logo = podcast.logoCache {
                     logo
@@ -148,6 +149,7 @@ struct NewPodcastView: View {
 struct PodcastsView: View {
     @State var podcasts: [Podcast]
     @State var isAdding = false
+    @Binding var ageMajority: Bool
     
     func lazyLogo() {
         for podcast in $podcasts {
@@ -165,7 +167,7 @@ struct PodcastsView: View {
                 ScrollView(.vertical, showsIndicators: true) {
                     VStack(spacing: 15) {
                         ForEach($podcasts) { podcast in
-                            PodcastItem(podcast: podcast)
+                            PodcastItem(podcast: podcast, ageMajority: $ageMajority)
                                 .foregroundColor(.white)
                         }
                         Spacer()
@@ -194,7 +196,8 @@ struct PodcastsView: View {
         }
     }
     
-    init() {
+    init(ageMajority: Binding<Bool>) {
+        self._ageMajority = ageMajority
         let parser = RSSParser(url: URL(string: "https://vk.com/podcasts-147415323_-1000000.rss")!)
         parser.parse()
         parser.podcast.parseJSON(name: "podcast")
@@ -205,6 +208,6 @@ struct PodcastsView: View {
 
 struct PodcastsView_Previews: PreviewProvider {
     static var previews: some View {
-        PodcastsView()
+        PodcastsView(ageMajority: .constant(true))
     }
 }
