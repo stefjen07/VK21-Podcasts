@@ -43,6 +43,9 @@ struct StatReactionType {
     var c = [CGFloat]()
     
     func getPercentage(idx: Int) -> CGFloat {
+        if maxDegree == minDegree {
+            return 0
+        }
         return CGFloat(values[idx] - minDegree) / CGFloat(maxDegree - minDegree)
     }
     
@@ -173,7 +176,7 @@ func maxDegree(maximumValue: Int) -> Int {
 
 func minDegree(minimumValue: Int, maximumValue: Int) -> Int {
     let scale = scale(maximumValue: maximumValue)
-    return (minimumValue - scale) / scale * scale
+    return max(0,(minimumValue - scale) / scale * scale)
 }
 
 struct Degree: Identifiable {
@@ -224,11 +227,7 @@ struct ReactionTypeGraph: View {
     let minDegree: Int
     let maxDegree: Int
     
-    //let intervalCounts: [Int] DEBUG
-    
-    func getOffset(height: CGFloat, reactionIdx: Int, idx: Int, pointSize: CGFloat) -> CGFloat {
-        return pointSize * 0.5 - height * types[reactionIdx].getPercentage(idx: idx)
-    }
+    let bottomDegrees: [String]
     
     func adapt(point: CGPoint, size: CGSize) -> CGPoint {
         return CGPoint(x: point.x * size.width, y: point.y * size.height)
@@ -294,21 +293,14 @@ struct ReactionTypeGraph: View {
                     
                     ZStack {
                         ForEach(0..<reactions.count) { reactionIdx in
-                            
                             if let selectionIdx = reactions[reactionIdx].statSelectionIdx {
-                                VStack(spacing: 0) {
-                                    Spacer()
-                                    getPath(size: size, reactionIdx: reactionIdx)
-                                        .stroke(reactionColors[selectionIdx], lineWidth: 3)
-                                }
-                                VStack(spacing: 0) {
-                                    Spacer()
-                                    getMaskPath(size: size, reactionIdx: reactionIdx)
-                                        .fill(Color("Background"))
-                                }
+                                getPath(size: size, reactionIdx: reactionIdx)
+                                    .stroke(reactionColors[selectionIdx], lineWidth: 3)
+                                getMaskPath(size: size, reactionIdx: reactionIdx)
+                                    .fill(Color("Background"))
                             }
                         }
-                    }.offset(x: 0, y: -15*0.5)
+                    }
                 }
                 Rectangle()
                     .fill(Color(white: 0.3))
@@ -316,11 +308,11 @@ struct ReactionTypeGraph: View {
                     .padding(.bottom, 5)
                     .zIndex(-1)
                 HStack {
-                    ForEach(0..<5) { i in
+                    ForEach(bottomDegrees.indices) { i in
                         if i != 0 {
                             Spacer()
                         }
-                        Text("\(i*6)")
+                        Text("\(bottomDegrees[i])")
                     }
                 }
                 .frame(height: 20)
@@ -330,8 +322,9 @@ struct ReactionTypeGraph: View {
         .foregroundColor(secondaryColor)
     }
     
-    init(values: [[Int]], reactions: [Reaction]) {
+    init(values: [[Int]], reactions: [Reaction], duration: Double) {
         self.reactions = reactions
+        self.bottomDegrees = getBottomDegrees(maxValue: (duration + 30) / 60, count: 5, leadingZero: false)
         
         var minValueU, maxValueU: Int?
         for i in 0..<values.count {
@@ -374,13 +367,10 @@ struct ReactionTypeGraph_Previews: PreviewProvider {
             Color("Background")
                 .edgesIgnoringSafeArea(.all)
             ReactionTypeGraph(values: [
-                [1000, 2000, 4000, 6000],
-                [1500, 2500, 5000, 3000],
-                [2300, 1200, 3600, 3200],
-                [2500, 2600, 2700, 1900]
+                
             ], reactions: [
             
-            ])
+            ], duration: 0)
                 .frame(width: 320, height: 165)
         }
     }

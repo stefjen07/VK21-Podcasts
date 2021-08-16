@@ -82,14 +82,6 @@ struct ReactionsGraph: View {
             }
         }
     }
-    
-    init(selfSize: CGSize) {
-        self.selfSize = selfSize
-        self.duration = 0
-        self.currentTime = 0
-        self.colPercentage = []
-        self.colPercentage = Array(repeating: 0.5, count: colsCount)
-    }
 }
 
 struct ReactionsGraph_Previews: PreviewProvider {

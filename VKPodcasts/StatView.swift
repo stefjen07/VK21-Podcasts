@@ -354,6 +354,9 @@ struct StatView: View {
     var maxAgePercentage: Double
     @State var reactionSelectionCount = 0
     @State var selectedTimeInterval: Int = 1
+    @State var difference = ""
+    
+    let values: [[Int]]
     
     func percentageOfFirst(_ k: Int) -> Double {
         var result = Double.zero
@@ -385,35 +388,19 @@ struct StatView: View {
                                     .font(.subheadline)
                                     .foregroundColor(.init(white: 0.65))
                                 Spacer()
-                                Text("8 %")
+                                Text(difference)
                             }
                             GeometryReader { proxy in
                                 let size = proxy.size
-                                ReactionsGraph(selfSize: size)
-                            }.frame(height: 120)
-                            HStack {
-                                ForEach(0..<9) { i in
-                                    if i != 0 {
-                                        Spacer()
-                                    }
-                                    Text("\(i*3<10 ? "0" : "")\(i*3)")
-                                        .font(.subheadline)
-                                        .foregroundColor(.init(white: 0.65))
-                                }
-                            }
+                                StatReactionsGraph(height: size.height, duration: duration, episode: episode, difference: $difference)
+                            }.frame(height: 140)
                         }
                         Divider()
                         VStack(alignment: .leading) {
                             StatTitle("Виды реакций")
-                            ReactionTypeGraph(values: [
-                                [1000, 2000, 4000, 6000],
-                                [1500, 2500, 5000, 3000],
-                                [2300, 1200, 3600, 3200],
-                                [2500, 2600, 2700, 1900],
-                                [2600, 1000, 3500, 2500]
-                            ], reactions: reactions)
+                            ReactionTypeGraph(values: values, reactions: reactions, duration: duration)
                             ForEach($showingReactions) { idx in
-                                StatReactionRow(selectionCount: $reactionSelectionCount, reactions: $reactions, reaction: $reactions[idx.wrappedValue], views: "4K")
+                                StatReactionRow(selectionCount: $reactionSelectionCount, reactions: $reactions, reaction: $reactions[idx.wrappedValue], views: shortNumber(values[idx.wrappedValue].reduce(0, +)))
                             }
                             if reactions.count > 4 {
                                 Button(action: {
@@ -596,7 +583,27 @@ struct StatView: View {
         )
     }
     
+    var episode: Episode
+    var duration: Double
+    
     init(reactions: [Reaction], episode: Episode, citiesCache: CitiesCache) {
+        self.episode = episode
+        let parts = episode.duration.split(separator: ":").map({
+            Int($0)
+        })
+        self.duration = 0
+        if parts.count > 2 {
+            if let parts0 = parts[0], let parts1 = parts[1], let parts2 = parts[2] {
+                let actualDuration = Double((parts0 * 60 + parts1) * 60 + parts2) + 0.5
+                print("Duration is \(actualDuration)")
+                self.duration = actualDuration
+            } else {
+                print("Wrong duration")
+            }
+        } else {
+            print("Wrong duration")
+        }
+        
         self._reactions = .init(initialValue: reactions)
         maleCount = 0
         peopleCount = 0
@@ -687,6 +694,26 @@ struct StatView: View {
             }
             self._showingReactions = .init(initialValue: showingReactions)
         }
+        
+        let step = duration / 6
+        
+        var values = [[Int]]()
+        
+        for reaction in reactions {
+            var value = [Int]()
+            for i in 0..<5 {
+                let range = (step*Double(i))..<(step*(Double(i)+1))
+                var val = 0
+                for stat in episode.statistics {
+                    if stat.reactionId == reaction.id && range.contains(Double(stat.time) / 1000) {
+                        val += 1
+                    }
+                }
+                value.append(val)
+            }
+            values.append(value)
+        }
+        self.values = values
     }
 }
 

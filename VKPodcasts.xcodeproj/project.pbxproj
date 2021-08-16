@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		002F0DA3F567C5815F7F5475 /* Pods_VKPodcasts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C4ABB5364CB21DA421B412E /* Pods_VKPodcasts.framework */; };
 		204CD1C8D05D9EEAF116AEE7 /* Pods_VKPodcasts_VKPodcastsUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C54067D9C31D86D2E2B400CC /* Pods_VKPodcasts_VKPodcastsUITests.framework */; };
+		3E20F0CB26CA7E7000CF8053 /* StatReactionsGraph.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E20F0CA26CA7E7000CF8053 /* StatReactionsGraph.swift */; };
 		3E2DE7BE26C5369800313C92 /* ReactionsGraph.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E2DE7BD26C5369700313C92 /* ReactionsGraph.swift */; };
 		3E434B8726C67881009D99DD /* PodcastsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E434B8626C67881009D99DD /* PodcastsView.swift */; };
 		3E434B8926C67C12009D99DD /* PodcastView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E434B8826C67C12009D99DD /* PodcastView.swift */; };
@@ -54,6 +55,7 @@
 		07313568BC89ABA711DDC5AC /* Pods-VKPodcastsTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VKPodcastsTests.debug.xcconfig"; path = "Target Support Files/Pods-VKPodcastsTests/Pods-VKPodcastsTests.debug.xcconfig"; sourceTree = "<group>"; };
 		0C4ABB5364CB21DA421B412E /* Pods_VKPodcasts.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_VKPodcasts.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		27F902617BE0166225C22737 /* Pods_VKPodcastsTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_VKPodcastsTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		3E20F0CA26CA7E7000CF8053 /* StatReactionsGraph.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatReactionsGraph.swift; sourceTree = "<group>"; };
 		3E2DE7BD26C5369700313C92 /* ReactionsGraph.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReactionsGraph.swift; sourceTree = "<group>"; };
 		3E434B8626C67881009D99DD /* PodcastsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PodcastsView.swift; sourceTree = "<group>"; };
 		3E434B8826C67C12009D99DD /* PodcastView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodcastView.swift; sourceTree = "<group>"; };
@@ -156,6 +158,7 @@
 				3EA7798D26C454EB00B0C05E /* DataModel.swift */,
 				3EA7798F26C4568A00B0C05E /* PlayerView.swift */,
 				3E65896026C8223F0066F144 /* StatView.swift */,
+				3E20F0CA26CA7E7000CF8053 /* StatReactionsGraph.swift */,
 				3EA8354F26C8626D00EA4662 /* ReactionTypeGraph.swift */,
 				3EA3D97426C83A2800D163E6 /* PieChart.swift */,
 				3E65895E26C818040066F144 /* BottomSheet.swift */,
@@ -459,6 +462,7 @@
 				3E65896126C8223F0066F144 /* StatView.swift in Sources */,
 				3EA7798E26C454EB00B0C05E /* DataModel.swift in Sources */,
 				3EA8355026C8626D00EA4662 /* ReactionTypeGraph.swift in Sources */,
+				3E20F0CB26CA7E7000CF8053 /* StatReactionsGraph.swift in Sources */,
 				3E434B8926C67C12009D99DD /* PodcastView.swift in Sources */,
 				3EA7799226C45B9E00B0C05E /* ReactionItem.swift in Sources */,
 				3EF6844326C57EAB0047CF20 /* RSSParser.swift in Sources */,
