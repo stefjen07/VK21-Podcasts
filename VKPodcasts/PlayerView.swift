@@ -163,11 +163,19 @@ struct PlayerView: View {
                                         GeometryReader { proxy in
                                             let size = proxy.size
                                             
-                                            ReactionsGraph(selfSize: size)
+                                            ReactionsGraph(selfSize: size, duration: durationSeconds, currentTime: currentSecond, episode: episode)
                                         }
                                     }
                                 }
-                                SliderRepresentable(value: $trackPercentage)
+                                CustomSlider(offset: $trackPercentage, hasUpdates: $sliderHasUpdates)
+                                    .onChange(of: sliderHasUpdates, perform: { hasUpdates in
+                                        if hasUpdates {
+                                            let seconds = Double(trackPercentage) * durationSeconds
+                                            
+                                            player.seek(to: .init(seconds: seconds, preferredTimescale: player.currentTime().timescale))
+                                            sliderHasUpdates = false
+                                        }
+                                    })
                                 HStack {
                                     Text(currentTime)
                                     Spacer()
@@ -383,7 +391,11 @@ struct PlayerView: View {
     @State var playerTimer: Timer?
     @State var currentTime = "0:00"
     @State var timeLeft: String
-    @State var trackPercentage: Float = 0
+    @State var trackPercentage: CGFloat = 0
+    @State var sliderHasUpdates = false
+    
+    @State var currentSecond: Double = 0
+    @State var durationSeconds: Double = 0
     
     func turnReactions(container: TimedReactionsContainer, isAvailable: Bool) {
         for reaction in container.availableReactions {
@@ -401,14 +413,18 @@ struct PlayerView: View {
             turnReactions(container: timedContainer, isAvailable: (timedContainer.from...timedContainer.to).contains(Int(seconds)))
         }
         currentTime = secondsToString(seconds: Int(seconds))
+        currentSecond = seconds
         if let duration = player.currentItem?.duration.seconds, !duration.isNaN {
+            durationSeconds = duration
             let secondsLeft = duration - seconds
             if paused {
                 timeLeft = episode.duration
             } else {
                 timeLeft = "-" + secondsToString(seconds: Int(secondsLeft))
             }
-            trackPercentage = Float(seconds / duration)
+            if !sliderHasUpdates {
+                trackPercentage = CGFloat(seconds / duration)
+            }
         }
     }
     

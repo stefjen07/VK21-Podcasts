@@ -197,6 +197,23 @@ func degreeDescriptions(minimumValue: Int, maximumValue: Int) -> [Degree] {
     return result
 }
 
+var typeGraphIntervals: [Range<Int>] = [
+    21..<27,
+     3..<9,
+     9..<15,
+    15..<21
+]
+
+func typeGraphIdx(time: Int) -> Int {
+    for intervalIdx in 0..<typeGraphIntervals.count {
+        let interval = typeGraphIntervals[intervalIdx]
+        if interval.contains(time) || interval.contains(time + 24) {
+            return intervalIdx
+        }
+    }
+    return 0
+}
+
 struct ReactionTypeGraph: View {
     var types: [StatReactionType]
     var reactions: [Reaction]
@@ -206,6 +223,8 @@ struct ReactionTypeGraph: View {
     
     let minDegree: Int
     let maxDegree: Int
+    
+    //let intervalCounts: [Int] DEBUG
     
     func getOffset(height: CGFloat, reactionIdx: Int, idx: Int, pointSize: CGFloat) -> CGFloat {
         return pointSize * 0.5 - height * types[reactionIdx].getPercentage(idx: idx)
@@ -221,7 +240,7 @@ struct ReactionTypeGraph: View {
     
     func getPath(size: CGSize, reactionIdx: Int) -> Path {
         var path = Path()
-        for i in 0..<3 {
+        for i in 0..<4 {
             var point1 = types[reactionIdx].dataPoints[i]
             var point2 = types[reactionIdx].dataPoints[i+1]
             if var control1 = types[reactionIdx].firstControlPoints[i],
@@ -236,7 +255,7 @@ struct ReactionTypeGraph: View {
                 path.addEllipse(in: circleRect(center: point1, radius: 6))
             }
         }
-        var lastPoint = types[reactionIdx].dataPoints[3]
+        var lastPoint = types[reactionIdx].dataPoints[4]
         lastPoint = adapt(point: lastPoint, size: size)
         path.addEllipse(in: circleRect(center: lastPoint, radius: 6))
         return path
@@ -244,7 +263,7 @@ struct ReactionTypeGraph: View {
     
     func getMaskPath(size: CGSize, reactionIdx: Int) -> Path {
         var path = Path()
-        for i in 0..<4 {
+        for i in 0..<5 {
             var point = types[reactionIdx].dataPoints[i]
             point = adapt(point: point, size: size)
             path.addEllipse(in: circleRect(center: point, radius: 5))
@@ -297,11 +316,11 @@ struct ReactionTypeGraph: View {
                     .padding(.bottom, 5)
                     .zIndex(-1)
                 HStack {
-                    ForEach(0..<4) { i in
+                    ForEach(0..<5) { i in
                         if i != 0 {
                             Spacer()
                         }
-                        Text("\(i*8)")
+                        Text("\(i*6)")
                     }
                 }
                 .frame(height: 20)

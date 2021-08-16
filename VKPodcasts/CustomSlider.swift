@@ -7,58 +7,40 @@
 
 import SwiftUI
 
-class CustomSlider: UISlider {
-    @IBInspectable var trackHeight: CGFloat = 3
-    @IBInspectable var thumbRadius: CGFloat = 20
-
-    private lazy var thumbView: UIView = {
-        let thumb = UIView()
-        thumb.backgroundColor = UIColor(named: "VKColor")
-        return thumb
-    }()
-
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        let thumb = thumbImage(radius: thumbRadius)
-        setThumbImage(thumb, for: .normal)
+struct CustomSlider: View {
+    @Binding var offset: CGFloat
+    @Binding var hasUpdates: Bool
+    let thumbRadius: CGFloat = 5
+    let trackHeight: CGFloat = 5
+    
+    var body: some View {
+        GeometryReader { proxy in
+            let size = proxy.size
+            
+            ZStack(alignment: Alignment(horizontal: .leading, vertical: .center)) {
+                Capsule()
+                    .fill(Color("VKColor").opacity(0.2))
+                    .frame(height: trackHeight)
+                Capsule()
+                    .fill(Color("VKColor"))
+                    .frame(width: offset * size.width + thumbRadius, height: trackHeight)
+                Circle()
+                    .fill(Color("VKColor"))
+                    .frame(width: thumbRadius * 2, height: thumbRadius * 2)
+                    .offset(x: offset * size.width)
+                    .gesture(DragGesture().onChanged({ value in
+                        if value.location.x >= thumbRadius && value.location.x <= size.width - thumbRadius {
+                            offset = (value.location.x - thumbRadius) / size.width
+                            hasUpdates = true
+                        }
+                    }))
+            }
+        }.frame(height: thumbRadius * 2)
     }
-
-    private func thumbImage(radius: CGFloat) -> UIImage {
-        thumbView.frame = CGRect(x: 0, y: radius / 2, width: radius, height: radius)
-        thumbView.layer.cornerRadius = radius / 2
-
-        let renderer = UIGraphicsImageRenderer(bounds: thumbView.bounds)
-        return renderer.image { rendererContext in
-            thumbView.layer.render(in: rendererContext.cgContext)
-        }
-    }
-
-    override func trackRect(forBounds bounds: CGRect) -> CGRect {
-        var newRect = super.trackRect(forBounds: bounds)
-        newRect.size.height = trackHeight
-        return newRect
-    }
-
 }
 
-struct SliderRepresentable: UIViewRepresentable {
-    @Binding var value: Float
-    
-    func updateUIView(_ uiView: CustomSlider, context: Context) {
-        
-    }
-    
-    func makeUIView(context: Context) -> CustomSlider {
-        let slider = CustomSlider()
-        slider.observe(\.value, changeHandler: { slider, _ in
-            self.value = slider.value
-        })
-        slider.thumbRadius = 15
-        slider.minimumValue = 0
-        slider.maximumValue = 1
-        slider.awakeFromNib()
-        slider.minimumTrackTintColor = .init(named: "VKColor")
-        slider.maximumTrackTintColor = .init(Color("VKColor").opacity(0.2))
-        return slider
+struct CustomSliderPreviews: PreviewProvider {
+    static var previews: some View {
+        CustomSlider(offset: .constant(0.5), hasUpdates: .constant(false))
     }
 }
