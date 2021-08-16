@@ -9,35 +9,40 @@ import SwiftUI
 import VK_ios_sdk
 
 class VKWrapper: NSObject, VKSdkDelegate, VKSdkUIDelegate {
-    func vkSdkNeedCaptchaEnter(_ captchaError: VKError!) {
-        let vc = VKCaptchaViewController.captchaControllerWithError(captchaError)
-        presentedController = vc
-        isPresented = true
-    }
-    
-    var token: VKAccessToken?
-    let sdk: VKSdk
-    var authorized = false
     @Binding var presentedController: UIViewController?
     @Binding var isPresented: Bool
     
-    func authorize() {
-        if let token = token, let accessToken = token.accessToken {
-            authorized = true
-            let request = VKRequest(method: "stats.trackVisitor", parameters: [
-                "access_token": accessToken
-            ])
-            request?.execute(resultBlock: { response in
-                print("Track visitor respond received: \(response?.responseString)")
-            }, errorBlock: { error in
-                print(error?.localizedDescription)
-            })
+    func showVC(_ controller: UIViewController) {
+        presentedController = controller
+        isPresented = true
+    }
+    
+    func vkSdkNeedCaptchaEnter(_ captchaError: VKError!) {
+        if let vc = VKCaptchaViewController.captchaControllerWithError(captchaError) {
+            showVC(vc)
         }
+    }
+    
+    @Binding var authorized: Bool
+    
+    func authorize() {
+        authorized = true
+        let request = VKRequest(method: "stats.trackVisitor", parameters: [
+            "access_token": VKSdk.accessToken().accessToken ?? ""
+        ])
+        request?.execute(resultBlock: { response in
+            print("Track visitor respond received: \(response?.responseString)")
+        }, errorBlock: { error in
+            print(error?.localizedDescription)
+        })
+    }
+    
+    func vkSdkTokenHasExpired(_ expiredToken: VKAccessToken!) {
+        VKSdk.authorize(nil)
     }
     
     func vkSdkAccessAuthorizationFinished(with result: VKAuthorizationResult!) {
         if (result.token != nil) {
-            token = result.token
             authorize()
         } else if (result.error != nil) {
             print(result.error.localizedDescription)
@@ -51,29 +56,19 @@ class VKWrapper: NSObject, VKSdkDelegate, VKSdkUIDelegate {
     }
     
     func vkSdkAccessTokenUpdated(_ newToken: VKAccessToken!, oldToken: VKAccessToken!) {
-        token = newToken
+        
     }
     
     func vkSdkShouldPresent(_ controller: UIViewController!) {
         print("Presenting VK controller")
-        presentedController = controller
-        isPresented = true
+        showVC(controller)
     }
+
     
-    func vkSdkWillDismiss(_ controller: UIViewController!) {
-        isPresented = false
-    }
-    
-    func register() {
-        sdk.register(self)
-        VKSdk.instance().uiDelegate = self
-    }
-    
-    init(presentedController: Binding<UIViewController?>, isPresented: Binding<Bool>) {
+    init(presentedController: Binding<UIViewController?>, isPresented: Binding<Bool>, authorized: Binding<Bool>) {
         self._presentedController = presentedController
         self._isPresented = isPresented
-        authorized = true //DEBUG
-        sdk  = VKSdk.initialize(withAppId: "7925312")
+        self._authorized = authorized
     }
 }
 
@@ -92,22 +87,31 @@ struct ViewControllerRepresentable: UIViewControllerRepresentable {
 struct ContentView: View {
     @State var controller: UIViewController? = nil
     @State var isPresented = false
-    @State var wrapper: VKWrapper? = nil
+    @State var authorized = false
+    @State var wrapper: VKWrapper?
     
     var body: some View {
         ZStack {
             if isPresented {
                 ViewControllerRepresentable(viewController: controller!)
-            } else if wrapper == nil {
-                EmptyView()
-            } else if !wrapper!.authorized {
-                LoginView(wrapper: $wrapper)
             } else {
-                PodcastsView()
+                if authorized {
+                    PodcastsView()
+                } else {
+                    LoginView(wrapper: $wrapper)
+                }
             }
         }.onAppear {
-            wrapper = VKWrapper(presentedController: $controller, isPresented: $isPresented)
-            wrapper?.register()
+            wrapper = VKWrapper(presentedController: $controller, isPresented: $isPresented, authorized: $authorized)
+            VKSdk.initialize(withAppId: "7925312").register(wrapper)
+            VKSdk.instance().uiDelegate = wrapper
+            VKSdk.wakeUpSession(nil, complete: { state, error in
+                if state == .authorized {
+                    wrapper?.authorize()
+                } else if let error = error {
+                    print(error.localizedDescription)
+                }
+            })
         }
     }
 }

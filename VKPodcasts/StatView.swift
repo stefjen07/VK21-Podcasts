@@ -648,7 +648,10 @@ struct StatView: View {
                     }
                 }
                 if !found {
-                    citiesTop.append(.init(id: stat.cityId, title: citiesCache.cityTitle(id: stat.cityId), count: 1, percentage: 0))
+                    let title = citiesCache.cityTitle(id: stat.cityId)
+                    if title == "" {
+                        citiesTop.append(.init(id: stat.cityId, title: title, count: 1, percentage: 0))
+                    }
                 }
             }
             citiesTop.sort(by: { first, second in

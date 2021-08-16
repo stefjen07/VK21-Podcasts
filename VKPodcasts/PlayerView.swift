@@ -354,9 +354,9 @@ struct PlayerView: View {
             }
         }
         .onAppear() {
-            citiesCache.cities = getCities(tIds: episode.statistics.map { stat in
+            getCities(tIds: episode.statistics.map { stat in
                 return stat.cityId
-            })
+            }, destination: $citiesCache.cities)
             playerTimer = Timer.scheduledTimer(withTimeInterval: 0.2, repeats: true, block: { timer in
                 self.checkTime()
             })

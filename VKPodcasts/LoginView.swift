@@ -16,7 +16,7 @@ struct LoginView: View {
             Color("Background")
                 .edgesIgnoringSafeArea(.all)
             Button(action: {
-                VKSdk.authorize([], with: .unlimitedToken)
+                VKSdk.authorize(nil)
             }, label: {
                 Text("Войти с ВКонтакте")
                     .foregroundColor(.white)
@@ -30,6 +30,6 @@ struct LoginView: View {
 
 struct LoginView_Previews: PreviewProvider {
     static var previews: some View {
-        LoginView(wrapper: .constant(VKWrapper(presentedController: .constant(nil), isPresented: .constant(false))))
+        LoginView(wrapper: .constant(nil))
     }
 }

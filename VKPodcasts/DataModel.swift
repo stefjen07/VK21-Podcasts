@@ -100,23 +100,33 @@ struct CitiesResponse: Codable {
     var response: [City]
 }
 
-func getCities(tIds: [Int]) -> [City] {
+func localeForRequest() -> String {
+    return Locale.current.languageCode ?? Locale.current.identifier
+}
+
+func getCities(tIds: [Int], destination: Binding<[City]>) {
     var ids: [Int] = tIds
-    var result: [City] = []
+    destination.wrappedValue = []
     while ids.count != 0 {
-        let request = VKRequest(method: "getCitiesById", parameters: [
-            "city_ids": ids.dropFirst(min(ids.count,1000))
+        var reqIds = [Int]()
+        for i in 0..<min(ids.count, 1000) {
+            reqIds.append(ids[i])
+        }
+        let request = VKRequest(method: "database.getCitiesById", parameters: [
+            "city_ids": reqIds,
+            "access_token": VKSdk.accessToken().accessToken ?? "",
+            "lang": localeForRequest()
         ])
         request?.execute(resultBlock: { response in
+            print("Cities received: \(response?.responseString)")
             if let cities = try? JSONDecoder().decode(CitiesResponse.self, from: response!.responseString.data(using: .utf8) ?? Data()) {
-                result.append(contentsOf: cities.response)
+                destination.wrappedValue.append(contentsOf: cities.response)
             }
         }, errorBlock: { error in
             print(error?.localizedDescription)
         })
         ids.removeFirst(min(ids.count,1000))
     }
-    return result
 }
 
 struct Stat: Codable {
