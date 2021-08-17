@@ -64,6 +64,18 @@ struct PlayerView: View {
     @Binding var userInfo: UserInfo
     @Environment(\.presentationMode) var presentation: Binding<PresentationMode>
     @State var citiesCache: CitiesCache = .init(cities: [])
+    @State var reactionsUnlocked = true
+    
+    func reactionsLock() {
+        withAnimation {
+            reactionsUnlocked = false
+            Timer.scheduledTimer(withTimeInterval: 10, repeats: false, block: { _ in
+                withAnimation {
+                    reactionsUnlocked = true
+                }
+            })
+        }
+    }
     
     func changeSpeed() {
         if(currentSpeedId == speeds.count-1) {
@@ -319,30 +331,40 @@ struct PlayerView: View {
                             .font(.title)
                             .bold()
                             .foregroundColor(.white)
-                        HStack {
-                            Spacer()
-                            LazyVGrid(columns: [.init(.adaptive(minimum: isBottomSheetOpened ? reactionItemSize * 1.45 : reactionItemSize * 0.95))], spacing: 20) {
-                                ForEach(podcast.reactions) { reaction in
-                                    if reaction.isAvailable {
-                                        Button(action: {
-                                            episode.statistics.append(Stat(time: Int(currentSecond * 1000), reactionId: reaction.id, sex: userInfo.sex, age: userInfo.age, cityId: userInfo.cityId))
-                                            podcastsStorage.save()
-                                        }, label: {
-                                            VStack {
-                                                ReactionItem(width: reactionItemSize, emoji: reaction.emoji)
-                                                if isBottomSheetOpened {
-                                                    Text(reaction.description)
-                                                        .font(.callout)
-                                                        .foregroundColor(.white)
-                                                        .lineLimit(1)
+                        if reactionsUnlocked {
+                            HStack {
+                                Spacer()
+                                LazyVGrid(columns: [.init(.adaptive(minimum: isBottomSheetOpened ? reactionItemSize * 1.45 : reactionItemSize * 0.95))], spacing: 20) {
+                                    ForEach(podcast.reactions) { reaction in
+                                        if reaction.isAvailable {
+                                            Button(action: {
+                                                withAnimation {
+                                                    reactionsLock()
+                                                    episode.statistics.append(Stat(time: Int(currentSecond * 1000), reactionId: reaction.id, sex: userInfo.sex, age: userInfo.age, cityId: userInfo.cityId))
+                                                    podcastsStorage.save()
                                                 }
-                                            }
-                                        })
+                                            }, label: {
+                                                VStack {
+                                                    ReactionItem(width: reactionItemSize, emoji: reaction.emoji)
+                                                    if isBottomSheetOpened {
+                                                        Text(reaction.description)
+                                                            .font(.callout)
+                                                            .foregroundColor(.white)
+                                                            .lineLimit(1)
+                                                    }
+                                                }
+                                            }).disabled(!reactionsUnlocked)
+                                        }
                                     }
                                 }
+                                Spacer()
                             }
-                            Spacer()
-                        }.padding(.horizontal, 15)
+                                .padding(.horizontal, 15)
+                        } else {
+                            Text("Можно оставлять не более одной реакции в 10 секунд")
+                                .foregroundColor(.init(white: 0.65))
+                                .padding(.horizontal, 30)
+                        }
                     }.gesture(
                         DragGesture(coordinateSpace: .local)
                             .onEnded { value in

@@ -59,10 +59,17 @@ struct EpisodeItem: View {
     }
 }
 
+extension URL: Identifiable {
+    public var id: Int {
+        self.hashValue
+    }
+}
+
 struct PodcastView: View {
     @Binding var podcast: Podcast
     @Binding var podcastsStorage: PodcastsStorage
     @Binding var userInfo: UserInfo
+    @State var activityItem: URL?
     @Environment(\.presentationMode) var presentation: Binding<PresentationMode>
     
     var body: some View {
@@ -113,6 +120,20 @@ struct PodcastView: View {
                         }
                     }
                     PodcastInfo(podcast: podcast)
+                    Button(action: {
+                        if let data = try? JSONEncoder().encode(podcast.toJSON()) {
+                            let url = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("podcast.json")
+                            do {
+                                try data.write(to: url)
+                                activityItem = url
+                            } catch {
+                                print(error.localizedDescription)
+                            }
+                        }
+                    }, label: {
+                        Text("Выгрузить JSON файл с реакциями")
+                            .foregroundColor(Color("VKColor"))
+                    }).padding(.vertical, 15)
                 }
                 .padding(.top, 40)
                 .padding(.horizontal, 25)
@@ -155,6 +176,11 @@ struct PodcastView: View {
                     }
                 }
         )
+        .sheet(item: $activityItem, onDismiss: {
+            
+        }, content: { item in
+            ShareSheet(activityItems: [item])
+        })
     }
 }
 
