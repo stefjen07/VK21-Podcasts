@@ -55,7 +55,7 @@ struct ReactionsGraph: View {
             ForEach(0..<colsCount) { i in
                 Capsule()
                     .foregroundColor(isColActive(idx: i) ? Color("VKColor") : Color("VKColor").opacity(0.2))
-                    .frame(width: colWidth, height: colPercentage[i]*selfSize.height)
+                    .frame(width: colWidth, height: max(colWidth, colPercentage[i]*selfSize.height))
             }
         }
     }
@@ -76,6 +76,7 @@ struct ReactionsGraph: View {
         for colPercentage in colPercentage {
             maxValue = max(maxValue, colPercentage)
         }
+        
         if maxValue != 0 {
             for i in 0..<colPercentage.count {
                 colPercentage[i] /= maxValue

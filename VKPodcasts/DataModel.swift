@@ -129,12 +129,34 @@ func getCities(tIds: [Int], destination: Binding<[City]>) {
     }
 }
 
+struct UserInfo {
+    var sex: Sex
+    var age: Int
+    var ageMajority: Bool
+    var cityId: Int
+    
+    init() {
+        sex = .female
+        age = 0
+        ageMajority = false
+        cityId = 0
+    }
+}
+
 struct Stat: Codable {
     var time: Int
     var reactionId: Int
     var sex: Sex
     var age: Int
     var cityId: Int
+    
+    init(time: Int, reactionId: Int, sex: Sex, age: Int, cityId: Int) {
+        self.time = time
+        self.reactionId = reactionId
+        self.sex = sex
+        self.age = age
+        self.cityId = cityId
+    }
     
     enum CodingKeys: String, CodingKey {
         case time

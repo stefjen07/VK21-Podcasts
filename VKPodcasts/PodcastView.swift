@@ -9,7 +9,7 @@ import SwiftUI
 
 struct PodcastView: View {
     @Binding var podcast: Podcast
-    @Binding var ageMajority: Bool
+    @Binding var userInfo: UserInfo
     @Environment(\.presentationMode) var presentation: Binding<PresentationMode>
     
     let publishedFormatter = DateFormatter()
@@ -58,8 +58,8 @@ struct PodcastView: View {
                         Spacer()
                     }
                     ForEach(podcast.episodes) { episode in
-                        if !episode.isExplicit || ageMajority {
-                            NavigationLink(destination: PlayerView(episode: episode, podcast: $podcast)) {
+                        if !episode.isExplicit || userInfo.ageMajority {
+                            NavigationLink(destination: PlayerView(episode: episode, podcast: $podcast, userInfo: $userInfo)) {
                                 VStack {
                                     HStack {
                                         if let logo = episode.logoCache {
@@ -151,6 +151,6 @@ struct PodcastView: View {
 
 struct PodcastView_Previews: PreviewProvider {
     static var previews: some View {
-        PodcastView(podcast: .constant(.init(title: "Подкаст", description: "Очень интересное описание подкаста", author: "stefjen07", logoUrl: "", reactions: [], episodes: [])), ageMajority: .constant(true))
+        PodcastView(podcast: .constant(.init(title: "Подкаст", description: "Очень интересное описание подкаста", author: "stefjen07", logoUrl: "", reactions: [], episodes: [])), userInfo: .constant(.init()))
     }
 }

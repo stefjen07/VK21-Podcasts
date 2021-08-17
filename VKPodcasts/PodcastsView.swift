@@ -10,10 +10,10 @@ import Combine
 
 struct PodcastItem: View {
     @Binding var podcast: Podcast
-    @Binding var ageMajority: Bool
+    @Binding var userInfo: UserInfo
     
     var body: some View {
-        NavigationLink(destination: PodcastView(podcast: $podcast, ageMajority: $ageMajority)) {
+        NavigationLink(destination: PodcastView(podcast: $podcast, userInfo: $userInfo)) {
             HStack {
                 if let logo = podcast.logoCache {
                     logo
@@ -149,7 +149,7 @@ struct NewPodcastView: View {
 struct PodcastsView: View {
     @State var podcasts: [Podcast]
     @State var isAdding = false
-    @Binding var ageMajority: Bool
+    @Binding var userInfo: UserInfo
     
     func lazyLogo() {
         for podcast in $podcasts {
@@ -167,7 +167,7 @@ struct PodcastsView: View {
                 ScrollView(.vertical, showsIndicators: true) {
                     VStack(spacing: 15) {
                         ForEach($podcasts) { podcast in
-                            PodcastItem(podcast: podcast, ageMajority: $ageMajority)
+                            PodcastItem(podcast: podcast, userInfo: $userInfo)
                                 .foregroundColor(.white)
                         }
                         Spacer()
@@ -196,8 +196,8 @@ struct PodcastsView: View {
         }
     }
     
-    init(ageMajority: Binding<Bool>) {
-        self._ageMajority = ageMajority
+    init(userInfo: Binding<UserInfo>) {
+        self._userInfo = userInfo
         let parser = RSSParser(url: URL(string: "https://vk.com/podcasts-147415323_-1000000.rss")!)
         parser.parse()
         parser.podcast.parseJSON(name: "podcast")
@@ -208,6 +208,6 @@ struct PodcastsView: View {
 
 struct PodcastsView_Previews: PreviewProvider {
     static var previews: some View {
-        PodcastsView(ageMajority: .constant(true))
+        PodcastsView(userInfo: .constant(.init()))
     }
 }

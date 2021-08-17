@@ -137,11 +137,12 @@ func shortNumber(_ value: Int) -> String {
     return preparePercentage(Double(value)/1000000, percentage: false)+"M"
 }
 
-struct StatCityData {
+struct StatCityData: Identifiable {
     var id: Int
     var title: String
     var count: Int
     var percentage: Double
+    var color: Color
 }
 
 struct StatCityRow: View {
@@ -341,6 +342,11 @@ func scale(maximumValue: Int) -> Int {
     }
 }
 
+enum PlaceType: String {
+    case city = "Страны"
+    case country = "Города"
+}
+
 struct StatView: View {
     @Environment(\.presentationMode) var presentation: Binding<PresentationMode>
     let malePercentage: Double
@@ -355,6 +361,8 @@ struct StatView: View {
     @State var reactionSelectionCount = 0
     @State var selectedTimeInterval: Int = 1
     @State var difference = ""
+    @State var selectedPlaceType = PlaceType.city
+    @State var placePickerOpened = false
     
     let values: [[Int]]
     
@@ -497,37 +505,72 @@ struct StatView: View {
                             DataComparingText()
                         }
                         Divider()
-                        VStack(alignment: .leading) {
-                            Button(action: {
-                                
-                            }, label: {
-                                HStack {
-                                    StatTitle("Города")
-                                    Image(systemName: "chevron.down")
-                                        .foregroundColor(Color("VKColor"))
-                                        .padding(.top, 10)
-                                }
-                            })
-                            HStack {
-                                Spacer()
-                                ZStack {
-                                    ForEach(0..<citiesTop.count) { i in
-                                        PieSliceView(pieSliceData: .init(startAngle: .init(degrees: 360 * percentageOfFirst(i)), endAngle: .init(degrees: 360 * percentageOfFirst(i+1)), color: Color("city\(i)")), borderColor: Color("Background"), selfSize: circleWidth)
+                        ZStack(alignment: .init(horizontal: .leading, vertical: .top)) {
+                            VStack(alignment: .leading) {
+                                Button(action: {
+                                    withAnimation {
+                                        placePickerOpened.toggle()
                                     }
-                                }.frame(width: circleWidth, height: circleWidth)
-                                Spacer()
-                            }
-                            ForEach(0..<citiesTop.count) { i in
-                                if i != 0 {
+                                }, label: {
+                                    HStack {
+                                        StatTitle(selectedPlaceType.rawValue)
+                                        Image(systemName: "chevron.down")
+                                            .foregroundColor(Color("VKColor"))
+                                            .padding(.top, 10)
+                                    }
+                                }).frame(height: 20)
+                                HStack {
                                     Spacer()
-                                        .frame(height: 20)
+                                    ZStack {
+                                        if citiesTop.count == 0 {
+                                            Text("Нет сведений")
+                                                .foregroundColor(.init(white: 0.65))
+                                                .font(.callout)
+                                        }
+                                        ForEach(0..<citiesTop.count) { i in
+                                            PieSliceView(pieSliceData: .init(startAngle: .init(degrees: 360 * percentageOfFirst(i)), endAngle: .init(degrees: 360 * percentageOfFirst(i+1)), color: Color("city\(i)")), borderColor: Color("Background"), selfSize: circleWidth)
+                                        }
+                                    }.frame(width: circleWidth, height: circleWidth)
+                                    Spacer()
                                 }
-                                StatCityRow(data: citiesTop[i], maxPercentage: maxCityPercentage, color: Color("city\(i)"))
-                                    .padding(.horizontal, 10)
+                                VStack(spacing: 25) {
+                                    ForEach(citiesTop) { city in
+                                        StatCityRow(data: city, maxPercentage: maxCityPercentage, color: city.color)
+                                            .padding(.horizontal, 10)
+                                    }
+                                }
+                                DataComparingText()
+                                    .padding(.top, 6)
+                                    .padding(.horizontal, 4)
                             }
-                            DataComparingText()
-                                .padding(.top, 6)
-                                .padding(.horizontal, 4)
+                            
+                            let placeTypes: [PlaceType] = [.city, .country]
+                            if placePickerOpened {
+                                VStack(spacing: 0) {
+                                    ForEach(placeTypes.indices) { i in
+                                        if i != 0 {
+                                            Divider()
+                                        }
+                                        Button(action: {
+                                            withAnimation {
+                                                selectedPlaceType = placeTypes[i]
+                                                placePickerOpened = false
+                                            }
+                                        }, label: {
+                                            HStack {
+                                                Image(systemName: "checkmark")
+                                                    .opacity(placeTypes[i] == selectedPlaceType ? 1.0 : 0.0)
+                                                Text(placeTypes[i].rawValue)
+                                                Spacer()
+                                            }
+                                        }).padding(10)
+                                    }
+                                }
+                                .frame(width: proxy.size.width * 0.5)
+                                .background(Blur(effect: UIBlurEffect(style: .systemMaterialDark)))
+                                .cornerRadius(10)
+                                .padding(.top, 30)
+                            }
                         }
                     }
                         .foregroundColor(Color("TitlePrimary"))
@@ -595,7 +638,6 @@ struct StatView: View {
         if parts.count > 2 {
             if let parts0 = parts[0], let parts1 = parts[1], let parts2 = parts[2] {
                 let actualDuration = Double((parts0 * 60 + parts1) * 60 + parts2) + 0.5
-                print("Duration is \(actualDuration)")
                 self.duration = actualDuration
             } else {
                 print("Wrong duration")
@@ -650,7 +692,7 @@ struct StatView: View {
                 if !found {
                     let title = citiesCache.cityTitle(id: stat.cityId)
                     if title != "" {
-                        citiesTop.append(.init(id: stat.cityId, title: title, count: 1, percentage: 0))
+                        citiesTop.append(.init(id: stat.cityId, title: title, count: 1, percentage: 0, color: .clear))
                     }
                 }
             }
@@ -668,11 +710,12 @@ struct StatView: View {
             }
             
             if citiesTop.count == 5 {
-                citiesTop.append(.init(id: -1, title: "Другие", count: othersCount, percentage: Double(othersCount)/Double(episode.statistics.count)))
+                citiesTop.append(.init(id: -1, title: "Другие", count: othersCount, percentage: Double(othersCount)/Double(episode.statistics.count), color: .clear))
             }
             
             for i in 0..<citiesTop.count {
                 maxPercentage = max(maxPercentage, citiesTop[i].percentage)
+                citiesTop[i].color = Color("city\(i)")
             }
             
             for i in 0..<statAgeGroups.count {

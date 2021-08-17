@@ -60,6 +60,7 @@ struct PlayerView: View {
     @State var isBottomSheetOpened = false
     @ObservedObject var episode: Episode
     @Binding var podcast: Podcast
+    @Binding var userInfo: UserInfo
     @Environment(\.presentationMode) var presentation: Binding<PresentationMode>
     @State var citiesCache: CitiesCache = .init(cities: [])
     
@@ -323,7 +324,7 @@ struct PlayerView: View {
                                 ForEach(podcast.reactions) { reaction in
                                     if reaction.isAvailable {
                                         Button(action: {
-                                            
+                                            episode.statistics.append(Stat(time: Int(currentSecond * 1000), reactionId: reaction.id, sex: userInfo.sex, age: userInfo.age, cityId: userInfo.cityId))
                                         }, label: {
                                             VStack {
                                                 ReactionItem(width: reactionItemSize, emoji: reaction.emoji)
@@ -354,9 +355,11 @@ struct PlayerView: View {
             }
         }
         .onAppear() {
-            getCities(tIds: episode.statistics.map { stat in
+            var cityIds = episode.statistics.map { stat in
                 return stat.cityId
-            }, destination: $citiesCache.cities)
+            }
+            cityIds.append(userInfo.cityId)
+            getCities(tIds: cityIds, destination: $citiesCache.cities)
             playerTimer = Timer.scheduledTimer(withTimeInterval: 0.2, repeats: true, block: { timer in
                 self.checkTime()
             })
@@ -437,18 +440,19 @@ struct PlayerView: View {
         checkTime()
     }
     
-    init(episode: Episode, podcast: Binding<Podcast>) {
+    init(episode: Episode, podcast: Binding<Podcast>, userInfo: Binding<UserInfo>) {
         _currentSpeedId = .init(initialValue: 2)
         _paused = .init(initialValue: false)
         self.episode = episode
         self._podcast = podcast
         self._timeLeft = .init(initialValue: episode.duration)
+        self._userInfo = userInfo
     }
 }
 
 struct PlayerView_Previews: PreviewProvider {
     static var previews: some View {
-        PlayerView(episode: .init(), podcast: .constant(.init()))
+        PlayerView(episode: .init(), podcast: .constant(.init()), userInfo: .constant(UserInfo()))
     }
 }
 
