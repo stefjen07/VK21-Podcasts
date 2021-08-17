@@ -92,56 +92,88 @@ class ImageLoader: ObservableObject {
 }
 
 struct NewPodcastView: View {
-    @State var url: String = ""
+    @State var rssStr: String = ""
+    @State var reactionsStr: String = ""
+    @State var rssUrl: URL?
+    @State var reactionsUrl: URL?
+    @State var documentPicking = false
+    @State var jsonPicking = false
     @Binding var podcasts: [Podcast]
+    
     @Environment(\.presentationMode) var presentation: Binding<PresentationMode>
     
     var body: some View {
-        ZStack {
-            Color("Background")
-                .edgesIgnoringSafeArea(.all)
-            VStack(spacing: 15) {
-                HStack {
-                    Button(action: {
-                        presentation.wrappedValue.dismiss()
-                    }, label: {
-                        Text("Отменить")
+        GeometryReader { proxy in
+            ZStack {
+                Color("Background")
+                    .edgesIgnoringSafeArea(.all)
+                    .documentPicker(isPresented: $documentPicking, extensions: ["rss"], onCancel: {
+                        
+                    }, onDocumentPicked: { url in
+                        rssUrl = url
+                    }).documentPicker(isPresented: $jsonPicking, extensions: ["json"], onCancel: {
+                        
+                    }, onDocumentPicked: { url in
+                        reactionsUrl = url
                     })
-                    Spacer()
-                    Button(action: {
-                        if let url = URL(string: url) {
-                            let parser = RSSParser(url: url)
-                            parser.parse()
-                            podcasts.append(parser.podcast)
+                VStack(spacing: 15) {
+                    HStack {
+                        Button(action: {
                             presentation.wrappedValue.dismiss()
-                        }
-                    }, label: {
-                        Text("Готово")
-                    })
+                        }, label: {
+                            Text("Отменить")
+                        })
+                        Spacer()
+                        Button(action: {
+                            if let url = rssUrl ?? URL(string: rssStr) {
+                                let parser = RSSParser(url: url)
+                                parser.parse()
+                                if let url = reactionsUrl ?? URL(string: reactionsStr) {
+                                    parser.podcast.parseJSON(url: url)
+                                }
+                                podcasts.append(parser.podcast)
+                                presentation.wrappedValue.dismiss()
+                            }
+                        }, label: {
+                            Text("Готово")
+                        })
+                    }
+                    Text("Новый подкаст")
+                        .font(.largeTitle)
+                        .bold()
+                    List {
+                        Section(content: {
+                            Button(action: {
+                                documentPicking.toggle()
+                            }, label: {
+                                Text(rssUrl?.lastPathComponent ?? "Выбрать RSS файл")
+                            })
+                            TextField("Введите URL адрес RSS файла", text: $rssStr)
+                                .preferredColorScheme(.dark)
+                                .disabled(rssUrl != nil)
+                        }, header: {
+                            Text("RSS")
+                        })
+                        Section(content: {
+                            Button(action: {
+                                jsonPicking.toggle()
+                            }, label: {
+                                Text(reactionsUrl?.lastPathComponent ?? "Выбрать файл с реакциями")
+                            })
+                            TextField("Введите URL адрес файла с реакциями", text: $reactionsStr)
+                                .preferredColorScheme(.dark)
+                                .disabled(reactionsUrl != nil)
+                        }, header: {
+                            Text("Файл с реакциями")
+                        })
+                        
+                    }.cornerRadius(20)
+                    Spacer()
                 }
-                Text("Новый подкаст")
-                    .font(.largeTitle)
-                    .bold()
-                List {
-                    Section(content: {
-                        TextField("Введите URL адрес RSS файла", text: $url)
-                            .preferredColorScheme(.dark)
-                    }, header: {
-                        Text("RSS")
-                    })
-                    Section(content: {
-                        TextField("Введите URL адрес файла с реакциями", text: $url)
-                            .preferredColorScheme(.dark)
-                    }, header: {
-                        Text("Файл с реакциями")
-                    })
-                    
-                }.cornerRadius(20)
-                Spacer()
-            }
-            .foregroundColor(.white)
-            .padding(.top, 15)
-            .padding(.horizontal, 25)
+                .foregroundColor(.white)
+                .padding(.top, 15)
+                .padding(.horizontal, 25)
+            }.frame(height: proxy.size.height)
         }
     }
 }
@@ -200,7 +232,7 @@ struct PodcastsView: View {
         self._userInfo = userInfo
         let parser = RSSParser(url: URL(string: "https://vk.com/podcasts-147415323_-1000000.rss")!)
         parser.parse()
-        parser.podcast.parseJSON(name: "podcast")
+        //parser.podcast.parseJSON(url: <#T##URL#>)
         self.podcasts = [parser.podcast]
         UINavigationBar.appearance().largeTitleTextAttributes = [.foregroundColor: UIColor.white]
     }

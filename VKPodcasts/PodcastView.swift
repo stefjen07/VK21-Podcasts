@@ -16,7 +16,7 @@ struct PodcastView: View {
     
     func publishedDate(date: Date) -> String {
         publishedFormatter.dateFormat = "d MMMM, yyyy"
-        publishedFormatter.locale = Locale.current
+        publishedFormatter.locale = Locale(identifier: "ru_RU")
         return publishedFormatter.string(from: date)
     }
     
@@ -104,6 +104,7 @@ struct PodcastView: View {
                             .cornerRadius(10)
                         }
                     }
+                    PodcastInfo(podcast: podcast)
                 }
                 .padding(.top, 40)
                 .padding(.horizontal, 25)
@@ -151,6 +152,6 @@ struct PodcastView: View {
 
 struct PodcastView_Previews: PreviewProvider {
     static var previews: some View {
-        PodcastView(podcast: .constant(.init(title: "Подкаст", description: "Очень интересное описание подкаста", author: "stefjen07", logoUrl: "", reactions: [], episodes: [])), userInfo: .constant(.init()))
+        PodcastView(podcast: .constant(.init(title: "Подкаст", description: "Очень интересное описание подкаста", author: "stefjen07", logoUrl: "", reactions: [], episodes: [], email: "")), userInfo: .constant(.init()))
     }
 }

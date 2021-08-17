@@ -303,14 +303,14 @@ class Podcast: ObservableObject, Identifiable {
     var author: String
     var logoUrl: String
     var logoCache: Image?
-    var reactions: [Reaction]
+    var email: String
+    var category: String
     
+    var reactions: [Reaction]
     var episodes: [Episode]
     
-    func parseJSON(name: String) {
-        if let bundlePath = Bundle.main.path(forResource: name,
-                                                     ofType: "json"),
-            let jsonData = try? String(contentsOfFile: bundlePath).data(using: .utf8) {
+    func parseJSON(url: URL) {
+        if let jsonData = try? Data(contentsOf: url) {
             parseJSON(data: jsonData)
         }
     }
@@ -333,17 +333,19 @@ class Podcast: ObservableObject, Identifiable {
         }
     }
     
-    init(title: String, description: String, author: String, logoUrl: String, reactions: [Reaction], episodes: [Episode]) {
+    init(title: String, description: String, author: String, logoUrl: String, reactions: [Reaction], episodes: [Episode], email: String) {
         self.title = title
         self.description = description
         self.author = author
         self.logoUrl = logoUrl
         self.reactions = reactions
         self.episodes = episodes
+        self.email = email
+        self.category = ""
     }
     
     convenience init() {
-        self.init(title: "", description: "", author: "", logoUrl: "", reactions: [], episodes: [])
+        self.init(title: "", description: "", author: "", logoUrl: "", reactions: [], episodes: [], email: "")
     }
 }
 

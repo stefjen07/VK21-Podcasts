@@ -40,6 +40,8 @@ class RSSParser: NSObject, XMLParserDelegate {
             isInItemDescription = true
         } else if elementName == "enclosure" && isInItem {
             tempEpisode?.audioUrl = attributeDict["url"] ?? ""
+        } else if elementName == "itunes:category" {
+            podcast.category = attributeDict["text"] ?? ""
         }
     }
     
@@ -87,6 +89,8 @@ class RSSParser: NSObject, XMLParserDelegate {
                 podcast.author += string
             } else if isInImageURL {
                 podcast.logoUrl += string
+            } else if tempElement == "itunes:email" {
+                podcast.email += string
             }
         }
     }

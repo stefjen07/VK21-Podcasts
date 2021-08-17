@@ -13,7 +13,6 @@
 		3E2DE7BE26C5369800313C92 /* ReactionsGraph.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E2DE7BD26C5369700313C92 /* ReactionsGraph.swift */; };
 		3E434B8726C67881009D99DD /* PodcastsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E434B8626C67881009D99DD /* PodcastsView.swift */; };
 		3E434B8926C67C12009D99DD /* PodcastView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E434B8826C67C12009D99DD /* PodcastView.swift */; };
-		3E5E0B9926C9972600FE9A44 /* podcast.json in Resources */ = {isa = PBXBuildFile; fileRef = 3E5E0B9826C9972600FE9A44 /* podcast.json */; };
 		3E65895D26C817D30066F144 /* CustomSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E65895C26C817D30066F144 /* CustomSlider.swift */; };
 		3E65895F26C818040066F144 /* BottomSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E65895E26C818040066F144 /* BottomSheet.swift */; };
 		3E65896126C8223F0066F144 /* StatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E65896026C8223F0066F144 /* StatView.swift */; };
@@ -30,6 +29,8 @@
 		3EA7799026C4568A00B0C05E /* PlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA7798F26C4568A00B0C05E /* PlayerView.swift */; };
 		3EA7799226C45B9E00B0C05E /* ReactionItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA7799126C45B9E00B0C05E /* ReactionItem.swift */; };
 		3EA8355026C8626D00EA4662 /* ReactionTypeGraph.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA8354F26C8626D00EA4662 /* ReactionTypeGraph.swift */; };
+		3EB9368B26CBF9B4009DCCDE /* DocumentPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EB9368A26CBF9B4009DCCDE /* DocumentPicker.swift */; };
+		3EB9368D26CC0E5A009DCCDE /* PodcastInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EB9368C26CC0E5A009DCCDE /* PodcastInfo.swift */; };
 		3EF6844326C57EAB0047CF20 /* RSSParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EF6844226C57EAB0047CF20 /* RSSParser.swift */; };
 		5B2B257E080F45ECF551E61C /* Pods_VKPodcastsTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27F902617BE0166225C22737 /* Pods_VKPodcastsTests.framework */; };
 /* End PBXBuildFile section */
@@ -59,7 +60,6 @@
 		3E2DE7BD26C5369700313C92 /* ReactionsGraph.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReactionsGraph.swift; sourceTree = "<group>"; };
 		3E434B8626C67881009D99DD /* PodcastsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PodcastsView.swift; sourceTree = "<group>"; };
 		3E434B8826C67C12009D99DD /* PodcastView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodcastView.swift; sourceTree = "<group>"; };
-		3E5E0B9826C9972600FE9A44 /* podcast.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = podcast.json; sourceTree = "<group>"; };
 		3E65895C26C817D30066F144 /* CustomSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSlider.swift; sourceTree = "<group>"; };
 		3E65895E26C818040066F144 /* BottomSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheet.swift; sourceTree = "<group>"; };
 		3E65896026C8223F0066F144 /* StatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatView.swift; sourceTree = "<group>"; };
@@ -80,6 +80,8 @@
 		3EA7798F26C4568A00B0C05E /* PlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerView.swift; sourceTree = "<group>"; };
 		3EA7799126C45B9E00B0C05E /* ReactionItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReactionItem.swift; sourceTree = "<group>"; };
 		3EA8354F26C8626D00EA4662 /* ReactionTypeGraph.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReactionTypeGraph.swift; sourceTree = "<group>"; };
+		3EB9368A26CBF9B4009DCCDE /* DocumentPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentPicker.swift; sourceTree = "<group>"; };
+		3EB9368C26CC0E5A009DCCDE /* PodcastInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodcastInfo.swift; sourceTree = "<group>"; };
 		3EF6844226C57EAB0047CF20 /* RSSParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSSParser.swift; sourceTree = "<group>"; };
 		4AC03FC6B9EC9134A0A5BD1F /* Pods-VKPodcasts.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VKPodcasts.debug.xcconfig"; path = "Target Support Files/Pods-VKPodcasts/Pods-VKPodcasts.debug.xcconfig"; sourceTree = "<group>"; };
 		8B1F610D295CBA2AC800C2D8 /* Pods-VKPodcasts-VKPodcastsUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VKPodcasts-VKPodcastsUITests.debug.xcconfig"; path = "Target Support Files/Pods-VKPodcasts-VKPodcastsUITests/Pods-VKPodcasts-VKPodcastsUITests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -164,12 +166,13 @@
 				3E65895E26C818040066F144 /* BottomSheet.swift */,
 				3E65895C26C817D30066F144 /* CustomSlider.swift */,
 				3EF6844226C57EAB0047CF20 /* RSSParser.swift */,
+				3EB9368C26CC0E5A009DCCDE /* PodcastInfo.swift */,
 				3E2DE7BD26C5369700313C92 /* ReactionsGraph.swift */,
 				3EA7799126C45B9E00B0C05E /* ReactionItem.swift */,
 				3EA7796326C4543700B0C05E /* VKPodcastsApp.swift */,
-				3E5E0B9826C9972600FE9A44 /* podcast.json */,
 				3EA7796526C4543700B0C05E /* ContentView.swift */,
 				3E8431E626C5A4DB00545232 /* LoginView.swift */,
+				3EB9368A26CBF9B4009DCCDE /* DocumentPicker.swift */,
 				3EA7796726C4543900B0C05E /* Assets.xcassets */,
 				3EA7796926C4543900B0C05E /* Preview Content */,
 			);
@@ -323,7 +326,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3E5E0B9926C9972600FE9A44 /* podcast.json in Resources */,
 				3EA7796B26C4543900B0C05E /* Preview Assets.xcassets in Resources */,
 				3EA7796826C4543900B0C05E /* Assets.xcassets in Resources */,
 			);
@@ -457,6 +459,8 @@
 				3E2DE7BE26C5369800313C92 /* ReactionsGraph.swift in Sources */,
 				3E65895D26C817D30066F144 /* CustomSlider.swift in Sources */,
 				3EA3D97526C83A2800D163E6 /* PieChart.swift in Sources */,
+				3EB9368D26CC0E5A009DCCDE /* PodcastInfo.swift in Sources */,
+				3EB9368B26CBF9B4009DCCDE /* DocumentPicker.swift in Sources */,
 				3E434B8726C67881009D99DD /* PodcastsView.swift in Sources */,
 				3EA7796426C4543700B0C05E /* VKPodcastsApp.swift in Sources */,
 				3E65896126C8223F0066F144 /* StatView.swift in Sources */,
