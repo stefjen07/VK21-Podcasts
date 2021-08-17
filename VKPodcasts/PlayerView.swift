@@ -65,6 +65,7 @@ struct PlayerView: View {
     @Environment(\.presentationMode) var presentation: Binding<PresentationMode>
     @State var citiesCache: CitiesCache = .init(cities: [])
     @State var reactionsUnlocked = true
+    @State var loaded = false
     
     func reactionsLock() {
         withAnimation {
@@ -357,26 +358,29 @@ struct PlayerView: View {
             }
         }
         .onAppear() {
-            var cityIds = episode.statistics.map { stat in
-                return stat.cityId
+            if !loaded {
+                var cityIds = episode.statistics.map { stat in
+                    return stat.cityId
+                }
+                cityIds.append(userInfo.cityId)
+                getCities(tIds: cityIds, destination: $citiesCache.cities)
+                
+                for i in 0..<podcast.reactions.count {
+                    podcast.reactions[i].isAvailable = episode.defaultReactions.contains(podcast.reactions[i].id)
+                }
+                if let url = URL(string: episode.audioUrl) {
+                    player = AVPlayer(url: url)
+                    play()
+                }
+                loaded = true
             }
-            cityIds.append(userInfo.cityId)
-            getCities(tIds: cityIds, destination: $citiesCache.cities)
             playerTimer = Timer.scheduledTimer(withTimeInterval: 0.2, repeats: true, block: { timer in
                 self.checkTime()
             })
-            for i in 0..<podcast.reactions.count {
-                podcast.reactions[i].isAvailable = episode.defaultReactions.contains(podcast.reactions[i].id)
-            }
-            if let url = URL(string: episode.audioUrl) {
-                player = AVPlayer(url: url)
-                play()
-            }
         }
         .onDisappear() {
             playerTimer?.invalidate()
             player.pause()
-            player = AVPlayer()
         }
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
