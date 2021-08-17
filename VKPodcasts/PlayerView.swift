@@ -291,28 +291,6 @@ struct PlayerView: View {
                     }
                 }
                 VStack {
-                    HStack {
-                        Button(action: {
-                            presentation.wrappedValue.dismiss()
-                        }, label: {
-                            Image(systemName: "chevron.backward")
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .padding(5)
-                                .frame(height: 30)
-                        })
-                        Spacer()
-                        NavigationLink(destination: StatView(reactions: podcast.reactions, episode: episode, citiesCache: citiesCache)) {
-                            Image(systemName: "chart.line.uptrend.xyaxis")
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .padding(5)
-                                .frame(height: 30)
-                        }
-                    }
-                    .foregroundColor(.white)
-                    .padding(.horizontal, 15)
-                    .padding(.top, 5)
                     Spacer()
                     if let logo = episode.logoCache {
                         logo
@@ -400,18 +378,18 @@ struct PlayerView: View {
             player.pause()
             player = AVPlayer()
         }
-        .navigationBarHidden(true)
-        .contentShape(Rectangle())
-        .gesture(
-            DragGesture(coordinateSpace: .local)
-                .onEnded { value in
-                    if value.translation.width > .zero
-                        && value.translation.height > -30
-                        && value.translation.height < 30 {
-                        presentation.wrappedValue.dismiss()
-                    }
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                NavigationLink(destination: StatView(reactions: podcast.reactions, episode: episode, citiesCache: citiesCache)) {
+                    Image(systemName: "chart.line.uptrend.xyaxis")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .padding(5)
+                        .frame(height: 30)
                 }
-        )
+            }
+        }
+        .navigationTitle("")
     }
     
     @State var player = AVPlayer()

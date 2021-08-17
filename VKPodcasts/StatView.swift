@@ -384,11 +384,6 @@ struct StatView: View {
                 
                 ScrollView(.vertical, showsIndicators: false) {
                     VStack {
-                        Text("Статистика")
-                            .font(.title3)
-                            .bold()
-                            .padding(.top, 5)
-                        Divider()
                         VStack(alignment: .leading) {
                             StatTitle("Реакции")
                             HStack {
@@ -574,6 +569,7 @@ struct StatView: View {
                         }
                     }
                         .foregroundColor(Color("TitlePrimary"))
+                        .padding(.top, 40)
                         .padding(.horizontal, 25)
                         .padding(.bottom, 25)
                     Divider()
@@ -594,36 +590,9 @@ struct StatView: View {
                 }
                 .preferredColorScheme(.dark)
             }
-            VStack {
-                HStack {
-                    Button(action: {
-                        presentation.wrappedValue.dismiss()
-                    }, label: {
-                        Image(systemName: "chevron.backward")
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .padding(5)
-                            .frame(height: 30)
-                    })
-                    Spacer()
-                }
-                Spacer()
-            }
-            .foregroundColor(.white)
-            .padding(.horizontal, 10)
         }
-        .navigationBarHidden(true)
-        .contentShape(Rectangle())
-        .gesture(
-            DragGesture(coordinateSpace: .local)
-                .onEnded { value in
-                    if value.translation.width > .zero
-                        && value.translation.height > -30
-                        && value.translation.height < 30 {
-                        presentation.wrappedValue.dismiss()
-                    }
-                }
-        )
+        .navigationBarTitle("Статистика")
+        .navigationBarTitleDisplayMode(.inline)
     }
     
     var episode: Episode

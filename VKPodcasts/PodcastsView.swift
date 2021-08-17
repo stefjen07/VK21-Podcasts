@@ -221,7 +221,7 @@ struct PodcastsView: View {
                 NewPodcastView(podcastsStorage: $podcastsStorage)
             }
         }
-        .smartTint(.white)
+        .accentColor(.white)
         .onAppear() {
             lazyLogo()
         }
@@ -236,5 +236,28 @@ struct PodcastsView: View {
 struct PodcastsView_Previews: PreviewProvider {
     static var previews: some View {
         PodcastsView(userInfo: .constant(.init()))
+    }
+}
+
+extension UINavigationController {
+    open override func viewWillLayoutSubviews() {
+        let color = UIColor(Color("Background"))
+        self.navigationController?.navigationBar.setBackgroundImage(UIImage(color: color), for: .default)
+        self.navigationController?.navigationBar.shadowImage = UIImage(color: UIColor(Color(white: 0.65).opacity(0.65)), size: .init(width: 1, height: 0.5))
+        self.navigationController?.view.backgroundColor = color
+    }
+}
+
+public extension UIImage {
+    convenience init?(color: UIColor, size: CGSize = CGSize(width: 1, height: 1)) {
+        let rect = CGRect(origin: .zero, size: size)
+        UIGraphicsBeginImageContextWithOptions(rect.size, false, 0.0)
+        color.setFill()
+        UIRectFill(rect)
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+
+        guard let cgImage = image?.cgImage else { return nil }
+        self.init(cgImage: cgImage)
     }
 }

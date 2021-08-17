@@ -78,8 +78,8 @@
             filePath = "VKPodcasts/PlayerView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "439"
-            endingLineNumber = "439"
+            startingLineNumber = "417"
+            endingLineNumber = "417"
             landmarkName = "checkTime()"
             landmarkType = "7">
          </BreakpointContent>
@@ -94,8 +94,8 @@
             filePath = "VKPodcasts/StatView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "655"
-            endingLineNumber = "655"
+            startingLineNumber = "624"
+            endingLineNumber = "624"
             landmarkName = "init(reactions:episode:citiesCache:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -126,8 +126,8 @@
             filePath = "VKPodcasts/StatView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "638"
-            endingLineNumber = "638"
+            startingLineNumber = "607"
+            endingLineNumber = "607"
             landmarkName = "init(reactions:episode:citiesCache:)"
             landmarkType = "7">
          </BreakpointContent>

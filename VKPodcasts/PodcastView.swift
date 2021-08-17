@@ -135,26 +135,8 @@ struct PodcastView: View {
                             .foregroundColor(Color("VKColor"))
                     }).padding(.vertical, 15)
                 }
-                .padding(.top, 40)
+                .padding(.top, 50)
                 .padding(.horizontal, 25)
-            }
-            VStack {
-                HStack {
-                    Button(action: {
-                        presentation.wrappedValue.dismiss()
-                    }, label: {
-                        Image(systemName: "chevron.backward")
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .padding(5)
-                            .frame(height: 30)
-                    })
-                    Spacer()
-                }
-                .foregroundColor(.white)
-                .padding(.horizontal, 15)
-                .padding(.top, 5)
-                Spacer()
             }
         }
         .onAppear() {
@@ -164,23 +146,12 @@ struct PodcastView: View {
                 }
             }
         }
-        .navigationBarHidden(true)
-        .contentShape(Rectangle())
-        .gesture(
-            DragGesture(coordinateSpace: .local)
-                .onEnded { value in
-                    if value.translation.width > .zero
-                        && value.translation.height > -30
-                        && value.translation.height < 30 {
-                        presentation.wrappedValue.dismiss()
-                    }
-                }
-        )
         .sheet(item: $activityItem, onDismiss: {
             
         }, content: { item in
             ShareSheet(activityItems: [item])
         })
+        .navigationTitle("")
     }
 }
 
