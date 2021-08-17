@@ -110,7 +110,7 @@ class RSSParser: NSObject, XMLParserDelegate {
         podcast.logoUrl = podcast.logoUrl.removingPercentEncoding ?? podcast.logoUrl
     }
     
-    init(url: URL) {
-        parser = XMLParser(contentsOf: url) ?? XMLParser()
+    init(data: Data) {
+        parser = XMLParser(data: data)
     }
 }

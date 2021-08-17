@@ -10,10 +10,11 @@ import Combine
 
 struct PodcastItem: View {
     @Binding var podcast: Podcast
+    @Binding var podcastsStorage: PodcastsStorage
     @Binding var userInfo: UserInfo
     
     var body: some View {
-        NavigationLink(destination: PodcastView(podcast: $podcast, userInfo: $userInfo)) {
+        NavigationLink(destination: PodcastView(podcast: $podcast, podcastsStorage: $podcastsStorage, userInfo: $userInfo)) {
             HStack {
                 if let logo = podcast.logoCache {
                     logo
@@ -98,7 +99,7 @@ struct NewPodcastView: View {
     @State var reactionsUrl: URL?
     @State var documentPicking = false
     @State var jsonPicking = false
-    @Binding var podcasts: [Podcast]
+    @Binding var podcastsStorage: PodcastsStorage
     
     @Environment(\.presentationMode) var presentation: Binding<PresentationMode>
     
@@ -125,15 +126,13 @@ struct NewPodcastView: View {
                         })
                         Spacer()
                         Button(action: {
-                            if let url = rssUrl ?? URL(string: rssStr) {
-                                let parser = RSSParser(url: url)
-                                parser.parse()
-                                if let url = reactionsUrl ?? URL(string: reactionsStr) {
-                                    parser.podcast.parseJSON(url: url)
-                                }
-                                podcasts.append(parser.podcast)
-                                presentation.wrappedValue.dismiss()
-                            }
+                            let rssRemoteUrl = URL(string: rssStr)
+                            let jsonRemoteUrl = URL(string: reactionsStr)
+                            let rssData = (try? Data(contentsOf: rssUrl ?? URL(fileURLWithPath: ""))) ?? Data()
+                            let jsonData = (try? Data(contentsOf: reactionsUrl ?? jsonRemoteUrl ?? URL(fileURLWithPath: ""))) ?? Data()
+                            let config = StoragePodcastConfig(rssUrl: rssRemoteUrl, rssData: rssData, jsonData: jsonData)
+                            podcastsStorage.addPodcast(config: config)
+                            presentation.wrappedValue.dismiss()
                         }, label: {
                             Text("Готово")
                         })
@@ -179,12 +178,12 @@ struct NewPodcastView: View {
 }
 
 struct PodcastsView: View {
-    @State var podcasts: [Podcast]
+    @State var podcastsStorage = PodcastsStorage()
     @State var isAdding = false
     @Binding var userInfo: UserInfo
     
     func lazyLogo() {
-        for podcast in $podcasts {
+        for podcast in $podcastsStorage.podcasts {
             if podcast.logoCache.wrappedValue == nil {
                 ImageLoader(urlString: podcast.wrappedValue.logoUrl, destination: podcast.logoCache)
             }
@@ -198,8 +197,8 @@ struct PodcastsView: View {
                     .edgesIgnoringSafeArea(.all)
                 ScrollView(.vertical, showsIndicators: true) {
                     VStack(spacing: 15) {
-                        ForEach($podcasts) { podcast in
-                            PodcastItem(podcast: podcast, userInfo: $userInfo)
+                        ForEach($podcastsStorage.podcasts) { podcast in
+                            PodcastItem(podcast: podcast, podcastsStorage: $podcastsStorage, userInfo: $userInfo)
                                 .foregroundColor(.white)
                         }
                         Spacer()
@@ -219,7 +218,7 @@ struct PodcastsView: View {
             .sheet(isPresented: $isAdding, onDismiss: {
                 lazyLogo()
             }) {
-                NewPodcastView(podcasts: $podcasts)
+                NewPodcastView(podcastsStorage: $podcastsStorage)
             }
         }
         .smartTint(.white)
@@ -230,10 +229,6 @@ struct PodcastsView: View {
     
     init(userInfo: Binding<UserInfo>) {
         self._userInfo = userInfo
-        let parser = RSSParser(url: URL(string: "https://vk.com/podcasts-147415323_-1000000.rss")!)
-        parser.parse()
-        //parser.podcast.parseJSON(url: <#T##URL#>)
-        self.podcasts = [parser.podcast]
         UINavigationBar.appearance().largeTitleTextAttributes = [.foregroundColor: UIColor.white]
     }
 }

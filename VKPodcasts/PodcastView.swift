@@ -7,11 +7,8 @@
 
 import SwiftUI
 
-struct PodcastView: View {
-    @Binding var podcast: Podcast
-    @Binding var userInfo: UserInfo
-    @Environment(\.presentationMode) var presentation: Binding<PresentationMode>
-    
+struct EpisodeItem: View {
+    @Binding var episode: Episode
     let publishedFormatter = DateFormatter()
     
     func publishedDate(date: Date) -> String {
@@ -19,6 +16,54 @@ struct PodcastView: View {
         publishedFormatter.locale = Locale(identifier: "ru_RU")
         return publishedFormatter.string(from: date)
     }
+    
+    var body: some View {
+        VStack {
+            HStack {
+                if let logo = episode.logoCache {
+                    logo
+                        .resizable()
+                        .aspectRatio(1, contentMode: .fill)
+                        .cornerRadius(5)
+                        .frame(width: 70)
+                } else {
+                    Color.gray.opacity(0.3)
+                        .aspectRatio(1, contentMode: .fill)
+                        .cornerRadius(5)
+                        .frame(width: 70)
+                }
+                VStack {
+                    HStack {
+                        Text(episode.title)
+                            .bold()
+                            .lineLimit(1)
+                        Spacer()
+                    }
+                    HStack {
+                        Text(episode.description)
+                            .foregroundColor(.init(white: 0.9))
+                            .lineLimit(2)
+                            .multilineTextAlignment(.leading)
+                        Spacer()
+                    }
+                }
+                .padding(.leading, 10)
+                .frame(height: 70)
+            }
+            HStack {
+                Text(episode.duration)
+                Spacer()
+                Text(publishedDate(date: episode.date))
+            }
+        }
+    }
+}
+
+struct PodcastView: View {
+    @Binding var podcast: Podcast
+    @Binding var podcastsStorage: PodcastsStorage
+    @Binding var userInfo: UserInfo
+    @Environment(\.presentationMode) var presentation: Binding<PresentationMode>
     
     var body: some View {
         ZStack {
@@ -57,47 +102,10 @@ struct PodcastView: View {
                             .multilineTextAlignment(.leading)
                         Spacer()
                     }
-                    ForEach(podcast.episodes) { episode in
-                        if !episode.isExplicit || userInfo.ageMajority {
-                            NavigationLink(destination: PlayerView(episode: episode, podcast: $podcast, userInfo: $userInfo)) {
-                                VStack {
-                                    HStack {
-                                        if let logo = episode.logoCache {
-                                            logo
-                                                .resizable()
-                                                .aspectRatio(1, contentMode: .fill)
-                                                .cornerRadius(5)
-                                                .frame(width: 70)
-                                        } else {
-                                            Color.gray.opacity(0.3)
-                                                .aspectRatio(1, contentMode: .fill)
-                                                .cornerRadius(5)
-                                                .frame(width: 70)
-                                        }
-                                        VStack {
-                                            HStack {
-                                                Text(episode.title)
-                                                    .bold()
-                                                    .lineLimit(1)
-                                                Spacer()
-                                            }
-                                            HStack {
-                                                Text(episode.description)
-                                                    .foregroundColor(.init(white: 0.9))
-                                                    .lineLimit(2)
-                                                    .multilineTextAlignment(.leading)
-                                                Spacer()
-                                            }
-                                        }
-                                        .padding(.leading, 10)
-                                        .frame(height: 70)
-                                    }
-                                    HStack {
-                                        Text(episode.duration)
-                                        Spacer()
-                                        Text(publishedDate(date: episode.date))
-                                    }
-                                }
+                    ForEach($podcast.episodes) { episode in
+                        if !episode.wrappedValue.isExplicit || userInfo.ageMajority {
+                            NavigationLink(destination: PlayerView(episode: episode, podcast: $podcast, userInfo: $userInfo, podcastsStorage: $podcastsStorage)) {
+                                EpisodeItem(episode: episode)
                             }
                             .padding(15)
                             .background(Color("VKColor"))
@@ -152,6 +160,6 @@ struct PodcastView: View {
 
 struct PodcastView_Previews: PreviewProvider {
     static var previews: some View {
-        PodcastView(podcast: .constant(.init(title: "Подкаст", description: "Очень интересное описание подкаста", author: "stefjen07", logoUrl: "", reactions: [], episodes: [], email: "")), userInfo: .constant(.init()))
+        PodcastView(podcast: .constant(.init(title: "Подкаст", description: "Очень интересное описание подкаста", author: "stefjen07", logoUrl: "", reactions: [], episodes: [], email: "")), podcastsStorage: .constant(.init()), userInfo: .constant(.init()))
     }
 }

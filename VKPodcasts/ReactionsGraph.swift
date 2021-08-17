@@ -63,15 +63,15 @@ struct ReactionsGraph: View {
         }.frame(height: selfSize.height)
     }
     
-    init(selfSize: CGSize, duration: Double, currentTime: Double, episode: Episode) {
+    init(selfSize: CGSize, duration: Double, currentTime: Double, statistics: Binding<[Stat]>) {
         self.selfSize = selfSize
         self.duration = duration
         self.currentTime = currentTime
         self.colPercentage = []
         self.colPercentage = Array(repeating:.zero, count: colsCount)
         
-        for stat in episode.statistics {
-            colPercentage[idxForTime(time: Double(stat.time)/1000)] += 1
+        for stat in statistics {
+            colPercentage[idxForTime(time: Double(stat.wrappedValue.time)/1000)] += 1
         }
         
         var maxValue: CGFloat = 0
@@ -90,7 +90,7 @@ struct ReactionsGraph: View {
 
 struct ReactionsGraph_Previews: PreviewProvider {
     static var previews: some View {
-        ReactionsGraph(selfSize: .init(width: 250, height: 80), duration: 0, currentTime: 0, episode: Episode())
+        ReactionsGraph(selfSize: .init(width: 250, height: 80), duration: 0, currentTime: 0, statistics: .constant(Episode().statistics))
             .previewLayout(.fixed(width: 250, height: 80))
     }
 }

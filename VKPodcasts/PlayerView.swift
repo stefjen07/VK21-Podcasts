@@ -58,8 +58,9 @@ struct PlayerView: View {
     @State var currentSpeedId: Int
     @State var paused: Bool
     @State var isBottomSheetOpened = false
-    @ObservedObject var episode: Episode
+    @Binding var episode: Episode
     @Binding var podcast: Podcast
+    @Binding var podcastsStorage: PodcastsStorage
     @Binding var userInfo: UserInfo
     @Environment(\.presentationMode) var presentation: Binding<PresentationMode>
     @State var citiesCache: CitiesCache = .init(cities: [])
@@ -164,7 +165,7 @@ struct PlayerView: View {
                                         GeometryReader { proxy in
                                             let size = proxy.size
                                             
-                                            ReactionsGraph(selfSize: size, duration: durationSeconds, currentTime: currentSecond, episode: episode)
+                                            ReactionsGraph(selfSize: size, duration: durationSeconds, currentTime: currentSecond, statistics: $episode.statistics)
                                         }
                                     }
                                 }
@@ -325,6 +326,7 @@ struct PlayerView: View {
                                     if reaction.isAvailable {
                                         Button(action: {
                                             episode.statistics.append(Stat(time: Int(currentSecond * 1000), reactionId: reaction.id, sex: userInfo.sex, age: userInfo.age, cityId: userInfo.cityId))
+                                            podcastsStorage.save()
                                         }, label: {
                                             VStack {
                                                 ReactionItem(width: reactionItemSize, emoji: reaction.emoji)
@@ -440,19 +442,20 @@ struct PlayerView: View {
         checkTime()
     }
     
-    init(episode: Episode, podcast: Binding<Podcast>, userInfo: Binding<UserInfo>) {
+    init(episode: Binding<Episode>, podcast: Binding<Podcast>, userInfo: Binding<UserInfo>, podcastsStorage: Binding<PodcastsStorage>) {
         _currentSpeedId = .init(initialValue: 2)
         _paused = .init(initialValue: false)
-        self.episode = episode
+        self._episode = episode
         self._podcast = podcast
-        self._timeLeft = .init(initialValue: episode.duration)
+        self._timeLeft = .init(initialValue: episode.wrappedValue.duration)
         self._userInfo = userInfo
+        self._podcastsStorage = podcastsStorage
     }
 }
 
 struct PlayerView_Previews: PreviewProvider {
     static var previews: some View {
-        PlayerView(episode: .init(), podcast: .constant(.init()), userInfo: .constant(UserInfo()))
+        PlayerView(episode: .constant(.init()), podcast: .constant(.init()), userInfo: .constant(UserInfo()), podcastsStorage: .constant(.init()))
     }
 }
 

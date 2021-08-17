@@ -15,15 +15,17 @@ struct LoginView: View {
         ZStack {
             Color("Background")
                 .edgesIgnoringSafeArea(.all)
-            Button(action: {
-                VKSdk.authorize(nil)
-            }, label: {
-                Text("Войти с ВКонтакте")
-                    .foregroundColor(.white)
-                    .padding(10)
-                    .background(Color("VKColor"))
-                    .cornerRadius(10)
-            })
+            if wrapper != nil {
+                Button(action: {
+                    VKSdk.authorize(nil)
+                }, label: {
+                    Text("Войти с ВКонтакте")
+                        .foregroundColor(.white)
+                        .padding(10)
+                        .background(Color("VKColor"))
+                        .cornerRadius(10)
+                })
+            }
         }
     }
 }

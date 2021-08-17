@@ -226,6 +226,13 @@ struct JSONEpisode: Codable {
     var timedReactions: [TimedReactionsContainer]
     var statistics: [Stat]
     
+    init(id: String, defaultReactions: [Int], timedReactions: [TimedReactionsContainer], statistics: [Stat]) {
+        self.guid = id
+        self.defaultReactions = defaultReactions
+        self.timedReactions = timedReactions
+        self.statistics = statistics
+    }
+    
     enum CodingKeys: String, CodingKey {
         case guid
         case default_reactions
@@ -294,6 +301,11 @@ struct JSONPodcast: Codable {
             self.episodes = []
         }
     }
+    
+    init(reactions: [Reaction], episodes: [JSONEpisode]) {
+        self.reactions = reactions
+        self.episodes = episodes
+    }
 }
 
 class Podcast: ObservableObject, Identifiable {
@@ -313,6 +325,11 @@ class Podcast: ObservableObject, Identifiable {
         if let jsonData = try? Data(contentsOf: url) {
             parseJSON(data: jsonData)
         }
+    }
+    
+    func toJSON() -> JSONPodcast {
+        let podcast = JSONPodcast(reactions: reactions, episodes: episodes.map { JSONEpisode(id: $0.id, defaultReactions: $0.defaultReactions, timedReactions: $0.timedReactions, statistics: $0.statistics) })
+        return podcast
     }
     
     func parseJSON(data: Data) {

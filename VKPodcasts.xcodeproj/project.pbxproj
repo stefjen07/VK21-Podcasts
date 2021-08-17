@@ -31,6 +31,7 @@
 		3EA8355026C8626D00EA4662 /* ReactionTypeGraph.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA8354F26C8626D00EA4662 /* ReactionTypeGraph.swift */; };
 		3EB9368B26CBF9B4009DCCDE /* DocumentPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EB9368A26CBF9B4009DCCDE /* DocumentPicker.swift */; };
 		3EB9368D26CC0E5A009DCCDE /* PodcastInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EB9368C26CC0E5A009DCCDE /* PodcastInfo.swift */; };
+		3EB9368F26CC24F3009DCCDE /* PodcastsStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EB9368E26CC24F3009DCCDE /* PodcastsStorage.swift */; };
 		3EF6844326C57EAB0047CF20 /* RSSParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EF6844226C57EAB0047CF20 /* RSSParser.swift */; };
 		5B2B257E080F45ECF551E61C /* Pods_VKPodcastsTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27F902617BE0166225C22737 /* Pods_VKPodcastsTests.framework */; };
 /* End PBXBuildFile section */
@@ -82,6 +83,7 @@
 		3EA8354F26C8626D00EA4662 /* ReactionTypeGraph.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReactionTypeGraph.swift; sourceTree = "<group>"; };
 		3EB9368A26CBF9B4009DCCDE /* DocumentPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentPicker.swift; sourceTree = "<group>"; };
 		3EB9368C26CC0E5A009DCCDE /* PodcastInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodcastInfo.swift; sourceTree = "<group>"; };
+		3EB9368E26CC24F3009DCCDE /* PodcastsStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodcastsStorage.swift; sourceTree = "<group>"; };
 		3EF6844226C57EAB0047CF20 /* RSSParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSSParser.swift; sourceTree = "<group>"; };
 		4AC03FC6B9EC9134A0A5BD1F /* Pods-VKPodcasts.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VKPodcasts.debug.xcconfig"; path = "Target Support Files/Pods-VKPodcasts/Pods-VKPodcasts.debug.xcconfig"; sourceTree = "<group>"; };
 		8B1F610D295CBA2AC800C2D8 /* Pods-VKPodcasts-VKPodcastsUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VKPodcasts-VKPodcastsUITests.debug.xcconfig"; path = "Target Support Files/Pods-VKPodcasts-VKPodcastsUITests/Pods-VKPodcasts-VKPodcastsUITests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -159,6 +161,7 @@
 				3E8431E526C5A05B00545232 /* Info.plist */,
 				3EA7798D26C454EB00B0C05E /* DataModel.swift */,
 				3EA7798F26C4568A00B0C05E /* PlayerView.swift */,
+				3EB9368E26CC24F3009DCCDE /* PodcastsStorage.swift */,
 				3E65896026C8223F0066F144 /* StatView.swift */,
 				3E20F0CA26CA7E7000CF8053 /* StatReactionsGraph.swift */,
 				3EA8354F26C8626D00EA4662 /* ReactionTypeGraph.swift */,
@@ -472,6 +475,7 @@
 				3EF6844326C57EAB0047CF20 /* RSSParser.swift in Sources */,
 				3E8431E726C5A4DB00545232 /* LoginView.swift in Sources */,
 				3E65895F26C818040066F144 /* BottomSheet.swift in Sources */,
+				3EB9368F26CC24F3009DCCDE /* PodcastsStorage.swift in Sources */,
 				3EA7799026C4568A00B0C05E /* PlayerView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
