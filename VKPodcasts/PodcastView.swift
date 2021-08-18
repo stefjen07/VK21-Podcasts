@@ -70,7 +70,6 @@ struct PodcastView: View {
     @Binding var podcastsStorage: PodcastsStorage
     @Binding var userInfo: UserInfo
     @State var activityItem: URL?
-    @Environment(\.presentationMode) var presentation: Binding<PresentationMode>
     
     var body: some View {
         ZStack {
@@ -110,8 +109,9 @@ struct PodcastView: View {
                         Spacer()
                     }
                     ForEach($podcast.episodes) { episode in
+                        
                         if !episode.wrappedValue.isExplicit || userInfo.ageMajority {
-                            NavigationLink(destination: PlayerView(episode: episode, podcast: $podcast, userInfo: $userInfo, podcastsStorage: $podcastsStorage)) {
+                            NavigationLink(destination: PlayerView(episode: episode, podcast: $podcast, podcastsStorage: $podcastsStorage, userInfo: $userInfo)) {
                                 EpisodeItem(episode: episode)
                             }
                             .padding(15)

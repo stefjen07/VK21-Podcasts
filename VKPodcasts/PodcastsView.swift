@@ -208,7 +208,11 @@ struct PodcastsView: View {
                 .padding(.horizontal, 25)
             }
             .navigationTitle("Подкасты")
-            .navigationBarItems(trailing:
+            .navigationBarItems(leading:
+                NavigationLink(destination: SettingsView(userInfo: $userInfo, podcastsStorage: $podcastsStorage)) {
+                    Image(systemName: "gear")
+                },
+            trailing:
                 Button(action: {
                     isAdding = true
                 }, label: {

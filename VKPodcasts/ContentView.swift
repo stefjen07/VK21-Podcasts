@@ -51,7 +51,9 @@ class VKWrapper: NSObject, VKSdkDelegate, VKSdkUIDelegate {
     @Binding var authorized: Bool
     
     func authorize() {
-        authorized = true
+        withAnimation {
+            authorized = true
+        }
         let request = VKRequest(method: "stats.trackVisitor", parameters: [
             "access_token": VKSdk.accessToken().accessToken ?? ""
         ])
@@ -78,6 +80,8 @@ class VKWrapper: NSObject, VKSdkDelegate, VKSdkUIDelegate {
                     let formatter = DateFormatter()
                     formatter.dateFormat = "dd.MM.yyyy"
                     
+                    self.userInfo.firstName = userInfo.first_name
+                    self.userInfo.lastName = userInfo.last_name
                     self.userInfo.cityId = userInfo.city.id
                     self.userInfo.sex = userInfo.sex == 1 ? .female : .male
                     self.userInfo.age = Int(Date().timeIntervalSince(formatter.date(from: userInfo.bdate) ?? Date()) / (365.25*24*60*60))
@@ -146,6 +150,7 @@ struct ContentView: View {
     @State var controller: UIViewController? = nil
     @State var isPresented = false
     @State var authorized = false
+    @State var initialized = false
     @State var userInfo = UserInfo()
     @State var wrapper: VKWrapper?
     
@@ -156,8 +161,11 @@ struct ContentView: View {
             } else {
                 if authorized {
                     PodcastsView(userInfo: $userInfo)
-                } else {
+                } else if initialized {
                     LoginView(wrapper: $wrapper)
+                } else {
+                    Color("Background")
+                        .edgesIgnoringSafeArea(.all)
                 }
             }
         }.onAppear {
@@ -169,6 +177,9 @@ struct ContentView: View {
                     wrapper?.authorize()
                 } else if let error = error {
                     print(error.localizedDescription)
+                }
+                withAnimation {
+                    initialized = true
                 }
             })
         }

@@ -130,17 +130,12 @@ func getCities(tIds: [Int], destination: Binding<[City]>) {
 }
 
 struct UserInfo {
-    var sex: Sex
-    var age: Int
-    var ageMajority: Bool
-    var cityId: Int
-    
-    init() {
-        sex = .female
-        age = 0
-        ageMajority = false
-        cityId = 0
-    }
+    var firstName: String = ""
+    var lastName: String = ""
+    var sex: Sex = .female
+    var age: Int = 0
+    var ageMajority: Bool = false
+    var cityId: Int = 0
 }
 
 struct Stat: Codable {

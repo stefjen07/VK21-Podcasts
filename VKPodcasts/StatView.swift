@@ -324,12 +324,13 @@ extension Int: Identifiable {
 
 struct DataTimeInterval {
     var description: String
+    var timeInterval: TimeInterval
 }
 
 var dataTimeIntervals: [DataTimeInterval] = [
-    .init(description: "7 дней"),
-    .init(description: "30 дней"),
-    .init(description: "полгода")
+    .init(description: "7 дней", timeInterval: 7*24*60*60),
+    .init(description: "30 дней", timeInterval: 30*24*60*60),
+    .init(description: "полгода", timeInterval: 6*30*24*60*60)
 ]
 
 func scale(maximumValue: Int) -> Int {
@@ -348,7 +349,6 @@ enum PlaceType: String {
 }
 
 struct StatView: View {
-    @Environment(\.presentationMode) var presentation: Binding<PresentationMode>
     let malePercentage: Double
     var maleCount: Int
     var peopleCount: Int
@@ -585,7 +585,6 @@ struct StatView: View {
                     })
                         .accentColor(Color("VKColor"))
                         .pickerStyle(MenuPickerStyle())
-                        
                     Divider()
                 }
                 .preferredColorScheme(.dark)

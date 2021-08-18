@@ -55,14 +55,13 @@ struct VolumeView: UIViewRepresentable {
 }
 
 struct PlayerView: View {
-    @State var currentSpeedId: Int
-    @State var paused: Bool
+    @State var currentSpeedId: Int = 2
+    @State var paused: Bool = false
     @State var isBottomSheetOpened = false
     @Binding var episode: Episode
     @Binding var podcast: Podcast
     @Binding var podcastsStorage: PodcastsStorage
     @Binding var userInfo: UserInfo
-    @Environment(\.presentationMode) var presentation: Binding<PresentationMode>
     @State var citiesCache: CitiesCache = .init(cities: [])
     @State var reactionsUnlocked = true
     @State var loaded = false
@@ -319,7 +318,10 @@ struct PlayerView: View {
                                             Button(action: {
                                                 withAnimation {
                                                     reactionsLock()
-                                                    episode.statistics.append(Stat(time: Int(currentSecond * 1000), reactionId: reaction.id, sex: userInfo.sex, age: userInfo.age, cityId: userInfo.cityId))
+                                                    let stat = Stat(time: Int(currentSecond * 1000), reactionId: reaction.id, sex: userInfo.sex, age: userInfo.age, cityId: userInfo.cityId)
+                                                    episode.statistics.append(stat)
+                                                    let userStat = UserStat(stat: stat, date: Date())
+                                                    statStorage.addStat(userStat)
                                                     podcastsStorage.save()
                                                 }
                                             }, label: {
@@ -344,16 +346,7 @@ struct PlayerView: View {
                                 .foregroundColor(.init(white: 0.65))
                                 .padding(.horizontal, 30)
                         }
-                    }.gesture(
-                        DragGesture(coordinateSpace: .local)
-                            .onEnded { value in
-                                if value.translation.width > .zero
-                                    && value.translation.height > -30
-                                    && value.translation.height < 30 {
-                                    presentation.wrappedValue.dismiss()
-                                }
-                            }
-                    )
+                    }
                 }.edgesIgnoringSafeArea(.all)
             }
         }
@@ -399,7 +392,7 @@ struct PlayerView: View {
     @State var player = AVPlayer()
     @State var playerTimer: Timer?
     @State var currentTime = "0:00"
-    @State var timeLeft: String
+    @State var timeLeft: String = ""
     @State var trackPercentage: CGFloat = 0
     @State var sliderHasUpdates = false
     
@@ -445,21 +438,11 @@ struct PlayerView: View {
         player.pause()
         checkTime()
     }
-    
-    init(episode: Binding<Episode>, podcast: Binding<Podcast>, userInfo: Binding<UserInfo>, podcastsStorage: Binding<PodcastsStorage>) {
-        _currentSpeedId = .init(initialValue: 2)
-        _paused = .init(initialValue: false)
-        self._episode = episode
-        self._podcast = podcast
-        self._timeLeft = .init(initialValue: episode.wrappedValue.duration)
-        self._userInfo = userInfo
-        self._podcastsStorage = podcastsStorage
-    }
 }
 
 struct PlayerView_Previews: PreviewProvider {
     static var previews: some View {
-        PlayerView(episode: .constant(.init()), podcast: .constant(.init()), userInfo: .constant(UserInfo()), podcastsStorage: .constant(.init()))
+        PlayerView(episode: .constant(.init()), podcast: .constant(.init()), podcastsStorage: .constant(.init()), userInfo: .constant(UserInfo()))
     }
 }
 

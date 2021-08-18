@@ -19,6 +19,57 @@ struct StoragePodcastConfig: Codable {
     }
 }
 
+struct UserStat: Codable {
+    var stat: Stat
+    var date: Date
+}
+
+struct UserStatStorage {
+    var userStats: [UserStat]
+    
+    var url: URL {
+        let fm = FileManager.default
+        if let url = fm.urls(for: .documentDirectory, in: .userDomainMask).first {
+            return url.appendingPathComponent("stats.storage")
+        }
+        return URL(fileURLWithPath: "")
+    }
+    
+    init() {
+        self.userStats = []
+        guard let data = try? Data(contentsOf: url) else {
+            return
+        }
+        
+        if let userStats = try? JSONDecoder().decode([UserStat].self, from: data) {
+            self.userStats = userStats
+        }
+    }
+    
+    func save() {
+        if let data = try? JSONEncoder().encode(userStats) {
+            try? data.write(to: url)
+        }
+    }
+    
+    mutating func addStat(_ stat: UserStat) {
+        userStats.append(stat)
+        save()
+    }
+    
+    func countForInterval(_ interval: TimeInterval) -> Int {
+        var result = 0
+        for stat in userStats {
+            if Date().timeIntervalSince(stat.date) <= interval {
+                result += 1
+            }
+        }
+        return result
+    }
+}
+
+var statStorage = UserStatStorage()
+
 struct PodcastsStorage {
     var podcasts: [Podcast]
     var configs: [StoragePodcastConfig]
