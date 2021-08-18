@@ -181,6 +181,7 @@ struct PodcastsView: View {
     @State var podcastsStorage = PodcastsStorage()
     @State var isAdding = false
     @Binding var userInfo: UserInfo
+    @Binding var authorized: Bool
     
     func lazyLogo() {
         for podcast in $podcastsStorage.podcasts {
@@ -209,7 +210,7 @@ struct PodcastsView: View {
             }
             .navigationTitle("Подкасты")
             .navigationBarItems(leading:
-                NavigationLink(destination: SettingsView(userInfo: $userInfo, podcastsStorage: $podcastsStorage)) {
+                NavigationLink(destination: SettingsView(userInfo: $userInfo, podcastsStorage: $podcastsStorage, authorized: $authorized)) {
                     Image(systemName: "gear")
                 },
             trailing:
@@ -231,15 +232,16 @@ struct PodcastsView: View {
         }
     }
     
-    init(userInfo: Binding<UserInfo>) {
+    init(userInfo: Binding<UserInfo>, authorized: Binding<Bool>) {
         self._userInfo = userInfo
+        self._authorized = authorized
         UINavigationBar.appearance().largeTitleTextAttributes = [.foregroundColor: UIColor.white]
     }
 }
 
 struct PodcastsView_Previews: PreviewProvider {
     static var previews: some View {
-        PodcastsView(userInfo: .constant(.init()))
+        PodcastsView(userInfo: .constant(.init()), authorized: .constant(true))
     }
 }
 

@@ -363,6 +363,7 @@ struct PlayerView: View {
                 }
                 if let url = URL(string: episode.audioUrl) {
                     player = AVPlayer(url: url)
+                    player.seek(to: .init(seconds: statStorage.seconds(episode.id), preferredTimescale: .init(10)))
                     play()
                 }
                 loaded = true
@@ -416,6 +417,7 @@ struct PlayerView: View {
         }
         currentTime = secondsToString(seconds: Int(seconds))
         currentSecond = seconds
+        statStorage.setSeconds(id: episode.id, seconds: currentSecond)
         if let duration = player.currentItem?.duration.seconds, !duration.isNaN {
             durationSeconds = duration
             let secondsLeft = duration - seconds

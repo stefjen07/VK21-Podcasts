@@ -11,6 +11,7 @@ import VK_ios_sdk
 struct SettingsView: View {
     @Binding var userInfo: UserInfo
     @Binding var podcastsStorage: PodcastsStorage
+    @Binding var authorized: Bool
     @State var selectedTimeInterval = 0
     
     var body: some View {
@@ -47,6 +48,9 @@ struct SettingsView: View {
                     }
                     Button(action: {
                         VKSdk.forceLogout()
+                        withAnimation {
+                            authorized = false
+                        }
                     }, label: {
                         Text("Выйти")
                     }).foregroundColor(.red)
@@ -63,6 +67,6 @@ struct SettingsView: View {
 
 struct SettingsView_Previews: PreviewProvider {
     static var previews: some View {
-        SettingsView(userInfo: .constant(.init()), podcastsStorage: .constant(.init()))
+        SettingsView(userInfo: .constant(.init()), podcastsStorage: .constant(.init()), authorized: .constant(true))
     }
 }

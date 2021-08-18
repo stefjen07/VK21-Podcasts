@@ -53,6 +53,7 @@ class VKWrapper: NSObject, VKSdkDelegate, VKSdkUIDelegate {
     func authorize() {
         withAnimation {
             authorized = true
+            isPresented = false
         }
         let request = VKRequest(method: "stats.trackVisitor", parameters: [
             "access_token": VKSdk.accessToken().accessToken ?? ""
@@ -160,7 +161,7 @@ struct ContentView: View {
                 ViewControllerRepresentable(viewController: controller!)
             } else {
                 if authorized {
-                    PodcastsView(userInfo: $userInfo)
+                    PodcastsView(userInfo: $userInfo, authorized: $authorized)
                 } else if initialized {
                     LoginView(wrapper: $wrapper)
                 } else {

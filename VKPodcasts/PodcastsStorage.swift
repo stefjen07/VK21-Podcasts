@@ -24,8 +24,33 @@ struct UserStat: Codable {
     var date: Date
 }
 
-struct UserStatStorage {
+struct StatSeconds: Codable {
+    var id: String
+    var seconds: Double
+}
+
+struct UserStatStorage: Codable {
     var userStats: [UserStat]
+    var lastSeconds: [StatSeconds]
+    
+    mutating func setSeconds(id: String, seconds: Double) {
+        for i in lastSeconds.indices {
+            if lastSeconds[i].id == id {
+                lastSeconds[i].seconds = seconds
+            }
+        }
+        lastSeconds.append(.init(id: id, seconds: seconds))
+        save()
+    }
+    
+    func seconds(_ id: String) -> Double {
+        for lastSecond in lastSeconds {
+            if lastSecond.id == id {
+                return lastSecond.seconds
+            }
+        }
+        return 0
+    }
     
     var url: URL {
         let fm = FileManager.default
@@ -37,17 +62,19 @@ struct UserStatStorage {
     
     init() {
         self.userStats = []
+        self.lastSeconds = []
         guard let data = try? Data(contentsOf: url) else {
             return
         }
         
-        if let userStats = try? JSONDecoder().decode([UserStat].self, from: data) {
-            self.userStats = userStats
+        if let userStatStorage = try? JSONDecoder().decode(UserStatStorage.self, from: data) {
+            self.userStats = userStatStorage.userStats
+            self.lastSeconds = userStatStorage.lastSeconds
         }
     }
     
     func save() {
-        if let data = try? JSONEncoder().encode(userStats) {
+        if let data = try? JSONEncoder().encode(self) {
             try? data.write(to: url)
         }
     }
