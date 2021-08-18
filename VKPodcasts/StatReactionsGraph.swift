@@ -23,6 +23,64 @@ func getBottomDegrees(maxValue: Double, count: Int, leadingZero: Bool) -> [Strin
     return degrees
 }
 
+class TouchView: UIView {
+    var tappedCallback: (([CGFloat]) -> Void)
+    var touches: [UITouch: CGFloat]
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        touches.forEach { touch in
+            self.touches[touch] = touch.location(in: self).x / frame.width
+        }
+        tappedCallback(Array(self.touches.values))
+        super.touchesBegan(touches, with: event)
+    }
+    
+    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+        touches.forEach { touch in
+            self.touches[touch] = touch.location(in: self).x / frame.width
+        }
+        tappedCallback(Array(self.touches.values))
+        super.touchesMoved(touches, with: event)
+    }
+    
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        touches.forEach { touch in
+            self.touches.removeValue(forKey: touch)
+        }
+        tappedCallback(Array(self.touches.values))
+        super.touchesEnded(touches, with: event)
+    }
+    
+    override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.touches.removeAll()
+        tappedCallback([])
+        super.touchesCancelled(touches, with: event)
+    }
+    
+    init(tappedCallback: @escaping (([CGFloat]) -> Void)) {
+        self.tappedCallback = tappedCallback
+        self.touches = [:]
+        super.init(frame: .zero)
+        self.isMultipleTouchEnabled = true
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
+struct GraphTouch: UIViewRepresentable {
+    var tappedCallback: (([CGFloat]) -> Void)
+
+    func makeUIView(context: UIViewRepresentableContext<GraphTouch>) -> GraphTouch.UIViewType {
+        return TouchView(tappedCallback: tappedCallback)
+    }
+
+    func updateUIView(_ uiView: UIView, context: UIViewRepresentableContext<GraphTouch>) {
+        
+    }
+}
+
 struct StatReactionsGraph: View {
     var height: CGFloat
     let duration: Double
@@ -53,25 +111,48 @@ struct StatReactionsGraph: View {
     var colPercentage: [CGFloat]
     
     var body: some View {
-        VStack(alignment: .center, spacing: 10) {
-            HStack(alignment: .bottom, spacing: 3) {
-                ForEach(0..<colsCount) { i in
-                    Capsule()
-                        .foregroundColor(isActive(idx: i) ? Color("VKColor") : Color("VKColor").opacity(0.2))
-                        .frame(height: max(5, colPercentage[i]*(height-20)))
+        ZStack {
+            VStack(alignment: .center, spacing: 10) {
+                HStack(alignment: .bottom, spacing: 3) {
+                    ForEach(0..<colsCount) { i in
+                        Capsule()
+                            .foregroundColor(isActive(idx: i) ? Color("VKColor") : Color("VKColor").opacity(0.2))
+                            .frame(height: max(5, colPercentage[i]*(height-20)))
+                    }
+                }
+                HStack {
+                    ForEach(degrees.indices) { i in
+                        if i != 0 {
+                            Spacer()
+                        }
+                        Text(degrees[i])
+                            .font(.subheadline)
+                            .foregroundColor(.init(white: 0.65))
+                    }.frame(height: 10)
                 }
             }
-            HStack {
-                ForEach(degrees.indices) { i in
-                    if i != 0 {
-                        Spacer()
+            GraphTouch(tappedCallback: { xs in
+                withAnimation {
+                    if xs.count == 2 {
+                        let sortedXs = xs.sorted(by: { first, second in
+                            first <= second
+                        })
+                        let leftX = sortedXs[0]
+                        let rightX = sortedXs[1]
+                        self.leftBound = Int(leftX * CGFloat(colsCount - 1))
+                        self.rightBound = Int(rightX * CGFloat(colsCount - 1))
+                    } else {
+                        self.leftBound = 0
+                        self.rightBound = colsCount - 1
                     }
-                    Text(degrees[i])
-                        .font(.subheadline)
-                        .foregroundColor(.init(white: 0.65))
-                }.frame(height: 10)
+                    difference = preparePercentage((colPercentage[rightBound] - colPercentage[leftBound]) * 100, percentage: true)
+                }
+            })
+        }
+            .frame(height: height)
+            .onAppear {
+                self.difference = preparePercentage((colPercentage[rightBound] - colPercentage[leftBound]) * 100.0, percentage: true)
             }
-        }.frame(height: height)
     }
     
     init(height: CGFloat, duration: Double, episode: Episode, difference: Binding<String>) {
