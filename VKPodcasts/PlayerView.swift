@@ -54,6 +54,21 @@ struct VolumeView: UIViewRepresentable {
     func updateUIView(_ uiView: UIViewType, context: Context) {}
 }
 
+struct PlayerSwitcher: View {
+    @Binding var podcastsStorage: PodcastsStorage
+    @Binding var podcast: Podcast
+    @Binding var userInfo: UserInfo
+    @State var episodeIdx: Int
+    
+    var body: some View {
+        ForEach(podcast.episodes.indices) { i in
+            if episodeIdx == i {
+                PlayerView(episode: $podcast.episodes[i], podcast: $podcast, podcastsStorage: $podcastsStorage, episodeIdx: $episodeIdx, userInfo: $userInfo)
+            }
+        }
+    }
+}
+
 struct PlayerView: View {
     @State var currentSpeedId: Int = 2
     @State var paused: Bool = false
@@ -61,10 +76,12 @@ struct PlayerView: View {
     @Binding var episode: Episode
     @Binding var podcast: Podcast
     @Binding var podcastsStorage: PodcastsStorage
+    @Binding var episodeIdx: Int
     @Binding var userInfo: UserInfo
     @State var citiesCache: CitiesCache = .init(cities: [])
     @State var reactionsUnlocked = true
     @State var loaded = false
+    @State var episodeSwitching = false
     
     func reactionsLock() {
         withAnimation {
@@ -216,18 +233,32 @@ struct PlayerView: View {
                                         )
                                 })
                                 Spacer()
-                                Button(action: {
-                                    let currentTime = player.currentTime()
-                                    let seconds = max(0, currentTime.seconds - 15)
-                                    let cm = CMTime(seconds: seconds, preferredTimescale: currentTime.timescale)
-                                    player.seek(to: cm)
-                                }, label: {
-                                    Image(systemName: "gobackward.15")
-                                        .resizable()
-                                        .foregroundColor(.white)
-                                        .aspectRatio(contentMode: .fit)
-                                        .frame(width: 30)
-                                })
+                                if episodeSwitching {
+                                    Button(action: {
+                                        episodeIdx += 1
+                                    }, label: {
+                                        Image(systemName: "backward.fill")
+                                            .resizable()
+                                            .foregroundColor(.white)
+                                            .aspectRatio(contentMode: .fit)
+                                            .frame(width: 30)
+                                    })
+                                        .disabled(episodeIdx == podcast.episodes.count - 1)
+                                        .opacity(episodeIdx == podcast.episodes.count - 1 ? 0 : 1)
+                                } else {
+                                    Button(action: {
+                                        let currentTime = player.currentTime()
+                                        let seconds = max(0, currentTime.seconds - 15)
+                                        let cm = CMTime(seconds: seconds, preferredTimescale: currentTime.timescale)
+                                        player.seek(to: cm)
+                                    }, label: {
+                                        Image(systemName: "gobackward.15")
+                                            .resizable()
+                                            .foregroundColor(.white)
+                                            .aspectRatio(contentMode: .fit)
+                                            .frame(width: 30)
+                                    })
+                                }
                                 Spacer()
                                 Button(action: {
                                     paused.toggle()
@@ -244,21 +275,37 @@ struct PlayerView: View {
                                         .frame(width: 30, height: 34)
                                 })
                                 Spacer()
-                                Button(action: {
-                                    let currentTime = player.currentTime()
-                                    let seconds = currentTime.seconds + 15
-                                    let cm = CMTime(seconds: seconds, preferredTimescale: currentTime.timescale)
-                                    player.seek(to: cm)
-                                }, label: {
-                                    Image(systemName: "goforward.15")
-                                        .resizable()
-                                        .foregroundColor(.white)
-                                        .aspectRatio(contentMode: .fit)
-                                        .frame(width: 30)
-                                })
+                                if episodeSwitching {
+                                    Button(action: {
+                                        episodeIdx -= 1
+                                    }, label: {
+                                        Image(systemName: "forward.fill")
+                                            .resizable()
+                                            .foregroundColor(.white)
+                                            .aspectRatio(contentMode: .fit)
+                                            .frame(width: 30)
+                                    })
+                                        .disabled(episodeIdx == 0)
+                                        .opacity(episodeIdx == 0 ? 0 : 1)
+                                } else {
+                                    Button(action: {
+                                        let currentTime = player.currentTime()
+                                        let seconds = currentTime.seconds + 15
+                                        let cm = CMTime(seconds: seconds, preferredTimescale: currentTime.timescale)
+                                        player.seek(to: cm)
+                                    }, label: {
+                                        Image(systemName: "goforward.15")
+                                            .resizable()
+                                            .foregroundColor(.white)
+                                            .aspectRatio(contentMode: .fit)
+                                            .frame(width: 30)
+                                    })
+                                }
                                 Spacer()
                                 Button(action: {
-                                    
+                                    withAnimation {
+                                        episodeSwitching.toggle()
+                                    }
                                 }, label: {
                                     Image(systemName: "ellipsis")
                                         .resizable()
@@ -444,7 +491,7 @@ struct PlayerView: View {
 
 struct PlayerView_Previews: PreviewProvider {
     static var previews: some View {
-        PlayerView(episode: .constant(.init()), podcast: .constant(.init()), podcastsStorage: .constant(.init()), userInfo: .constant(UserInfo()))
+        PlayerView(episode: .constant(.init()), podcast: .constant(.init()), podcastsStorage: .constant(.init()), episodeIdx: .constant(0), userInfo: .constant(UserInfo()))
     }
 }
 

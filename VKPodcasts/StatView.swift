@@ -344,8 +344,8 @@ func scale(maximumValue: Int) -> Int {
 }
 
 enum PlaceType: String {
-    case city = "Страны"
-    case country = "Города"
+    case city = "Города"
+    case country = "Страны"
 }
 
 struct StatView: View {
@@ -363,6 +363,7 @@ struct StatView: View {
     @State var difference = ""
     @State var selectedPlaceType = PlaceType.city
     @State var placePickerOpened = false
+    var sortedIndices: [Int]
     
     let values: [[Int]]
     
@@ -402,8 +403,9 @@ struct StatView: View {
                         VStack(alignment: .leading) {
                             StatTitle("Виды реакций")
                             ReactionTypeGraph(values: values, reactions: reactions, duration: duration)
-                            ForEach($showingReactions) { idx in
-                                StatReactionRow(selectionCount: $reactionSelectionCount, reactions: $reactions, reaction: $reactions[idx.wrappedValue], views: shortNumber(values[idx.wrappedValue].reduce(0, +)))
+                            ForEach(showingReactions) { rawIdx in
+                                let idx = sortedIndices[rawIdx]
+                                StatReactionRow(selectionCount: $reactionSelectionCount, reactions: $reactions, reaction: $reactions[idx], views: shortNumber(values[idx].reduce(0, +)))
                             }
                             if reactions.count > 4 {
                                 Button(action: {
@@ -417,6 +419,7 @@ struct StatView: View {
                                             }
                                             self.showingReactions = showingReactions
                                         }
+                                        self.showingReactions = self.showingReactions.map { sortedIndices[$0] }
                                     }
                                 }, label: {
                                     HStack {
@@ -727,6 +730,9 @@ struct StatView: View {
             }
             values.append(value)
         }
+        sortedIndices = values.indices.sorted(by: { first, second in
+            return values[first].reduce(0, +) > values[second].reduce(0, +)
+        })
         self.values = values
     }
 }

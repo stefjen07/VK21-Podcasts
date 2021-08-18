@@ -108,11 +108,11 @@ struct PodcastView: View {
                             .multilineTextAlignment(.leading)
                         Spacer()
                     }
-                    ForEach($podcast.episodes) { episode in
+                    ForEach(podcast.episodes.indices) { episodeIdx in
                         
-                        if !episode.wrappedValue.isExplicit || userInfo.ageMajority {
-                            NavigationLink(destination: PlayerView(episode: episode, podcast: $podcast, podcastsStorage: $podcastsStorage, userInfo: $userInfo)) {
-                                EpisodeItem(episode: episode)
+                        if !podcast.episodes[episodeIdx].isExplicit || userInfo.ageMajority {
+                            NavigationLink(destination: PlayerSwitcher(podcastsStorage: $podcastsStorage, podcast: $podcast, userInfo: $userInfo, episodeIdx: episodeIdx)) {
+                                EpisodeItem(episode: $podcast.episodes[episodeIdx])
                             }
                             .padding(15)
                             .background(Color("VKColor"))
