@@ -100,7 +100,7 @@ class VKWrapper: NSObject, VKSdkDelegate, VKSdkUIDelegate {
     }
     
     func vkSdkTokenHasExpired(_ expiredToken: VKAccessToken!) {
-        VKSdk.authorize(nil)
+        authorized = false
     }
     
     func vkSdkAccessAuthorizationFinished(with result: VKAuthorizationResult!) {
@@ -126,6 +126,9 @@ class VKWrapper: NSObject, VKSdkDelegate, VKSdkUIDelegate {
         showVC(controller)
     }
 
+    func vkSdkWillDismiss(_ controller: UIViewController!) {
+        isPresented = false
+    }
     
     init(presentedController: Binding<UIViewController?>, isPresented: Binding<Bool>, authorized: Binding<Bool>, userInfo: Binding<UserInfo>) {
         self._presentedController = presentedController

@@ -182,21 +182,10 @@ struct PlayerView: View {
                                 .padding(.vertical, 10)
                             Spacer()
                             VStack {
-                                ZStack {
-                                    GeometryReader { proxy in
-                                        let size = proxy.size
-                                        
-                                        EmojiGraph(selfSize: size)
-                                    }
-                                    VStack {
-                                        Spacer()
-                                            .frame(height: 20)
-                                        GeometryReader { proxy in
-                                            let size = proxy.size
-                                            
-                                            ReactionsGraph(selfSize: size, duration: durationSeconds, currentTime: currentSecond, statistics: $episode.statistics)
-                                        }
-                                    }
+                                GeometryReader { proxy in
+                                    let size = proxy.size
+                                    
+                                    ReactionsGraph(selfSize: size, duration: durationSeconds, currentTime: currentSecond, episode: $episode, reactions: podcast.reactions)
                                 }
                                 CustomSlider(offset: $trackPercentage, hasUpdates: $sliderHasUpdates)
                                     .onChange(of: sliderHasUpdates, perform: { hasUpdates in

@@ -16,6 +16,7 @@
 		3E65895D26C817D30066F144 /* CustomSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E65895C26C817D30066F144 /* CustomSlider.swift */; };
 		3E65895F26C818040066F144 /* BottomSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E65895E26C818040066F144 /* BottomSheet.swift */; };
 		3E65896126C8223F0066F144 /* StatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E65896026C8223F0066F144 /* StatView.swift */; };
+		3E71600026CD92A70021D520 /* EmojiGraph.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E715FFF26CD92A70021D520 /* EmojiGraph.swift */; };
 		3E8431E726C5A4DB00545232 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E8431E626C5A4DB00545232 /* LoginView.swift */; };
 		3E9A7F1626CD162D0086474D /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E9A7F1526CD162D0086474D /* SettingsView.swift */; };
 		3EA3D97526C83A2800D163E6 /* PieChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA3D97426C83A2800D163E6 /* PieChart.swift */; };
@@ -66,6 +67,7 @@
 		3E65895C26C817D30066F144 /* CustomSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSlider.swift; sourceTree = "<group>"; };
 		3E65895E26C818040066F144 /* BottomSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheet.swift; sourceTree = "<group>"; };
 		3E65896026C8223F0066F144 /* StatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatView.swift; sourceTree = "<group>"; };
+		3E715FFF26CD92A70021D520 /* EmojiGraph.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiGraph.swift; sourceTree = "<group>"; };
 		3E8431E526C5A05B00545232 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		3E8431E626C5A4DB00545232 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		3E9A7F1526CD162D0086474D /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
@@ -176,6 +178,7 @@
 				3EF6844226C57EAB0047CF20 /* RSSParser.swift */,
 				3EB9368C26CC0E5A009DCCDE /* PodcastInfo.swift */,
 				3E2DE7BD26C5369700313C92 /* ReactionsGraph.swift */,
+				3E715FFF26CD92A70021D520 /* EmojiGraph.swift */,
 				3EB9369026CC4DCF009DCCDE /* ShareSheet.swift */,
 				3EA7799126C45B9E00B0C05E /* ReactionItem.swift */,
 				3EA7796326C4543700B0C05E /* VKPodcastsApp.swift */,
@@ -479,6 +482,7 @@
 				3EB9369126CC4DCF009DCCDE /* ShareSheet.swift in Sources */,
 				3E20F0CB26CA7E7000CF8053 /* StatReactionsGraph.swift in Sources */,
 				3E434B8926C67C12009D99DD /* PodcastView.swift in Sources */,
+				3E71600026CD92A70021D520 /* EmojiGraph.swift in Sources */,
 				3EA7799226C45B9E00B0C05E /* ReactionItem.swift in Sources */,
 				3EF6844326C57EAB0047CF20 /* RSSParser.swift in Sources */,
 				3E8431E726C5A4DB00545232 /* LoginView.swift in Sources */,
