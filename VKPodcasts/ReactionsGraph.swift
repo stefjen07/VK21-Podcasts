@@ -43,23 +43,16 @@ struct ReactionsGraph: View {
     
     var body: some View {
         ZStack {
-            VStack(alignment: .leading, spacing: 0) {
-                Spacer()
-                    .frame(height: 30)
-                HStack(spacing: 0) {
-                    HStack(alignment: .bottom, spacing: colWidth / 2.0) {
-                        ForEach(0..<colsCount) { i in
-                            VStack(spacing: 0) {
-                                Spacer(minLength: 0)
-                                Capsule()
-                                    .foregroundColor(isColActive(idx: i) ? Color("VKColor") : Color("VKColor").opacity(0.2))
-                                    .frame(width: colWidth, height: max(colWidth, colPercentage[i]*(selfSize.height-20)))
-                            }
-                        }
+            HStack(alignment: .bottom, spacing: colWidth / 2.0) {
+                ForEach(0..<colsCount) { i in
+                    VStack(spacing: 0) {
+                        Spacer(minLength: 0)
+                        Capsule()
+                            .foregroundColor(isColActive(idx: i) ? Color("VKColor") : Color("VKColor").opacity(0.2))
+                            .frame(width: colWidth, height: max(colWidth, colPercentage[i]*(selfSize.height-20)))
                     }
-                    Spacer(minLength: 0)
                 }
-            }.frame(width: selfSize.width)
+            }.padding(.top, 30)
             EmojiGraph(values: emojiValues, valueAll: valueAll, reactions: reactions)
         }.frame(height: selfSize.height)
     }

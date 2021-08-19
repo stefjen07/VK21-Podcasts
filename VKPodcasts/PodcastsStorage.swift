@@ -29,6 +29,24 @@ struct StatSeconds: Codable {
     var seconds: Double
 }
 
+func getUrlForStats() -> URL {
+    let fm = FileManager.default
+    if let url = fm.urls(for: .documentDirectory, in: .userDomainMask).first {
+        return url.appendingPathComponent("stats.storage")
+    }
+    print("Unable to find url for stats")
+    return URL(fileURLWithPath: "")
+}
+
+func getUrlForSeconds() -> URL {
+    let fm = FileManager.default
+    if let url = fm.urls(for: .documentDirectory, in: .userDomainMask).first {
+        return url.appendingPathComponent("seconds.storage")
+    }
+    print("Unable to find url for seconds")
+    return URL(fileURLWithPath: "")
+}
+
 struct UserStatStorage: Codable {
     var userStats: [UserStat]
     var lastSeconds: [StatSeconds]
@@ -40,7 +58,6 @@ struct UserStatStorage: Codable {
             }
         }
         lastSeconds.append(.init(id: id, seconds: seconds))
-        save()
     }
     
     func seconds(_ id: String) -> Double {
@@ -52,30 +69,35 @@ struct UserStatStorage: Codable {
         return 0
     }
     
-    var url: URL {
-        let fm = FileManager.default
-        if let url = fm.urls(for: .documentDirectory, in: .userDomainMask).first {
-            return url.appendingPathComponent("stats.storage")
-        }
-        return URL(fileURLWithPath: "")
-    }
-    
     init() {
-        self.userStats = []
-        self.lastSeconds = []
-        guard let data = try? Data(contentsOf: url) else {
-            return
+        if let data = try? Data(contentsOf: getUrlForStats()) {
+            if let userStats = try? JSONDecoder().decode([UserStat].self, from: data) {
+                self.userStats = userStats
+            } else {
+                self.userStats = []
+            }
+        } else {
+            self.userStats = []
         }
         
-        if let userStatStorage = try? JSONDecoder().decode(UserStatStorage.self, from: data) {
-            self.userStats = userStatStorage.userStats
-            self.lastSeconds = userStatStorage.lastSeconds
+        if let secondsData = try? Data(contentsOf: getUrlForSeconds()) {
+            if let lastSeconds = try? JSONDecoder().decode([StatSeconds].self, from: secondsData) {
+                self.lastSeconds = lastSeconds
+            } else {
+                self.lastSeconds = []
+            }
+        } else {
+            self.lastSeconds = []
         }
     }
     
     func save() {
-        if let data = try? JSONEncoder().encode(self) {
-            try? data.write(to: url)
+        if let data = try? JSONEncoder().encode(userStats) {
+            try? data.write(to: getUrlForStats())
+        }
+        
+        if let data = try? JSONEncoder().encode(lastSeconds) {
+            try? data.write(to: getUrlForSeconds())
         }
     }
     

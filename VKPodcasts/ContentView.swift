@@ -188,6 +188,9 @@ struct ContentView: View {
                     initialized = true
                 }
             })
+            Timer.scheduledTimer(withTimeInterval: 1.5, repeats: true, block: { _ in
+                statStorage.save()
+            })
         }
     }
 }
