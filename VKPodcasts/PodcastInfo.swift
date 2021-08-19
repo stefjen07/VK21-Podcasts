@@ -8,21 +8,23 @@
 import SwiftUI
 
 struct InfoRow: View {
+    @Environment(\.colorScheme) var colorScheme
     var title: String
     var value: String
     
     var body: some View {
         HStack {
             Text(title)
-                .foregroundColor(.init(white: 0.65))
+                .foregroundColor(colorScheme == .dark ? .init(white: 0.65) : .init(white: 0.35))
             Spacer()
             Text(value)
-                .foregroundColor(.white)
+                .foregroundColor(.primary)
         }
     }
 }
 
 struct PodcastInfo: View {
+    @Environment(\.colorScheme) var colorScheme
     var podcast: Podcast
     
     var body: some View {
@@ -35,7 +37,7 @@ struct PodcastInfo: View {
             InfoRow(title: "E-mail автора", value: podcast.email)
         }
         .padding(20)
-        .background(Color("Background").brightness(0.4).opacity(0.7))
+        .background(colorScheme == .light ? Color.white.brightness(0).opacity(0.7) : Color("Background").brightness(0.4).opacity(0.7))
         .cornerRadius(10)
         .padding(.top, 15)
     }

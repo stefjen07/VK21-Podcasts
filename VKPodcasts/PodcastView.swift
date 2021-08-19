@@ -35,6 +35,7 @@ struct EpisodeItem: View {
                 VStack {
                     HStack {
                         Text(episode.title)
+                            .foregroundColor(.white)
                             .bold()
                             .lineLimit(1)
                         Spacer()
@@ -52,8 +53,10 @@ struct EpisodeItem: View {
             }
             HStack {
                 Text(episode.duration)
+                    .foregroundColor(.white)
                 Spacer()
                 Text(publishedDate(date: episode.date))
+                    .foregroundColor(.white)
             }
         }
     }
@@ -97,14 +100,14 @@ struct PodcastView: View {
                         Text(podcast.title)
                             .font(.largeTitle)
                             .bold()
-                            .foregroundColor(.white)
+                            .foregroundColor(.primary)
                             .lineLimit(1)
                         Spacer()
                     }
                         .padding(.bottom, 2)
                     HStack {
                         Text(podcast.description)
-                            .foregroundColor(.white)
+                            .foregroundColor(.primary)
                             .multilineTextAlignment(.leading)
                         Spacer()
                     }

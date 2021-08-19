@@ -31,6 +31,7 @@ struct PodcastItem: View {
                 VStack {
                     HStack {
                         Text(podcast.title)
+                            .foregroundColor(.white)
                             .bold()
                             .lineLimit(1)
                         Spacer()
@@ -139,7 +140,7 @@ struct NewPodcastView: View {
                                 Text(rssUrl?.lastPathComponent ?? "Выбрать RSS файл")
                             })
                             TextField("Введите URL адрес RSS файла", text: $rssStr)
-                                .preferredColorScheme(.dark)
+                                
                                 .disabled(rssUrl != nil)
                         }, header: {
                             Text("RSS")
@@ -151,7 +152,7 @@ struct NewPodcastView: View {
                                 Text(reactionsUrl?.lastPathComponent ?? "Выбрать файл с реакциями")
                             })
                             TextField("Введите URL адрес файла с реакциями", text: $reactionsStr)
-                                .preferredColorScheme(.dark)
+                                
                                 .disabled(reactionsUrl != nil)
                         }, header: {
                             Text("Файл с реакциями")
@@ -160,7 +161,7 @@ struct NewPodcastView: View {
                     }.cornerRadius(20)
                     Spacer()
                 }
-                .foregroundColor(.white)
+                .foregroundColor(.primary)
                 .padding(.top, 15)
                 .padding(.horizontal, 25)
             }.frame(height: proxy.size.height)
@@ -191,7 +192,7 @@ struct PodcastsView: View {
                     VStack(spacing: 15) {
                         ForEach($podcastsStorage.podcasts) { podcast in
                             PodcastItem(podcast: podcast, podcastsStorage: $podcastsStorage, userInfo: $userInfo)
-                                .foregroundColor(.white)
+                                .foregroundColor(.primary)
                         }
                         Spacer()
                     }
@@ -217,7 +218,7 @@ struct PodcastsView: View {
                 NewPodcastView(podcastsStorage: $podcastsStorage)
             }
         }
-        .accentColor(.white)
+        .accentColor(.primary)
         .onAppear() {
             lazyLogo()
         }
@@ -226,7 +227,7 @@ struct PodcastsView: View {
     init(userInfo: Binding<UserInfo>, authorized: Binding<Bool>) {
         self._userInfo = userInfo
         self._authorized = authorized
-        UINavigationBar.appearance().largeTitleTextAttributes = [.foregroundColor: UIColor.white]
+        UINavigationBar.appearance().largeTitleTextAttributes = [.foregroundColor: UIColor(Color.primary)]
     }
 }
 

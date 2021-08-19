@@ -55,10 +55,10 @@ struct SettingsView: View {
                         Text("Выйти")
                     }).foregroundColor(.red)
                 }
-                .foregroundColor(.white)
+                .foregroundColor(.primary)
                 .padding(.top, 40)
                 .padding(.horizontal, 20)
-            }.preferredColorScheme(.dark)
+            }
         }
         .navigationBarTitle("Настройки")
         .navigationBarTitleDisplayMode(.inline)

@@ -349,6 +349,7 @@ enum PlaceType: String {
 }
 
 struct StatView: View {
+    @Environment(\.colorScheme) var colorScheme
     let malePercentage: Double
     var maleCount: Int
     var peopleCount: Int
@@ -565,7 +566,7 @@ struct StatView: View {
                                     }
                                 }
                                 .frame(width: proxy.size.width * 0.5)
-                                .background(Blur(effect: UIBlurEffect(style: .systemMaterialDark)))
+                                .background(Blur(effect: UIBlurEffect(style: colorScheme == .dark ? .systemMaterialDark : .systemMaterialLight)))
                                 .cornerRadius(10)
                                 .padding(.top, 30)
                             }
@@ -590,7 +591,7 @@ struct StatView: View {
                         .pickerStyle(MenuPickerStyle())
                     Divider()
                 }
-                .preferredColorScheme(.dark)
+                
             }
         }
         .navigationBarTitle("Статистика")

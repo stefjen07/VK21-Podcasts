@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct BottomSheetView<Content: View>: View {
+    @Environment(\.colorScheme) var colorScheme
     @Binding var isOpen: Bool
     
     let radius: CGFloat = 30
@@ -39,14 +40,14 @@ struct BottomSheetView<Content: View>: View {
             VStack(spacing: 0) {
                 self.indicator
                     .padding(15)
-                    .preferredColorScheme(.dark)
+                    
                 self.content
             }
             .frame(width: geometry.size.width, height: self.maxHeight, alignment: .top)
-            .background(Blur(effect: UIBlurEffect(style: .dark)))
+            .background(Blur(effect: UIBlurEffect(style: colorScheme == .dark ? .dark : .light)))
             .cornerRadius(radius, corners: [.topLeft, .topRight])
             .frame(height: geometry.size.height, alignment: .bottom)
-            .shadow(color: .white, radius: 2)
+            .shadow(color: .init(white: 0.5), radius: 2)
             .offset(y: max(self.offset + self.translation, 0))
             .animation(.interactiveSpring(), value: isOpen)
             .animation(.interactiveSpring(), value: translation)

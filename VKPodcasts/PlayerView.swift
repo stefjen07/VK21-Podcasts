@@ -214,7 +214,7 @@ struct PlayerView: View {
                                     Text(speeds[currentSpeedId].removeZerosFromEnd() + "x")
                                         .font(.callout)
                                         .bold()
-                                        .foregroundColor(.white)
+                                        .foregroundColor(.primary)
                                         .frame(width: 60, height: 25)
                                         .overlay(
                                             Capsule()
@@ -228,7 +228,7 @@ struct PlayerView: View {
                                     }, label: {
                                         Image(systemName: "backward.fill")
                                             .resizable()
-                                            .foregroundColor(.white)
+                                            .foregroundColor(.primary)
                                             .aspectRatio(contentMode: .fit)
                                             .frame(width: 30)
                                     })
@@ -243,7 +243,7 @@ struct PlayerView: View {
                                     }, label: {
                                         Image(systemName: "gobackward.15")
                                             .resizable()
-                                            .foregroundColor(.white)
+                                            .foregroundColor(.primary)
                                             .aspectRatio(contentMode: .fit)
                                             .frame(width: 30)
                                     })
@@ -259,7 +259,7 @@ struct PlayerView: View {
                                 }, label: {
                                     Image(systemName: paused ? "play.fill" : "pause.fill")
                                         .resizable()
-                                        .foregroundColor(.white)
+                                        .foregroundColor(.primary)
                                         .aspectRatio(contentMode: .fit)
                                         .frame(width: 30, height: 34)
                                 })
@@ -270,7 +270,7 @@ struct PlayerView: View {
                                     }, label: {
                                         Image(systemName: "forward.fill")
                                             .resizable()
-                                            .foregroundColor(.white)
+                                            .foregroundColor(.primary)
                                             .aspectRatio(contentMode: .fit)
                                             .frame(width: 30)
                                     })
@@ -285,7 +285,7 @@ struct PlayerView: View {
                                     }, label: {
                                         Image(systemName: "goforward.15")
                                             .resizable()
-                                            .foregroundColor(.white)
+                                            .foregroundColor(.primary)
                                             .aspectRatio(contentMode: .fit)
                                             .frame(width: 30)
                                     })
@@ -298,7 +298,7 @@ struct PlayerView: View {
                                 }, label: {
                                     Image(systemName: "ellipsis")
                                         .resizable()
-                                        .foregroundColor(.white)
+                                        .foregroundColor(.primary)
                                         .aspectRatio(contentMode: .fit)
                                         .frame(width: 20)
                                 })
@@ -344,7 +344,7 @@ struct PlayerView: View {
                         Text("Реакции")
                             .font(.title)
                             .bold()
-                            .foregroundColor(.white)
+                            .foregroundColor(.primary)
                         if reactionsUnlocked {
                             HStack {
                                 Spacer()
@@ -366,7 +366,7 @@ struct PlayerView: View {
                                                     if isBottomSheetOpened {
                                                         Text(reaction.description)
                                                             .font(.callout)
-                                                            .foregroundColor(.white)
+                                                            .foregroundColor(.primary)
                                                             .lineLimit(1)
                                                     }
                                                 }
