@@ -10,7 +10,7 @@ import SwiftUI
 struct DataComparingText: View {
     var body: some View {
         HStack {
-            Text("Данные сравниваются за одинаковые промежутки времени в прошлом.")
+            Text("data-comparing")
                 .font(.footnote)
                 .foregroundColor(.init(white: 0.65))
                 .multilineTextAlignment(.leading)
@@ -20,7 +20,7 @@ struct DataComparingText: View {
 }
 
 struct StatTitle: View {
-    var text: String
+    var text: LocalizedStringKey
     
     var body: some View {
         Text(text)
@@ -28,7 +28,7 @@ struct StatTitle: View {
             .padding(.top, 10)
     }
     
-    init(_ text: String) {
+    init(_ text: LocalizedStringKey) {
         self.text = text
     }
 }
@@ -283,14 +283,14 @@ struct AgeGroup {
         self.value = right
     }
     
-    var description: String {
+    var description: LocalizedStringKey {
         switch type {
         case .lower:
-            return "до \(value)"
+            return "before \(value)"
         case .range:
             return "\(value)-\(bound!)"
         case .greaterEqual:
-            return "от \(value)"
+            return "from \(value)"
         }
     }
     
@@ -328,9 +328,9 @@ struct DataTimeInterval {
 }
 
 var dataTimeIntervals: [DataTimeInterval] = [
-    .init(description: "7 дней", timeInterval: 7*24*60*60),
-    .init(description: "30 дней", timeInterval: 30*24*60*60),
-    .init(description: "полгода", timeInterval: 6*30*24*60*60)
+    .init(description: "7days", timeInterval: 7*24*60*60),
+    .init(description: "30days", timeInterval: 30*24*60*60),
+    .init(description: "halfyear", timeInterval: 6*30*24*60*60)
 ]
 
 func scale(maximumValue: Int) -> Int {
@@ -343,9 +343,9 @@ func scale(maximumValue: Int) -> Int {
     }
 }
 
-enum PlaceType: String {
-    case city = "Города"
-    case country = "Страны"
+enum PlaceType: LocalizedStringKey {
+    case city = "cities"
+    case country = "countries"
 }
 
 struct StatView: View {
@@ -387,9 +387,9 @@ struct StatView: View {
                 ScrollView(.vertical, showsIndicators: false) {
                     VStack {
                         VStack(alignment: .leading) {
-                            StatTitle("Реакции")
+                            StatTitle("reacts")
                             HStack {
-                                Text("Динамика реакций на подкаст")
+                                Text("reacts-change")
                                     .font(.subheadline)
                                     .foregroundColor(.init(white: 0.65))
                                 Spacer()
@@ -402,7 +402,7 @@ struct StatView: View {
                         }
                         Divider()
                         VStack(alignment: .leading) {
-                            StatTitle("Виды реакций")
+                            StatTitle("reacts-types")
                             ReactionTypeGraph(values: values, reactions: reactions, duration: duration)
                             ForEach(showingReactions) { rawIdx in
                                 let idx = sortedIndices[rawIdx]
@@ -425,7 +425,7 @@ struct StatView: View {
                                 }, label: {
                                     HStack {
                                         Image(systemName: showingReactions.count > 4 ? "chevron.up" : "chevron.down")
-                                        Text(showingReactions.count > 4 ? "Меньше реакций" : "Остальные реакции")
+                                        Text(showingReactions.count > 4 ? "more-reacts" : "less-reacts")
                                     }.font(.body)
                                 })
                                     .foregroundColor(Color("VKColor"))
@@ -436,7 +436,7 @@ struct StatView: View {
                         }
                         Divider()
                         VStack(alignment: .leading) {
-                            StatTitle("Пол и возраст")
+                            StatTitle("sex-and-age")
                             HStack {
                                 Spacer()
                                 Circle()
@@ -470,7 +470,7 @@ struct StatView: View {
                                             .foregroundColor(.init(white: 0.65))
                                             .font(.title2)
                                     }
-                                    Text("Мужчины")
+                                    Text("men")
                                         .foregroundColor(.init(white: 0.65))
                                         .font(.footnote)
                                 }
@@ -491,7 +491,7 @@ struct StatView: View {
                                             .foregroundColor(.init(white: 0.65))
                                             .font(.title2)
                                     }
-                                    Text("Женщины")
+                                    Text("ladies")
                                         .font(.footnote)
                                         .foregroundColor(.init(white: 0.65))
                                 }
@@ -522,7 +522,7 @@ struct StatView: View {
                                     Spacer()
                                     ZStack {
                                         if citiesTop.count == 0 {
-                                            Text("Нет сведений")
+                                            Text("no-info")
                                                 .foregroundColor(.init(white: 0.65))
                                                 .font(.callout)
                                         }
@@ -579,12 +579,13 @@ struct StatView: View {
                     Divider()
                     Picker(selection: $selectedTimeInterval, content: {
                         ForEach(0..<dataTimeIntervals.count) { i in
-                            Text("Данные за \(dataTimeIntervals[i].description)")
+                            Text("data-interval \(String(format: NSLocalizedString(dataTimeIntervals[i].description, comment: "")))")
                                 .foregroundColor(Color("VKColor"))
                                 .tag(i)
                         }
                     }, label: {
-                        Text("Данные за \(dataTimeIntervals[selectedTimeInterval].description)")
+                        Text("data-interval \(String(format: NSLocalizedString(dataTimeIntervals[selectedTimeInterval].description, comment: "")))")
+                            .foregroundColor(Color("VKColor"))
                         Image(systemName: "chevron.down")
                     })
                         .accentColor(Color("VKColor"))
@@ -594,7 +595,7 @@ struct StatView: View {
                 
             }
         }
-        .navigationBarTitle("Статистика")
+        .navigationBarTitle("stats")
         .navigationBarTitleDisplayMode(.inline)
     }
     
@@ -682,7 +683,7 @@ struct StatView: View {
             }
             
             if citiesTop.count == 5 {
-                citiesTop.append(.init(id: -1, title: "Другие", count: othersCount, percentage: Double(othersCount)/Double(episode.statistics.count), color: .clear))
+                citiesTop.append(.init(id: -1, title: String(format: NSLocalizedString("others", comment: "")), count: othersCount, percentage: Double(othersCount)/Double(episode.statistics.count), color: .clear))
             }
             
             for i in 0..<citiesTop.count {

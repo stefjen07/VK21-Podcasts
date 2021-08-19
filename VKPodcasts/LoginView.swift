@@ -19,7 +19,7 @@ struct LoginView: View {
                 Button(action: {
                     VKSdk.authorize(nil)
                 }, label: {
-                    Text("Войти с ВКонтакте")
+                    Text("vk-auth")
                         .foregroundColor(.primary)
                         .padding(10)
                         .background(Color("VKColor"))

@@ -21,25 +21,26 @@ struct SettingsView: View {
             ScrollView(.vertical, showsIndicators: false) {
                 VStack(spacing: 20) {
                     VStack(alignment: .leading, spacing: 10) {
-                        StatTitle("Основная информация")
-                        InfoRow(title: "Имя и фамилия", value: "\(userInfo.firstName) \(userInfo.lastName)")
-                        InfoRow(title: "Возраст", value: "\(userInfo.age)")
-                        InfoRow(title: "Пол", value: "\(userInfo.sex == .male ? "Мужской" : "Женский")")
+                        StatTitle("cmn-info")
+                        InfoRow(title: "fullname", value: "\(userInfo.firstName) \(userInfo.lastName)")
+                        InfoRow(title: "age", value: "\(userInfo.age)")
+                        InfoRow(title: "sex", value: String(format: NSLocalizedString(userInfo.sex == .male ? "sex-male" : "sex-female", comment: "")))
                     }
                     VStack(alignment: .leading, spacing: 10) {
-                        StatTitle("Персональная статистика")
-                        InfoRow(title: "Оставленные реакции", value: String(statStorage.countForInterval(dataTimeIntervals[selectedTimeInterval].timeInterval)))
+                        StatTitle("personal-stat")
+                        InfoRow(title: "given-reacts", value: String(statStorage.countForInterval(dataTimeIntervals[selectedTimeInterval].timeInterval)))
                     }
                     VStack(spacing: 10) {
                         Divider()
                         Picker(selection: $selectedTimeInterval, content: {
                             ForEach(0..<dataTimeIntervals.count) { i in
-                                Text("Данные за \(dataTimeIntervals[i].description)")
+                                Text("data-interval \(String(format: NSLocalizedString(dataTimeIntervals[i].description, comment: "")))")
                                     .foregroundColor(Color("VKColor"))
                                     .tag(i)
                             }
                         }, label: {
-                            Text("Данные за \(dataTimeIntervals[selectedTimeInterval].description)")
+                            Text("data-interval \(String(format: NSLocalizedString(dataTimeIntervals[selectedTimeInterval].description, comment: "")))")
+                                .foregroundColor(Color("VKColor"))
                             Image(systemName: "chevron.down")
                         })
                             .accentColor(Color("VKColor"))
@@ -52,7 +53,7 @@ struct SettingsView: View {
                             authorized = false
                         }
                     }, label: {
-                        Text("Выйти")
+                        Text("sign-out")
                     }).foregroundColor(.red)
                 }
                 .foregroundColor(.primary)
@@ -60,7 +61,7 @@ struct SettingsView: View {
                 .padding(.horizontal, 20)
             }
         }
-        .navigationBarTitle("Настройки")
+        .navigationBarTitle("settings")
         .navigationBarTitleDisplayMode(.inline)
     }
 }

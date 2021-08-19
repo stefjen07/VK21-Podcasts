@@ -9,7 +9,7 @@ import SwiftUI
 
 struct InfoRow: View {
     @Environment(\.colorScheme) var colorScheme
-    var title: String
+    var title: LocalizedStringKey
     var value: String
     
     var body: some View {
@@ -29,12 +29,14 @@ struct PodcastInfo: View {
     
     var body: some View {
         VStack(spacing: 10) {
-            InfoRow(title: "Категория", value: podcast.category)
-            InfoRow(title: "Содержит Explicit-выпуски", value: podcast.episodes.contains(where: { episode in
+            Text("additional-info")
+                .font(.headline)
+            InfoRow(title: "podcast-сategory", value: podcast.category)
+            InfoRow(title: "contains-explicit", value: String(format: NSLocalizedString(podcast.episodes.contains(where: { episode in
                 return episode.isExplicit
-            }) ? "Да" : "Нет")
-            InfoRow(title: "Автор", value: podcast.author)
-            InfoRow(title: "E-mail автора", value: podcast.email)
+            }) ? "yes" : "no", comment: "")))
+            InfoRow(title: "author", value: podcast.author)
+            InfoRow(title: "author-email", value: podcast.email)
         }
         .padding(20)
         .background(colorScheme == .light ? Color.white.brightness(0).opacity(0.7) : Color("Background").brightness(0.4).opacity(0.7))

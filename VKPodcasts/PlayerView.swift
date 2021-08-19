@@ -341,7 +341,7 @@ struct PlayerView: View {
                 
                 BottomSheetView(isOpen: $isBottomSheetOpened, maxHeight: bottomSize + 15 * 4 + reactionItemSize * 5 + 50, bottomSize: bottomSize) {
                     VStack(alignment: .center) {
-                        Text("Реакции")
+                        Text("reacts")
                             .font(.title)
                             .bold()
                             .foregroundColor(.primary)
@@ -378,7 +378,7 @@ struct PlayerView: View {
                             }
                                 .padding(.horizontal, 15)
                         } else {
-                            Text("Можно оставлять не более одной реакции в 10 секунд")
+                            Text("reacts-limit")
                                 .foregroundColor(.init(white: 0.65))
                                 .padding(.horizontal, 30)
                         }

@@ -13,7 +13,7 @@ struct EpisodeItem: View {
     
     func publishedDate(date: Date) -> String {
         publishedFormatter.dateFormat = "d MMMM yyyy"
-        publishedFormatter.locale = Locale(identifier: "ru_RU")
+        publishedFormatter.locale = Locale.current
         return publishedFormatter.string(from: date)
     }
     
@@ -134,7 +134,7 @@ struct PodcastView: View {
                             }
                         }
                     }, label: {
-                        Text("Выгрузить JSON файл с реакциями")
+                        Text("download-json")
                             .foregroundColor(Color("VKColor"))
                     }).padding(.vertical, 15)
                 }

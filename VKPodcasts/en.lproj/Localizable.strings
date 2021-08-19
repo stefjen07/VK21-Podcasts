@@ -1,0 +1,58 @@
+/* 
+  Localization.strings
+  VKPodcasts
+
+  Created by Евгений on 19.08.2021.
+  
+*/
+
+"download-json" = "Download JSON file with reactions";
+"cancel" = "Cancel";
+"done" = "Done";
+"choose-rss" = "Choose RSS file";
+"rss-url" = "Enter URL of RSS file";
+"rss" = "RSS";
+"choose-reacts" = "Choose reactions' file";
+"reacts-url" = "Choose URL of reactions' file";
+"reacts-file" = "Reactions' file";
+"podcasts" = "Podcasts";
+"cmn-info" = "Common information";
+"fullname" = "Full name";
+"age" = "Age";
+"sex" = "Sex";
+"sex-male" = "Male";
+"sex-female" = "Female";
+"personal-stat" = "Personal statistics";
+"given-reacts" = "Left reactions";
+"data-interval %@" = "Data for %@";
+"sign-out" = "Sign out";
+"settings" = "Settings";
+"reacts" = "Reactions";
+"reacts-limit" = "Allowed to leave no more than one reaction per 10 seconds";
+"data-comparing" = "Data are compared for the same time intervals in the past.";
+"before %lld" = "before %lld";
+"from %lld" = "from %lld";
+"7days" = "7 days";
+"30days" = "30 days";
+"halfyear" = "half a year";
+"cities" = "Cities";
+"countries" = "Countries";
+"reacts-change" = "Podcast's reactions change";
+"reacts-types" = "Reactions' types";
+"more-reacts" = "Other reactions";
+"less-reacts" = "Fewer reactions";
+"sex-and-age" = "Sex and age";
+"men" = "Men";
+"ladies" = "Women";
+"no-info" = "No information";
+"stats" = "Statistics";
+"others" = "Others";
+"podcast-сategory" = "Category";
+"contains-explicit" = "Contains Explicit-episodes";
+"yes" = "Yes";
+"no" = "No";
+"author" = "Author";
+"author-email" = "Author's e-mail";
+"vk-auth" = "Log in with VK";
+"new-podcast" = "New podcast";
+"additional-info" = "Additional information";

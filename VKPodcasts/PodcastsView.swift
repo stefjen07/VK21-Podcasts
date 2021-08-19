@@ -114,7 +114,7 @@ struct NewPodcastView: View {
                         Button(action: {
                             presentation.wrappedValue.dismiss()
                         }, label: {
-                            Text("Отменить")
+                            Text("cancel")
                         })
                         Spacer()
                         Button(action: {
@@ -126,10 +126,10 @@ struct NewPodcastView: View {
                             podcastsStorage.addPodcast(config: config)
                             presentation.wrappedValue.dismiss()
                         }, label: {
-                            Text("Готово")
+                            Text("done")
                         })
                     }
-                    Text("Новый подкаст")
+                    Text("new-podcast")
                         .font(.largeTitle)
                         .bold()
                     List {
@@ -137,25 +137,31 @@ struct NewPodcastView: View {
                             Button(action: {
                                 documentPicking.toggle()
                             }, label: {
-                                Text(rssUrl?.lastPathComponent ?? "Выбрать RSS файл")
+                                if let filename = rssUrl?.lastPathComponent {
+                                    Text(filename)
+                                } else {
+                                    Text("choose-rss")
+                                }
                             })
-                            TextField("Введите URL адрес RSS файла", text: $rssStr)
-                                
+                            TextField(LocalizedStringKey("rss-url"), text: $rssStr)
                                 .disabled(rssUrl != nil)
                         }, header: {
-                            Text("RSS")
+                            Text("rss")
                         })
                         Section(content: {
                             Button(action: {
                                 jsonPicking.toggle()
                             }, label: {
-                                Text(reactionsUrl?.lastPathComponent ?? "Выбрать файл с реакциями")
+                                if let filename = reactionsUrl?.lastPathComponent {
+                                    Text(filename)
+                                } else {
+                                    Text("choose-reacts")
+                                }
                             })
-                            TextField("Введите URL адрес файла с реакциями", text: $reactionsStr)
-                                
+                            TextField(LocalizedStringKey("reacts-url"), text: $reactionsStr)
                                 .disabled(reactionsUrl != nil)
                         }, header: {
-                            Text("Файл с реакциями")
+                            Text("reacts-file")
                         })
                         
                     }.cornerRadius(20)
@@ -200,7 +206,7 @@ struct PodcastsView: View {
                 .padding(.top, 10)
                 .padding(.horizontal, 25)
             }
-            .navigationTitle("Подкасты")
+            .navigationTitle("podcasts")
             .navigationBarItems(leading:
                 NavigationLink(destination: SettingsView(userInfo: $userInfo, podcastsStorage: $podcastsStorage, authorized: $authorized)) {
                     Image(systemName: "gear")

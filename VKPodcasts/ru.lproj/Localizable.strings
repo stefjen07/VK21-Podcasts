@@ -1,0 +1,58 @@
+/* 
+  Localization.strings
+  VKPodcasts
+
+  Created by Евгений on 19.08.2021.
+  
+*/
+
+"download-json" = "Выгрузить JSON файл с реакциями";
+"cancel" = "Отменить";
+"done" = "Готово";
+"choose-rss" = "Выбрать RSS файл";
+"rss-url" = "Введите URL адрес RSS файла";
+"rss" = "RSS";
+"choose-reacts" = "Выбрать файл с реакциями";
+"reacts-url" = "Введите URL адрес файла с реакциями";
+"reacts-file" = "Файл с реакциями";
+"podcasts" = "Подкасты";
+"cmn-info" = "Основная информация";
+"fullname" = "Имя и фамилия";
+"age" = "Возраст";
+"sex" = "Пол";
+"sex-male" = "Мужской";
+"sex-female" = "Женский";
+"personal-stat" = "Персональная статистика";
+"given-reacts" = "Оставленные реакции";
+"data-interval %@" = "Данные за %@";
+"sign-out" = "Выйти";
+"settings" = "Настройки";
+"reacts" = "Реакции";
+"reacts-limit" = "Можно оставлять не более одной реакции в 10 секунд";
+"data-comparing" = "Данные сравниваются за одинаковые промежутки времени в прошлом.";
+"before %lld" = "до %lld";
+"from %lld" = "от %lld";
+"7days" = "7 дней";
+"30days" = "30 дней";
+"halfyear" = "полгода";
+"cities" = "Города";
+"countries" = "Страны";
+"reacts-change" = "Динамика реакций на подкаст";
+"reacts-types" = "Виды реакций";
+"more-reacts" = "Остальные реакции";
+"less-reacts" = "Меньше реакций";
+"sex-and-age" = "Пол и возраст";
+"men" = "Мужчины";
+"ladies" = "Женщины";
+"no-info" = "Нет сведений";
+"stats" = "Статистика";
+"others" = "Другие";
+"podcast-сategory" = "Категория";
+"contains-explicit" = "Содержит Explicit-выпуски";
+"yes" = "Да";
+"no" = "Нет";
+"author" = "Автор";
+"author-email" = "E-mail автора";
+"vk-auth" = "Войти с ВКонтакте";
+"new-podcast" = "Новый подкаст";
+"additional-info" = "Дополнительная информация";
