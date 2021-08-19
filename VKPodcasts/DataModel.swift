@@ -118,12 +118,16 @@ func getCities(tIds: [Int], destination: Binding<[City]>) {
             "lang": localeForRequest()
         ])
         request?.execute(resultBlock: { response in
-            print("Cities received: \(response?.responseString)")
-            if let cities = try? JSONDecoder().decode(CitiesResponse.self, from: response!.responseString.data(using: .utf8) ?? Data()) {
-                destination.wrappedValue.append(contentsOf: cities.response)
+            if let response = response?.responseString {
+                print("Cities received: \(response)")
+                if let cities = try? JSONDecoder().decode(CitiesResponse.self, from: response.data(using: .utf8) ?? Data()) {
+                    destination.wrappedValue.append(contentsOf: cities.response)
+                }
             }
         }, errorBlock: { error in
-            print(error?.localizedDescription)
+            if let error = error {
+                print(error.localizedDescription)
+            }
         })
         ids.removeFirst(min(ids.count,1000))
     }

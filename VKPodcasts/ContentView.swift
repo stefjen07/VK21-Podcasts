@@ -59,8 +59,8 @@ class VKWrapper: NSObject, VKSdkDelegate, VKSdkUIDelegate {
             "access_token": VKSdk.accessToken().accessToken ?? ""
         ])
         request?.execute(resultBlock: { response in
-            if let response = response {
-                print("Track visitor respond received: \(response.responseString)")
+            if let response = response?.responseString {
+                print("Track visitor respond received: \(response)")
             }
         }, errorBlock: { error in
             if let error = error {
@@ -95,7 +95,9 @@ class VKWrapper: NSObject, VKSdkDelegate, VKSdkUIDelegate {
             print("City id: \(self.userInfo.cityId)")
             print("Sex: \(self.userInfo.sex.rawValue)")
         }, errorBlock: { error in
-            print(error?.localizedDescription)
+            if let error = error {
+                print(error.localizedDescription)
+            }
         })
     }
     

@@ -471,7 +471,7 @@ struct PlayerView: View {
     }
     
     func play() {
-        player.play()
+        player.playImmediately(atRate: Float(speeds[currentSpeedId]))
     }
     
     func pause() {

@@ -15,6 +15,7 @@ struct ReactionsGraph: View {
     let duration: Double
     let currentTime: Double
     var emojiValues: [[Int]]
+    var valueAll: [Int]
     
     var colsCount: Int {
         return Int((selfSize.width+colWidth/2)/(colWidth*1.5))
@@ -59,7 +60,7 @@ struct ReactionsGraph: View {
                     Spacer(minLength: 0)
                 }
             }.frame(width: selfSize.width)
-            EmojiGraph(values: emojiValues, reactions: reactions)
+            EmojiGraph(values: emojiValues, valueAll: valueAll, reactions: reactions)
         }.frame(height: selfSize.height)
     }
     
@@ -71,6 +72,8 @@ struct ReactionsGraph: View {
         self._episode = episode
         self.emojiValues = []
         self.colPercentage = []
+        self.valueAll = []
+        self.valueAll = Array(repeating: 0, count: colsCount)
         self.emojiValues = Array(repeating: Array(repeating: 0, count: colsCount), count: reactions.count)
         
         for stat in self.episode.statistics {
@@ -81,22 +84,14 @@ struct ReactionsGraph: View {
                     break
                 }
             }
-            emojiValues[reactionIdx][idxForTime(time: Double(stat.time)/1000)] += 1
+            let col = idxForTime(time: Double(stat.time)/1000)
+            emojiValues[reactionIdx][col] += 1
+            valueAll[col] += 1
         }
         
-        for col in 0..<colsCount {
-            var result = 0
-            for reaction in 0..<emojiValues.count {
-                result += emojiValues[reaction][col]
-            }
-            colPercentage.append(CGFloat(result))
-        }
+        colPercentage = valueAll.map { CGFloat($0) }
         
-        var maxValue: CGFloat = 0
-        
-        for colPercentage in colPercentage {
-            maxValue = max(maxValue, colPercentage)
-        }
+        let maxValue = colPercentage.reduce(0, max)
         
         if maxValue != 0 {
             for i in 0..<colPercentage.count {

@@ -75,15 +75,9 @@ struct EmojiGraph: View {
         }
     }
     
-    init(values: [[Int]], reactions: [Reaction]) {
+    init(values: [[Int]], valueAll: [Int], reactions: [Reaction]) {
         self.data = []
         let colsCount = (values.first?.count ?? 1)
-        var valueAll = Array(repeating: 0, count: colsCount)
-        for i in 0..<values.count {
-            for j in 0..<colsCount {
-                valueAll[j] += values[i][j]
-            }
-        }
         for i in reactions.indices {
             let reactionValues = (0..<colsCount).indices.map { values[i][$0]*2 - valueAll[$0] }
             let bestRange = getBestSubrange(values: reactionValues, data: data)

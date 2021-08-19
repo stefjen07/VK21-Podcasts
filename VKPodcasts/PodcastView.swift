@@ -12,7 +12,7 @@ struct EpisodeItem: View {
     let publishedFormatter = DateFormatter()
     
     func publishedDate(date: Date) -> String {
-        publishedFormatter.dateFormat = "d MMMM, yyyy"
+        publishedFormatter.dateFormat = "d MMMM yyyy"
         publishedFormatter.locale = Locale(identifier: "ru_RU")
         return publishedFormatter.string(from: date)
     }
@@ -142,7 +142,7 @@ struct PodcastView: View {
         .onAppear() {
             for episode in $podcast.episodes {
                 if episode.logoCache.wrappedValue == nil {
-                    ImageLoader(urlString: episode.wrappedValue.logoUrl, destination: episode.logoCache)
+                    loadImage(urlString: episode.wrappedValue.logoUrl, destination: episode.logoCache)
                 }
             }
         }

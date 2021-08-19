@@ -70,27 +70,17 @@ extension View {
     }
 }
 
-class ImageLoader: ObservableObject {
-    @Binding var destination: Image?
-    var data = Data() {
-        didSet {
+func loadImage(urlString: String, destination: Binding<Image?>) {
+    guard let url = URL(string: urlString) else { return }
+    let task = URLSession.shared.dataTask(with: url) { data, response, error in
+        guard let data = data else { return }
+        DispatchQueue.main.async {
             if let uiImage = UIImage(data: data) {
-                self.destination = Image(uiImage: uiImage)
+                destination.wrappedValue = Image(uiImage: uiImage)
             }
         }
     }
-
-    init(urlString: String, destination: Binding<Image?>) {
-        self._destination = destination
-        guard let url = URL(string: urlString) else { return }
-        let task = URLSession.shared.dataTask(with: url) { data, response, error in
-            guard let data = data else { return }
-            DispatchQueue.main.async {
-                self.data = data
-            }
-        }
-        task.resume()
-    }
+    task.resume()
 }
 
 struct NewPodcastView: View {
@@ -187,7 +177,7 @@ struct PodcastsView: View {
     func lazyLogo() {
         for podcast in $podcastsStorage.podcasts {
             if podcast.logoCache.wrappedValue == nil {
-                ImageLoader(urlString: podcast.wrappedValue.logoUrl, destination: podcast.logoCache)
+                loadImage(urlString: podcast.wrappedValue.logoUrl, destination: podcast.logoCache)
             }
         }
     }
