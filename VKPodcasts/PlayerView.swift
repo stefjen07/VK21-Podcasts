@@ -402,6 +402,7 @@ struct PlayerView: View {
                     player.seek(to: .init(seconds: statStorage.seconds(episode.id), preferredTimescale: .init(10)))
                     play()
                 }
+                paused = false
                 loaded = true
             }
             playerTimer = Timer.scheduledTimer(withTimeInterval: 0.2, repeats: true, block: { timer in
@@ -411,6 +412,7 @@ struct PlayerView: View {
         .onDisappear() {
             playerTimer?.invalidate()
             player.pause()
+            paused = true
         }
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {

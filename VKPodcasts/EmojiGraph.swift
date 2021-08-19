@@ -91,6 +91,5 @@ struct EmojiGraph: View {
                 data.append(.init(emoji: reactions[i].emoji, start: bestRange.left, end: bestRange.right))
             }
         }
-        print(data)
     }
 }

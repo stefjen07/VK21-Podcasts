@@ -19,14 +19,14 @@ struct PodcastItem: View {
                 if let logo = podcast.logoCache {
                     logo
                         .resizable()
-                        .aspectRatio(1, contentMode: .fill)
+                        .aspectRatio(contentMode: .fill)
                         .cornerRadius(5)
-                        .frame(width: 50)
+                        .frame(width: 60, height: 60)
                 } else {
                     Color.gray.opacity(0.3)
-                        .aspectRatio(1, contentMode: .fill)
+                        .aspectRatio(contentMode: .fill)
                         .cornerRadius(5)
-                        .frame(width: 50)
+                        .frame(width: 60, height: 60)
                 }
                 VStack {
                     HStack {
@@ -39,15 +39,16 @@ struct PodcastItem: View {
                         Text(podcast.description)
                             .foregroundColor(.init(white: 0.9))
                             .lineLimit(2)
+                            .multilineTextAlignment(.leading)
                         Spacer()
                     }
-                }.padding(.leading, 10)
+                }.padding(.leading, 15)
                 Spacer()
             }
+                .padding(.all, 15)
+                .background(Color("VKColor"))
+                .cornerRadius(10)
         }
-        .padding(15)
-        .background(Color("VKColor"))
-        .cornerRadius(10)
     }
 }
 
