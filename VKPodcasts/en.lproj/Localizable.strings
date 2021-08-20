@@ -30,8 +30,8 @@
 "reacts" = "Reactions";
 "reacts-limit" = "Allowed to leave no more than one reaction per 10 seconds";
 "data-comparing" = "Data are compared for the same time intervals in the past.";
-"before %lld" = "before %lld";
-"from %lld" = "from %lld";
+"before %lld" = "< %lld";
+"from %lld" = "> %lld";
 "7days" = "7 days";
 "30days" = "30 days";
 "halfyear" = "half a year";
