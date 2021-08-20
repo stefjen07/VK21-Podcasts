@@ -23,7 +23,7 @@ struct Delete: ViewModifier {
                         Rectangle()
                             .foregroundColor(.red)
                         Image(systemName: "trash")
-                            .foregroundColor(.white)
+                            .foregroundColor(Color("Background"))
                             .font(.title2.bold())
                             .layoutPriority(-1)
                     }.frame(width: -offset.width)

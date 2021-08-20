@@ -200,7 +200,6 @@ struct PodcastsView: View {
                         ForEach($podcastsStorage.podcasts) { podcast in
                             PodcastItem(podcast: podcast, podcastsStorage: $podcastsStorage, userInfo: $userInfo)
                                 .foregroundColor(.primary)
-                                .listRowBackground(Color.clear)
                                 .onDelete {
                                     if let index = podcastsStorage.podcasts.firstIndex(where: { checkPodcast in
                                         return checkPodcast.id == podcast.wrappedValue.id
