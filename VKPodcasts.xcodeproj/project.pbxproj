@@ -10,6 +10,7 @@
 		002F0DA3F567C5815F7F5475 /* Pods_VKPodcasts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C4ABB5364CB21DA421B412E /* Pods_VKPodcasts.framework */; };
 		204CD1C8D05D9EEAF116AEE7 /* Pods_VKPodcasts_VKPodcastsUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C54067D9C31D86D2E2B400CC /* Pods_VKPodcasts_VKPodcastsUITests.framework */; };
 		3E20F0CB26CA7E7000CF8053 /* StatReactionsGraph.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E20F0CA26CA7E7000CF8053 /* StatReactionsGraph.swift */; };
+		3E256A8626CFE6A3004956C0 /* Deletion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E256A8526CFE6A3004956C0 /* Deletion.swift */; };
 		3E2DE7BE26C5369800313C92 /* ReactionsGraph.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E2DE7BD26C5369700313C92 /* ReactionsGraph.swift */; };
 		3E434B8726C67881009D99DD /* PodcastsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E434B8626C67881009D99DD /* PodcastsView.swift */; };
 		3E434B8926C67C12009D99DD /* PodcastView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E434B8826C67C12009D99DD /* PodcastView.swift */; };
@@ -62,6 +63,7 @@
 		0C4ABB5364CB21DA421B412E /* Pods_VKPodcasts.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_VKPodcasts.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		27F902617BE0166225C22737 /* Pods_VKPodcastsTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_VKPodcastsTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3E20F0CA26CA7E7000CF8053 /* StatReactionsGraph.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatReactionsGraph.swift; sourceTree = "<group>"; };
+		3E256A8526CFE6A3004956C0 /* Deletion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Deletion.swift; sourceTree = "<group>"; };
 		3E2DE7BD26C5369700313C92 /* ReactionsGraph.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReactionsGraph.swift; sourceTree = "<group>"; };
 		3E434B8626C67881009D99DD /* PodcastsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PodcastsView.swift; sourceTree = "<group>"; };
 		3E434B8826C67C12009D99DD /* PodcastView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodcastView.swift; sourceTree = "<group>"; };
@@ -167,6 +169,7 @@
 			children = (
 				3E434B8826C67C12009D99DD /* PodcastView.swift */,
 				3E434B8626C67881009D99DD /* PodcastsView.swift */,
+				3E256A8526CFE6A3004956C0 /* Deletion.swift */,
 				3E9A7F1526CD162D0086474D /* SettingsView.swift */,
 				3E8431E526C5A05B00545232 /* Info.plist */,
 				3EA7798D26C454EB00B0C05E /* DataModel.swift */,
@@ -486,6 +489,7 @@
 				3EA7798E26C454EB00B0C05E /* DataModel.swift in Sources */,
 				3EA8355026C8626D00EA4662 /* ReactionTypeGraph.swift in Sources */,
 				3EB9369126CC4DCF009DCCDE /* ShareSheet.swift in Sources */,
+				3E256A8626CFE6A3004956C0 /* Deletion.swift in Sources */,
 				3E20F0CB26CA7E7000CF8053 /* StatReactionsGraph.swift in Sources */,
 				3E434B8926C67C12009D99DD /* PodcastView.swift in Sources */,
 				3E71600026CD92A70021D520 /* EmojiGraph.swift in Sources */,

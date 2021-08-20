@@ -50,6 +50,7 @@ struct PodcastItem: View {
                 .background(Color("VKColor"))
                 .cornerRadius(10)
         }
+            .padding(.horizontal, 25)
     }
 }
 
@@ -199,12 +200,20 @@ struct PodcastsView: View {
                         ForEach($podcastsStorage.podcasts) { podcast in
                             PodcastItem(podcast: podcast, podcastsStorage: $podcastsStorage, userInfo: $userInfo)
                                 .foregroundColor(.primary)
+                                .listRowBackground(Color.clear)
+                                .onDelete {
+                                    if let index = podcastsStorage.podcasts.firstIndex(where: { checkPodcast in
+                                        return checkPodcast.id == podcast.wrappedValue.id
+                                    }) {
+                                        podcastsStorage.podcasts.remove(at: index)
+                                        podcastsStorage.configs.remove(at: index)
+                                        podcastsStorage.save()
+                                    }
+                                }
                         }
-                        Spacer()
                     }
                 }
                 .padding(.top, 10)
-                .padding(.horizontal, 25)
             }
             .navigationTitle("podcasts")
             .navigationBarItems(leading:
@@ -222,6 +231,9 @@ struct PodcastsView: View {
                 lazyLogo()
             }) {
                 NewPodcastView(podcastsStorage: $podcastsStorage)
+            }
+            .onAppear {
+                UITableView.appearance().separatorStyle = .none
             }
         }
         .accentColor(.primary)
