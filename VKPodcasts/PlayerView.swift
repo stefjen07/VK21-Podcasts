@@ -185,7 +185,7 @@ struct PlayerView: View {
                                 GeometryReader { proxy in
                                     let size = proxy.size
                                     
-                                    ReactionsGraph(selfSize: size, duration: durationSeconds, currentTime: currentSecond, episode: $episode, reactions: podcast.reactions)
+                                    ReactionsGraph(selfSize: size, duration: durationSeconds, currentTime: $currentSecond, episode: $episode, reactions: podcast.reactions)
                                 }
                                 CustomSlider(offset: $trackPercentage, hasUpdates: $sliderHasUpdates)
                                     .onChange(of: sliderHasUpdates, perform: { hasUpdates in
@@ -356,9 +356,10 @@ struct PlayerView: View {
                                                     reactionsLock()
                                                     let stat = Stat(time: Int(currentSecond * 1000), reactionId: reaction.id, sex: userInfo.sex, age: userInfo.age, cityId: userInfo.cityId)
                                                     episode.statistics.append(stat)
-                                                    let userStat = UserStat(stat: stat, date: Date())
+                                                    let userStat = UserStat(date: Date())
                                                     statStorage.addStat(userStat)
                                                     podcastsStorage.save()
+                                                    episode.recalculate()
                                                 }
                                             }, label: {
                                                 VStack {
@@ -405,12 +406,16 @@ struct PlayerView: View {
                 paused = false
                 loaded = true
             }
-            playerTimer = Timer.scheduledTimer(withTimeInterval: 0.2, repeats: true, block: { timer in
+            playerTimer = Timer.scheduledTimer(withTimeInterval: 0.2, repeats: true, block: { _ in
                 self.checkTime()
+            })
+            secondsTimer = Timer.scheduledTimer(withTimeInterval: 2.5, repeats: true, block: { _ in
+                statStorage.setSeconds(id: episode.id, seconds: currentSecond)
             })
         }
         .onDisappear() {
             playerTimer?.invalidate()
+            secondsTimer?.invalidate()
             player.pause()
             paused = true
         }
@@ -437,6 +442,7 @@ struct PlayerView: View {
     
     @State var currentSecond: Double = 0
     @State var durationSeconds: Double = 0
+    @State var secondsTimer: Timer?
     
     func turnReactions(container: TimedReactionsContainer, isAvailable: Bool) {
         for reaction in container.availableReactions {
@@ -449,23 +455,21 @@ struct PlayerView: View {
     }
     
     func checkTime() {
-        let seconds = player.currentTime().seconds
+        currentSecond = player.currentTime().seconds
         for timedContainer in episode.timedReactions {
-            turnReactions(container: timedContainer, isAvailable: (timedContainer.from...timedContainer.to).contains(Int(seconds)))
+            turnReactions(container: timedContainer, isAvailable: (timedContainer.from...timedContainer.to).contains(Int(currentSecond)))
         }
-        currentTime = secondsToString(seconds: Int(seconds))
-        currentSecond = seconds
-        statStorage.setSeconds(id: episode.id, seconds: currentSecond)
+        currentTime = secondsToString(seconds: Int(currentSecond))
         if let duration = player.currentItem?.duration.seconds, !duration.isNaN {
             durationSeconds = duration
-            let secondsLeft = duration - seconds
+            let secondsLeft = duration - currentSecond
             if paused {
                 timeLeft = episode.duration
             } else {
                 timeLeft = "-" + secondsToString(seconds: Int(secondsLeft))
             }
             if !sliderHasUpdates {
-                trackPercentage = CGFloat(seconds / duration)
+                trackPercentage = CGFloat(currentSecond / duration)
             }
         }
     }

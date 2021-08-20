@@ -9,13 +9,11 @@ import SwiftUI
 
 struct ReactionsGraph: View {
     @Binding var episode: Episode
+    @Binding var currentTime: Double
+    var duration: Double
     var reactions: [Reaction]
     var selfSize: CGSize
     let colWidth: CGFloat = 4
-    let duration: Double
-    let currentTime: Double
-    var emojiValues: [[Int]]
-    var valueAll: [Int]
     
     var colsCount: Int {
         return Int((selfSize.width+colWidth/2)/(colWidth*1.5))
@@ -27,15 +25,6 @@ struct ReactionsGraph: View {
         }
         return (duration * Double(idx) / Double(colsCount))..<(duration * Double(idx+1) / Double(colsCount))
     }
-    
-    func idxForTime(time: Double) -> Int {
-        if duration == 0 {
-            return 0
-        }
-        return Int((time / duration) * Double(colsCount))
-    }
-    
-    var colPercentage: [CGFloat]
     
     func isColActive(idx: Int) -> Bool {
         return currentTime >= intervalForCol(idx: idx).lowerBound
@@ -49,54 +38,30 @@ struct ReactionsGraph: View {
                         Spacer(minLength: 0)
                         Capsule()
                             .foregroundColor(isColActive(idx: i) ? Color("VKColor") : Color("VKColor").opacity(0.2))
-                            .frame(width: colWidth, height: max(colWidth, colPercentage[i]*(selfSize.height-20)))
+                            .frame(width: colWidth, height: max(colWidth, episode.colPercentage[i]*(selfSize.height-20)))
                     }
                 }
             }.padding(.top, 30)
-            EmojiGraph(values: emojiValues, valueAll: valueAll, reactions: reactions)
+            EmojiGraph(values: episode.emojiValues, valueAll: episode.valueAll, reactions: reactions)
         }.frame(height: selfSize.height)
     }
     
-    init(selfSize: CGSize, duration: Double, currentTime: Double, episode: Binding<Episode>, reactions: [Reaction]) {
+    init(selfSize: CGSize, duration: Double, currentTime: Binding<Double>, episode: Binding<Episode>, reactions: [Reaction]) {
         self.selfSize = selfSize
         self.duration = duration
-        self.currentTime = currentTime
+        self._currentTime = currentTime
         self.reactions = reactions
         self._episode = episode
-        self.emojiValues = []
-        self.colPercentage = []
-        self.valueAll = []
-        self.valueAll = Array(repeating: 0, count: colsCount)
-        self.emojiValues = Array(repeating: Array(repeating: 0, count: colsCount), count: reactions.count)
-        
-        for stat in self.episode.statistics {
-            var reactionIdx = 0
-            for i in reactions.indices {
-                if reactions[i].id == stat.reactionId {
-                    reactionIdx = i
-                    break
-                }
-            }
-            let col = idxForTime(time: Double(stat.time)/1000)
-            emojiValues[reactionIdx][col] += 1
-            valueAll[col] += 1
-        }
-        
-        colPercentage = valueAll.map { CGFloat($0) }
-        
-        let maxValue = colPercentage.reduce(0, max)
-        
-        if maxValue != 0 {
-            for i in 0..<colPercentage.count {
-                colPercentage[i] /= maxValue
-            }
+        if self.episode.colPercentage.count != colsCount || duration != self.episode.updateDuration {
+            print("Graph updated")
+            self.episode.calculateGraphsCache(reactions: reactions, duration: duration, colsCount: colsCount)
         }
     }
 }
 
 struct ReactionsGraph_Previews: PreviewProvider {
     static var previews: some View {
-        ReactionsGraph(selfSize: .init(width: 250, height: 80), duration: 0, currentTime: 0, episode: .constant(.init()), reactions: [])
+        ReactionsGraph(selfSize: .init(width: 250, height: 80), duration: 0, currentTime: .constant(0), episode: .constant(.init()), reactions: [])
             .previewLayout(.fixed(width: 250, height: 80))
     }
 }

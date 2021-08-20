@@ -20,7 +20,7 @@ struct LoginView: View {
                     VKSdk.authorize(nil)
                 }, label: {
                     Text("vk-auth")
-                        .foregroundColor(.primary)
+                        .foregroundColor(.white)
                         .padding(10)
                         .background(Color("VKColor"))
                         .cornerRadius(10)

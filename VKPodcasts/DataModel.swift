@@ -104,8 +104,15 @@ func localeForRequest() -> String {
     return Locale.current.languageCode ?? Locale.current.identifier
 }
 
+extension Sequence where Element: Hashable {
+    func uniqued() -> [Element] {
+        var set = Set<Element>()
+        return filter { set.insert($0).inserted }
+    }
+}
+
 func getCities(tIds: [Int], destination: Binding<[City]>) {
-    var ids: [Int] = tIds
+    var ids: [Int] = tIds.uniqued()
     destination.wrappedValue = []
     while ids.count != 0 {
         var reqIds = [Int]()
@@ -217,6 +224,56 @@ class Episode: ObservableObject, Identifiable {
     var isExplicit: Bool = false
     var date: Date = .init()
     var duration: String = ""
+    
+    var valueAll = [Int]()
+    var emojiValues = [[Int]]()
+    var colPercentage = [CGFloat]()
+    var lastColsCount: Int = 0
+    var lastReactions: [Reaction] = []
+    var updateDuration: Double = 0
+    
+    func idxForTime(time: Double, duration: Double, colsCount: Int) -> Int {
+        if duration == 0 {
+            return 0
+        }
+        return Int((time / duration) * Double(colsCount))
+    }
+    
+    func recalculate() {
+        calculateGraphsCache(reactions: lastReactions, duration: updateDuration, colsCount: lastColsCount)
+    }
+    
+    func calculateGraphsCache(reactions: [Reaction], duration: Double, colsCount: Int) {
+        self.valueAll = Array(repeating: 0, count: colsCount)
+        self.emojiValues = Array(repeating: Array(repeating: 0, count: colsCount), count: reactions.count)
+        
+        for stat in statistics {
+            var reactionIdx = 0
+            for i in reactions.indices {
+                if reactions[i].id == stat.reactionId {
+                    reactionIdx = i
+                    break
+                }
+            }
+            let col = idxForTime(time: Double(stat.time)/1000, duration: duration, colsCount: colsCount)
+            emojiValues[reactionIdx][col] += 1
+            valueAll[col] += 1
+        }
+        
+        colPercentage = valueAll.map { CGFloat($0) }
+        
+        let maxValue = colPercentage.reduce(0, max)
+        
+        if maxValue != 0 {
+            for i in 0..<colPercentage.count {
+                colPercentage[i] /= maxValue
+            }
+        }
+        
+        self.lastReactions = reactions
+        self.lastColsCount = colsCount
+        self.updateDuration = duration
+    }
 }
 
 struct JSONEpisode: Codable {

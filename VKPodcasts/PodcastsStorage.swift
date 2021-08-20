@@ -20,7 +20,6 @@ struct StoragePodcastConfig: Codable {
 }
 
 struct UserStat: Codable {
-    var stat: Stat
     var date: Date
 }
 
